@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Obedience — TruePresence Developer Reference</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #c9d1d9;
+  --text-muted: #8b949e;
+  --accent: #58a6ff;
+  --accent-hover: #79c0ff;
+  --green: #3fb950;
+  --orange: #d29922;
+  --red: #f85149;
+  --purple: #bc8cff;
+  --pink: #f778ba;
+  --gold: #e3b341;
+  --prudence: #58a6ff;
+  --justice: #3fb950;
+  --fortitude: #f85149;
+  --temperance: #bc8cff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+  position: sticky; top: 0; z-index: 100;
+}
+header .container { display: flex; align-items: center; gap: 16px; }
+header h1 { font-size: 18px; font-weight: 600; }
+header h1 span { color: var(--text-muted); font-weight: 400; }
+header nav { margin-left: auto; display: flex; gap: 12px; font-size: 14px; }
+.breadcrumb { padding: 12px 0; font-size: 13px; color: var(--text-muted); }
+.breadcrumb a { color: var(--text-muted); }
+.breadcrumb a:hover { color: var(--accent); }
+
+/* Index page */
+.hero { padding: 48px 0 32px; text-align: center; }
+.hero h2 { font-size: 32px; margin-bottom: 8px; }
+.hero p { color: var(--text-muted); font-size: 16px; }
+.stats-row { display: flex; gap: 16px; justify-content: center; margin: 24px 0; flex-wrap: wrap; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 140px;
+}
+.stat-card .number { font-size: 28px; font-weight: 700; color: var(--accent); }
+.stat-card .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.cardinal-group { margin: 32px 0; }
+.cardinal-group h3 {
+  font-size: 20px;
+  padding: 12px 16px;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid var(--border);
+  border-bottom: none;
+}
+.cardinal-group h3.prudence { background: rgba(88,166,255,0.1); color: var(--prudence); }
+.cardinal-group h3.justice { background: rgba(63,185,80,0.1); color: var(--justice); }
+.cardinal-group h3.fortitude { background: rgba(248,81,73,0.1); color: var(--fortitude); }
+.cardinal-group h3.temperance { background: rgba(188,140,255,0.1); color: var(--temperance); }
+
+.virtue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+}
+.virtue-card {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  transition: background 0.15s;
+}
+.virtue-card:hover { background: var(--surface2); }
+.virtue-card .part-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.part-badge.cardinal { background: rgba(227,179,65,0.15); color: var(--gold); }
+.part-badge.integral { background: rgba(88,166,255,0.1); color: var(--accent); }
+.part-badge.subjective { background: rgba(63,185,80,0.1); color: var(--green); }
+.part-badge.potential { background: rgba(188,140,255,0.1); color: var(--purple); }
+.virtue-card .name { font-weight: 500; }
+.virtue-card .stories-count { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+
+/* Virtue detail page */
+.virtue-header { padding: 32px 0 24px; }
+.virtue-header h2 { font-size: 28px; margin-bottom: 4px; }
+.virtue-header .meta { color: var(--text-muted); font-size: 14px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.virtue-header .meta .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.section-header {
+  padding: 12px 16px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-body { padding: 16px; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+  align-items: start;
+}
+.field-row:last-child { border-bottom: none; }
+.field-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.field-label .human-name { font-weight: 600; color: var(--text); font-size: 14px; }
+.field-value { font-size: 14px; }
+.field-value .empty { color: var(--text-muted); font-style: italic; }
+
+code.field-name {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 11px;
+  background: rgba(88,166,255,0.1);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.list-inline { display: flex; flex-wrap: wrap; gap: 6px; }
+.list-inline .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+
+/* Story cards */
+.story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.story-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.story-card .genre-bar {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.story-card .genre-bar.aesop_fables { background: rgba(210,153,34,0.1); color: var(--orange); }
+.story-card .genre-bar.greek_roman_mythology { background: rgba(88,166,255,0.1); color: var(--accent); }
+.story-card .genre-bar.grimm_fairy_tales { background: rgba(63,185,80,0.1); color: var(--green); }
+.story-card .genre-bar.historical_biography { background: rgba(188,140,255,0.1); color: var(--purple); }
+.story-card .card-body { padding: 12px; }
+.story-card h4 { font-size: 15px; margin-bottom: 6px; }
+.story-card .summary { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+.story-card .story-meta { font-size: 12px; color: var(--text-muted); }
+.story-card .story-meta .field-row { grid-template-columns: 200px 1fr; padding: 4px 0; }
+
+.story-text-toggle {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--accent);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+.story-text-toggle:hover { background: var(--surface2); }
+.story-full-text {
+  display: none;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.7;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--bg);
+}
+.story-full-text.open { display: block; }
+
+.sanity-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: rgba(88,166,255,0.1);
+  border: 1px solid rgba(88,166,255,0.2);
+}
+.sanity-link:hover { background: rgba(88,166,255,0.2); text-decoration: none; }
+
+footer {
+  padding: 32px 0;
+  margin-top: 48px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+@media (max-width: 768px) {
+  .field-row { grid-template-columns: 1fr; }
+  .story-grid { grid-template-columns: 1fr; }
+  .stats-row { flex-direction: column; align-items: center; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>TruePresence <span>Developer Reference</span></h1>
+    <nav><a href="index.html#prudence" style="color: var(--prudence)">Prudence</a> <a href="index.html#justice" style="color: var(--justice)">Justice</a> <a href="index.html#fortitude" style="color: var(--fortitude)">Fortitude</a> <a href="index.html#temperance" style="color: var(--temperance)">Temperance</a></nav>
+  </div>
+</header>
+<div class="container">
+  <div class="breadcrumb"><a href="index.html">Virtues</a> / <a href="index.html#justice">Justice</a> / Obedience</div>
+  
+    <div class="virtue-header">
+      <h2>Obedience</h2>
+      <div class="meta">
+        <span class="tag part-badge potential">potential part</span>
+        <span style="color: var(--justice)">Justice</span>
+        <span>ID: <code class="field-name">virtue-obedience</code></span>
+        <a href="https://virtuestories.sanity.studio/intent/edit/id=virtue-obedience;type=virtue" target="_blank" class="sanity-link">Open in Sanity ↗</a>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">📝 Content</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Virtue Name</span>
+            <code class="field-name" title="Sanity field: virtue.name.en">virtue.name.en</code>
+          </div>
+          <div class="field-value">Obedience</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Slug</span>
+            <code class="field-name" title="Sanity field: virtue.slug.current">virtue.slug.current</code>
+          </div>
+          <div class="field-value">obedience</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Definition</span>
+            <code class="field-name" title="Sanity field: virtue.definition.en">virtue.definition.en</code>
+          </div>
+          <div class="field-value">Willing submission to proper authority; obedience to God&#x27;s will; receptivity to guidance</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Alternate Names</span>
+            <code class="field-name" title="Sanity field: virtue.alternateNames[].en">virtue.alternateNames[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Submission</span> <span class="tag">Following Direction</span> <span class="tag">Receptivity</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Overlap Notes</span>
+            <code class="field-name" title="Sanity field: virtue.overlapNotes.en">virtue.overlapNotes.en</code>
+          </div>
+          <div class="field-value">Protestant virtue. Related to humility and faith in Catholic/Protestant traditions.</div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">📖 Aquinas / Summa</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Cardinal Virtue</span>
+            <code class="field-name" title="Sanity field: virtue.cardinalVirtue">virtue.cardinalVirtue</code>
+          </div>
+          <div class="field-value">Justice</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Part Type</span>
+            <code class="field-name" title="Sanity field: virtue.partType">virtue.partType</code>
+          </div>
+          <div class="field-value">potential</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Summa Reference</span>
+            <code class="field-name" title="Sanity field: virtue.aquinasReference">virtue.aquinasReference</code>
+          </div>
+          <div class="field-value"><span class="empty">—</span></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">⛪ Traditions</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Tradition Tags</span>
+            <code class="field-name" title="Sanity field: virtue.traditionTags">virtue.traditionTags</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">protestant</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Protestant Category</span>
+            <code class="field-name" title="Sanity field: virtue.protestantCategory.en">virtue.protestantCategory.en</code>
+          </div>
+          <div class="field-value">theological and moral</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Scripture Ref</span>
+            <code class="field-name" title="Sanity field: virtue.scriptureRef">virtue.scriptureRef</code>
+          </div>
+          <div class="field-value">Romans 13:1</div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">🧠 Therapeutic Integration</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Primary Approach</span>
+            <code class="field-name" title="Sanity field: virtue.primaryTherapeuticApproach.en">virtue.primaryTherapeuticApproach.en</code>
+          </div>
+          <div class="field-value">Acceptance &amp; Commitment Therapy; Values Alignment; Motivational Interviewing</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Key Interventions</span>
+            <code class="field-name" title="Sanity field: virtue.keyInterventions[].en">virtue.keyInterventions[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Discerning obedience and autonomy</span> <span class="tag">Authority and conscience dialogue</span> <span class="tag">Willing compliance practice</span> <span class="tag">Internal alignment with right order</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Clinical Applications</span>
+            <code class="field-name" title="Sanity field: virtue.clinicalApplications[].en">virtue.clinicalApplications[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Oppositional patterns and resistance</span> <span class="tag">Submissive self-abandonment</span> <span class="tag">Difficulty with legitimate authority</span> <span class="tag">Moral confusion about obedience</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">CCMMP Integration</span>
+            <code class="field-name" title="Sanity field: virtue.ccmmpIntegration.en">virtue.ccmmpIntegration.en</code>
+          </div>
+          <div class="field-value">We are Created to align our will with legitimate order and ultimately with God&#x27;s will. Fallen obedience becomes either rebellious defiance or passive self-erasure. Grace enables willing alignment—freely choosing what is genuinely good, united with God&#x27;s loving will.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Therapeutic Tags</span>
+            <code class="field-name" title="Sanity field: virtue.therapeuticTags">virtue.therapeuticTags</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">relationships</span> <span class="tag">self_esteem</span> <span class="tag">purpose</span></div></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">🌐 Perspectives (6 Audience Gates)</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Perspectives Array</span>
+            <code class="field-name" title="Sanity field: virtue.perspectives[]">virtue.perspectives[]</code>
+          </div>
+          <div class="field-value">
+            <span class="empty">Content pending — schema supports up to 6 gates:</span><br>
+            <div class="list-inline" style="margin-top: 6px;">
+              <span class="tag">✝️ Catholic</span>
+              <span class="tag">🕊️ Christian</span>
+              <span class="tag">✡️ Jewish</span>
+              <span class="tag">☪️ Muslim</span>
+              <span class="tag">🕉️ Hindu</span>
+              <span class="tag">🌐 Secular</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label"><span class="human-name">Each perspective has</span></div>
+          <div class="field-value">
+            <code class="field-name" title="Sanity field: perspectiveContent.audienceGate">perspectiveContent.audienceGate</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.displayName">perspectiveContent.displayName</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.blurb">perspectiveContent.blurb</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.article">perspectiveContent.article</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.reframe">perspectiveContent.reframe</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.bibliography[]">perspectiveContent.bibliography[]</code>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">📚 Stories (4 of 4 genres)</div>
+      <div class="section-body">
+        <div class="story-grid">
+        <div class="story-card">
+          <div class="genre-bar aesop_fables">🦊 Aesop's Fables</div>
+          <div class="card-body">
+            <h4>The Boy and the Nettle</h4>
+            <div class="summary">A boy grasps a nettle gently and is not stung; obedience means following proper instruction and authority that guides us toward flourishing rather than harm.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-obedience-aesop_fables</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">aesop_fables</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">ACT and values alignment help clients recognize that wise obedience to internal values and external guidance serves flou...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">338</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">medieval_illumination</div></div>
+              
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-obedience-aesop_fables;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (338 words)</button>
+            <div class="story-full-text">A mother, attempting to teach her son the importance of obedience, took him to a field where Nettles grew in great profusion. &quot;These plants,&quot; she said, &quot;are dangerous and will sting your skin painfully if you touch them carelessly. I command you not to touch them. Do you understand?&quot;<br><br>The boy, young and curious, agreed that he understood and promised to obey.<br><br>Yet later that day, when his mother was occupied with other tasks, the boy returned to the field of Nettles. Curious about the nature of the plants, he approached one cautiously and reached out to touch it with just the tip of his finger. Immediately, the Nettle stung him painfully, causing his finger to swell and burn with an uncomfortable sensation.<br><br>Crying out, he called for his mother, who came running. She applied a soothing balm to his wound and spoke to him seriously: &quot;Did I not command you not to touch the Nettles? This pain is the result of your disobedience. You have learned, through painful experience, the truth of my words. Had you obeyed, you would have avoided this suffering.&quot;<br><br>The boy, chastened by this experience, asked, &quot;Mother, why did the Nettle sting me so painfully for just touching it lightly?&quot;<br><br>His mother replied: &quot;Because that is the nature of the Nettle. If you touch it with caution and uncertainty, it stings you. Yet if you grasp it firmly with your whole hand, it will not sting you, for your firm grip and confidence crushes the bristles that cause the sting. The Nettle injures only those who approach it with hesitation and fear. This is the lesson of obedience—that sometimes commands are given to protect us from harm. Disobedience, undertaken with uncertainty and doubt, brings suffering. But the path of clear obedience, followed with confidence and commitment, avoids the pain altogether.&quot;<br><br>The boy understood at last that obedience to his mother&#x27;s commands was not a burden imposed upon him, but a protection against the dangers of a world he did not yet fully understand.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar greek_roman_mythology">🏛️ Greek & Roman Mythology</div>
+          <div class="card-body">
+            <h4>Odysseus&#x27;s Men Disobey</h4>
+            <div class="summary">Odysseus&#x27;s crew disobeys his command and opens Aeolus&#x27;s bag of winds, causing disaster—illustrating the consequences of refusing to align with authority and values.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-obedience-greek_roman_mythology</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">greek_roman_mythology</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Demonstrates ACT&#x27;s values alignment: showing how obedience to recognized authority creates order and shared purpose.</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">275</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">renaissance_oil</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.classicalSource.en">virtueStory.classicalSource.en</code></div><div class="field-value">Odyssey, Book X</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-obedience-greek_roman_mythology;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (275 words)</button>
+            <div class="story-full-text">As Odysseus&#x27;s ships sailed past the island of the Cyclopes, the crew encountered the wine-god Aeolus, who ruled the winds. Aeolus received them hospitably and gave Odysseus a leather bag containing all the dangerous winds, keeping only the favorable West Wind free. His explicit instruction was clear: Odysseus must not open the bag until they reached Ithaca, for releasing the other winds would blow them back to sea. For many days the ships sailed safely toward home, within sight of Ithaca&#x27;s shores.<br><br>Yet as they approached their destination, the crew&#x27;s trust in Odysseus wavered. Some of the men whispered that the sealed bag must contain treasure—gold or silver that Odysseus was hoarding for himself rather than sharing. Their disobedience to Odysseus&#x27;s clear instructions, combined with envious suspicion, led them to open the bag while Odysseus slept. The winds escaped, blowing the ships hundreds of miles back toward the sea, and the crew&#x27;s home-coming was delayed by years.<br><br>Homer uses this episode to illustrate the destructive power of disobedience, particularly when rooted in suspicion and envy. The crew had clear instruction from their commander about what would preserve their homecoming. Their failure to obey—their decision that they understood the situation better than Odysseus—resulted in catastrophic consequences not merely for themselves but for everyone. The virtue of obedience, as Homer presents it, is not blind submission but rather the trust-based willingness to follow leadership. Odysseus had demonstrated his wisdom and his commitment to his men&#x27;s welfare; their disobedience reflected not reasonable doubt but baseless suspicion. The episode teaches that in hierarchical organizations where one person has knowledge others lack, obedience to proper authority protects the common good.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar grimm_fairy_tales">🏰 Grimm's Fairy Tales</div>
+          <div class="card-body">
+            <h4>The Devil and His Three Golden Hairs</h4>
+            <div class="summary">A young man demonstrates wise obedience when it aligns with virtue, distinguishing between legitimate authority and obedience to values rather than blind compliance.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-obedience-grimm_fairy_tales</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">grimm_fairy_tales</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">ACT&#x27;s values alignment shows that true obedience serves what matters most, not authority for its own sake.</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">276</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">romantic_watercolor</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.grimmNumber">virtueStory.grimmNumber</code></div><div class="field-value">KHM 29</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-obedience-grimm_fairy_tales;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (276 words)</button>
+            <div class="story-full-text">In this tale, the boy&#x27;s ultimate obedience to his destiny—accepting his lucky star&#x27;s path despite the count&#x27;s cruel interventions—demonstrates the virtue of obedience to God&#x27;s will. A poor man&#x27;s son, born under a lucky star destined to marry the count&#x27;s daughter, is cast into a river by a jealous count. Rescued and raised by a miller, the boy survives. Years later, the count sets him an impossible task: retrieve three gold hairs from the Devil&#x27;s head.<br><br>The boy journeys to the Devil&#x27;s house, where the Devil&#x27;s grandmother shelters him. While the Devil sleeps, she extracts three golden hairs. With each removal, the Devil shouts out riddles in his sleep. The grandmother answers them: a toad blocks a wine-well, a mouse gnaws a barren tree&#x27;s root, and a ferryman is bound to his post until another takes his place.<br><br>The boy uses these answers to gain wealth and favor from grateful kings, ultimately fulfilling the prophecy. His faithful obedience to his calling—neither fleeing nor despairing at the count&#x27;s tests—allows him to marry the count&#x27;s daughter and claim his destined fortune.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar historical_biography">📜 Historical Biography</div>
+          <div class="card-body">
+            <h4>Galileo&#x27;s Obedience to Conscience Over Authority</h4>
+            <div class="summary">When forced to recant his scientific observations before the Inquisition, Galileo outwardly obeyed but maintained inward fidelity to truth, allegedly whispering &#x27;and yet it moves&#x27; regarding the earth&#x27;s motion. His obedience was to a higher authority—reality and conscience—rather than institutional power.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-obedience-historical_biography</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">historical_biography</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Obedience through ACT and values alignment distinguishes between external compliance and authentic commitment, teaching ...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">475</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">historical_realism</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.historicalFigure.en">virtueStory.historicalFigure.en</code></div><div class="field-value">Galileo Galilei</div></div><div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.era.en">virtueStory.era.en</code></div><div class="field-value">17th century</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-obedience-historical_biography;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (475 words)</button>
+            <div class="story-full-text">Galileo Galilei&#x27;s later life exemplified the tension between obedience to authority and obedience to conscience. In 1633, at age sixty-eight, Galileo was tried by the Roman Inquisition for publishing &quot;Dialogue Concerning the Two Chief World Systems,&quot; which promoted the heliocentric model despite Church prohibition. The trial and its aftermath demonstrate Galileo&#x27;s struggle with obedience to legitimate authority versus commitment to truth. Galileo had been warned by Church officials not to advocate for heliocentrism. He had complied with these instructions for years, only expressing heliocentric ideas in hypothetical terms. However, he believed that the evidence for heliocentrism was overwhelming, and that continuing to teach geocentrism required denying observable reality. When he published the Dialogue, he violated explicit Church instructions, prioritizing obedience to what he understood as truth over obedience to ecclesiastical authority. The Inquisition convicted Galileo of heresy for promoting heliocentrism. He was placed under house arrest, essentially imprisoned in his home for his final years. The Church demanded that he publicly recant his support for heliocentrism. Galileo was seventy years old, in declining health, threatened with worse punishments if he refused recantation. Under these circumstances, Galileo publicly recanted, declaring that the sun orbits the Earth, contradicting everything his observations had revealed. Legend claims that after recanting, Galileo whispered, &quot;And yet it moves,&quot; suggesting that his verbal obedience to Church authority did not change his conviction about physical reality. Whether historically accurate or apocryphal, the claim captures Galileo&#x27;s internal conflict: he obeyed the Church&#x27;s demand for recantation while maintaining that truth was not subject to ecclesiastical decree. Galileo&#x27;s final years were difficult. He was confined to his home, unable to teach or engage in scientific work. He remained under surveillance, his publications monitored. Yet even in captivity, he worked on scientific problems, dictating observations and calculations to visitors. He maintained intellectual engagement even as his physical freedom was constrained. Galileo&#x27;s case raised profound questions about obedience. Are scientists obligated to obey ecclesiastical or political authorities that demand denial of observed truth? Is conscience-based disobedience ever justified when confronting institutional authority? Galileo&#x27;s response was complex: he obeyed the Church&#x27;s demand for public recantation but did not recant his conviction about reality. He accepted imprisonment rather than renounce truth as he understood it, but he did not actively resist or violently rebel against authority. His obedience to conscience was expressed through suffering and endurance rather than through confrontation. Galileo&#x27;s case became foundational to how the modern world understands the relationship between science and religion, between individual conscience and institutional authority. His apparent submission masked continued commitment to truth. His recantation did not silence his ideas; his unpublished writings circulated, influencing scientific developments throughout Europe. Galileo&#x27;s life demonstrates that true obedience to conscience sometimes requires apparent obedience to authority while maintaining interior conviction. His willingness to endure imprisonment rather than deny truth established that some commitments transcend institutional authority.</div>
+        </div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">🌍 Translation Status</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Supported Languages</span>
+            <code class="field-name" title="Sanity field: virtue.translationStatus">virtue.translationStatus</code>
+          </div>
+          <div class="field-value">
+            <div class="list-inline">
+              <span class="tag" style="border-color: var(--green);">en ✓</span>
+              <span class="tag">es pending</span>
+              <span class="tag">fr pending</span>
+              <span class="tag">pt pending</span>
+              <span class="tag">it pending</span>
+              <span class="tag">de pending</span>
+              <span class="tag">pl pending</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Audio Narration</span>
+            <code class="field-name" title="Sanity field: virtueStory.contentAudio">virtueStory.contentAudio</code>
+          </div>
+          <div class="field-value"><span class="empty">Pending ElevenLabs generation — schema supports localeAudio for all 7 languages</span></div>
+        </div>
+      </div>
+    </div>
+</div>
+<footer>
+  <div class="container">
+    TruePresence Virtue Dataset — Divine Mercy University<br>
+    Sanity Project: <code>hx1r1wkd</code> / <code>production</code> —
+    <a href="https://virtuestories.sanity.studio" target="_blank">Open Sanity Studio</a>
+  </div>
+</footer>
+<script>
+function toggleStoryText(btn) {
+  const panel = btn.nextElementSibling;
+  panel.classList.toggle('open');
+  btn.textContent = panel.classList.contains('open') ? '▾ Hide Full Text' : '▸ Show Full Text';
+}
+</script>
+</body>
+</html>

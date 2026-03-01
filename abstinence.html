@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abstinence — TruePresence Developer Reference</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #c9d1d9;
+  --text-muted: #8b949e;
+  --accent: #58a6ff;
+  --accent-hover: #79c0ff;
+  --green: #3fb950;
+  --orange: #d29922;
+  --red: #f85149;
+  --purple: #bc8cff;
+  --pink: #f778ba;
+  --gold: #e3b341;
+  --prudence: #58a6ff;
+  --justice: #3fb950;
+  --fortitude: #f85149;
+  --temperance: #bc8cff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+  position: sticky; top: 0; z-index: 100;
+}
+header .container { display: flex; align-items: center; gap: 16px; }
+header h1 { font-size: 18px; font-weight: 600; }
+header h1 span { color: var(--text-muted); font-weight: 400; }
+header nav { margin-left: auto; display: flex; gap: 12px; font-size: 14px; }
+.breadcrumb { padding: 12px 0; font-size: 13px; color: var(--text-muted); }
+.breadcrumb a { color: var(--text-muted); }
+.breadcrumb a:hover { color: var(--accent); }
+
+/* Index page */
+.hero { padding: 48px 0 32px; text-align: center; }
+.hero h2 { font-size: 32px; margin-bottom: 8px; }
+.hero p { color: var(--text-muted); font-size: 16px; }
+.stats-row { display: flex; gap: 16px; justify-content: center; margin: 24px 0; flex-wrap: wrap; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 140px;
+}
+.stat-card .number { font-size: 28px; font-weight: 700; color: var(--accent); }
+.stat-card .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.cardinal-group { margin: 32px 0; }
+.cardinal-group h3 {
+  font-size: 20px;
+  padding: 12px 16px;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid var(--border);
+  border-bottom: none;
+}
+.cardinal-group h3.prudence { background: rgba(88,166,255,0.1); color: var(--prudence); }
+.cardinal-group h3.justice { background: rgba(63,185,80,0.1); color: var(--justice); }
+.cardinal-group h3.fortitude { background: rgba(248,81,73,0.1); color: var(--fortitude); }
+.cardinal-group h3.temperance { background: rgba(188,140,255,0.1); color: var(--temperance); }
+
+.virtue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+}
+.virtue-card {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  transition: background 0.15s;
+}
+.virtue-card:hover { background: var(--surface2); }
+.virtue-card .part-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.part-badge.cardinal { background: rgba(227,179,65,0.15); color: var(--gold); }
+.part-badge.integral { background: rgba(88,166,255,0.1); color: var(--accent); }
+.part-badge.subjective { background: rgba(63,185,80,0.1); color: var(--green); }
+.part-badge.potential { background: rgba(188,140,255,0.1); color: var(--purple); }
+.virtue-card .name { font-weight: 500; }
+.virtue-card .stories-count { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+
+/* Virtue detail page */
+.virtue-header { padding: 32px 0 24px; }
+.virtue-header h2 { font-size: 28px; margin-bottom: 4px; }
+.virtue-header .meta { color: var(--text-muted); font-size: 14px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.virtue-header .meta .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.section-header {
+  padding: 12px 16px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-body { padding: 16px; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+  align-items: start;
+}
+.field-row:last-child { border-bottom: none; }
+.field-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.field-label .human-name { font-weight: 600; color: var(--text); font-size: 14px; }
+.field-value { font-size: 14px; }
+.field-value .empty { color: var(--text-muted); font-style: italic; }
+
+code.field-name {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 11px;
+  background: rgba(88,166,255,0.1);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.list-inline { display: flex; flex-wrap: wrap; gap: 6px; }
+.list-inline .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+
+/* Story cards */
+.story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.story-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.story-card .genre-bar {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.story-card .genre-bar.aesop_fables { background: rgba(210,153,34,0.1); color: var(--orange); }
+.story-card .genre-bar.greek_roman_mythology { background: rgba(88,166,255,0.1); color: var(--accent); }
+.story-card .genre-bar.grimm_fairy_tales { background: rgba(63,185,80,0.1); color: var(--green); }
+.story-card .genre-bar.historical_biography { background: rgba(188,140,255,0.1); color: var(--purple); }
+.story-card .card-body { padding: 12px; }
+.story-card h4 { font-size: 15px; margin-bottom: 6px; }
+.story-card .summary { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+.story-card .story-meta { font-size: 12px; color: var(--text-muted); }
+.story-card .story-meta .field-row { grid-template-columns: 200px 1fr; padding: 4px 0; }
+
+.story-text-toggle {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--accent);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+.story-text-toggle:hover { background: var(--surface2); }
+.story-full-text {
+  display: none;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.7;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--bg);
+}
+.story-full-text.open { display: block; }
+
+.sanity-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: rgba(88,166,255,0.1);
+  border: 1px solid rgba(88,166,255,0.2);
+}
+.sanity-link:hover { background: rgba(88,166,255,0.2); text-decoration: none; }
+
+footer {
+  padding: 32px 0;
+  margin-top: 48px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+@media (max-width: 768px) {
+  .field-row { grid-template-columns: 1fr; }
+  .story-grid { grid-template-columns: 1fr; }
+  .stats-row { flex-direction: column; align-items: center; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>TruePresence <span>Developer Reference</span></h1>
+    <nav><a href="index.html#prudence" style="color: var(--prudence)">Prudence</a> <a href="index.html#justice" style="color: var(--justice)">Justice</a> <a href="index.html#fortitude" style="color: var(--fortitude)">Fortitude</a> <a href="index.html#temperance" style="color: var(--temperance)">Temperance</a></nav>
+  </div>
+</header>
+<div class="container">
+  <div class="breadcrumb"><a href="index.html">Virtues</a> / <a href="index.html#temperance">Temperance</a> / Abstinence</div>
+  
+    <div class="virtue-header">
+      <h2>Abstinence</h2>
+      <div class="meta">
+        <span class="tag part-badge subjective">subjective part</span>
+        <span style="color: var(--temperance)">Temperance</span>
+        <span>ID: <code class="field-name">virtue-abstinence</code></span>
+        <a href="https://virtuestories.sanity.studio/intent/edit/id=virtue-abstinence;type=virtue" target="_blank" class="sanity-link">Open in Sanity ↗</a>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">📝 Content</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Virtue Name</span>
+            <code class="field-name" title="Sanity field: virtue.name.en">virtue.name.en</code>
+          </div>
+          <div class="field-value">Abstinence</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Slug</span>
+            <code class="field-name" title="Sanity field: virtue.slug.current">virtue.slug.current</code>
+          </div>
+          <div class="field-value">abstinence</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Definition</span>
+            <code class="field-name" title="Sanity field: virtue.definition.en">virtue.definition.en</code>
+          </div>
+          <div class="field-value"><span class="empty">—</span></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Alternate Names</span>
+            <code class="field-name" title="Sanity field: virtue.alternateNames[].en">virtue.alternateNames[].en</code>
+          </div>
+          <div class="field-value"><span class="empty">—</span></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Overlap Notes</span>
+            <code class="field-name" title="Sanity field: virtue.overlapNotes.en">virtue.overlapNotes.en</code>
+          </div>
+          <div class="field-value"><span class="empty">—</span></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">📖 Aquinas / Summa</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Cardinal Virtue</span>
+            <code class="field-name" title="Sanity field: virtue.cardinalVirtue">virtue.cardinalVirtue</code>
+          </div>
+          <div class="field-value">Temperance</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Part Type</span>
+            <code class="field-name" title="Sanity field: virtue.partType">virtue.partType</code>
+          </div>
+          <div class="field-value">subjective</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Summa Reference</span>
+            <code class="field-name" title="Sanity field: virtue.aquinasReference">virtue.aquinasReference</code>
+          </div>
+          <div class="field-value"><span class="empty">—</span></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">⛪ Traditions</div>
+      <div class="section-body"><span class="empty">No tradition data in unified list (Aquinas subdivision)</span></div>
+    </div>
+    <div class="section">
+      <div class="section-header">🧠 Therapeutic Integration</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Primary Approach</span>
+            <code class="field-name" title="Sanity field: virtue.primaryTherapeuticApproach.en">virtue.primaryTherapeuticApproach.en</code>
+          </div>
+          <div class="field-value">Cognitive Behavioral Therapy; Mindfulness; Willpower Development</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Key Interventions</span>
+            <code class="field-name" title="Sanity field: virtue.keyInterventions[].en">virtue.keyInterventions[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Appetite awareness and observation</span> <span class="tag">Fasting or abstinence practice</span> <span class="tag">Intentional going-without experience</span> <span class="tag">Freedom through restraint exercises</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Clinical Applications</span>
+            <code class="field-name" title="Sanity field: virtue.clinicalApplications[].en">virtue.clinicalApplications[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Eating disorders and disordered eating</span> <span class="tag">Food addiction patterns</span> <span class="tag">Loss of control around substances</span> <span class="tag">Difficulty with healthy restraint</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">CCMMP Integration</span>
+            <code class="field-name" title="Sanity field: virtue.ccmmpIntegration.en">virtue.ccmmpIntegration.en</code>
+          </div>
+          <div class="field-value">We are Created with capacity to abstain from pleasure for greater goods. Fallen excess enslaves us; fearful rigidity denies legitimate satisfaction. Grace enables free abstinence—choosing to do without not from deprivation but from alignment with what truly matters.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Therapeutic Tags</span>
+            <code class="field-name" title="Sanity field: virtue.therapeuticTags">virtue.therapeuticTags</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">resilience</span> <span class="tag">self_esteem</span> <span class="tag">stress</span></div></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">🌐 Perspectives (6 Audience Gates)</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Perspectives Array</span>
+            <code class="field-name" title="Sanity field: virtue.perspectives[]">virtue.perspectives[]</code>
+          </div>
+          <div class="field-value">
+            <span class="empty">Content pending — schema supports up to 6 gates:</span><br>
+            <div class="list-inline" style="margin-top: 6px;">
+              <span class="tag">✝️ Catholic</span>
+              <span class="tag">🕊️ Christian</span>
+              <span class="tag">✡️ Jewish</span>
+              <span class="tag">☪️ Muslim</span>
+              <span class="tag">🕉️ Hindu</span>
+              <span class="tag">🌐 Secular</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label"><span class="human-name">Each perspective has</span></div>
+          <div class="field-value">
+            <code class="field-name" title="Sanity field: perspectiveContent.audienceGate">perspectiveContent.audienceGate</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.displayName">perspectiveContent.displayName</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.blurb">perspectiveContent.blurb</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.article">perspectiveContent.article</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.reframe">perspectiveContent.reframe</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.bibliography[]">perspectiveContent.bibliography[]</code>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">📚 Stories (4 of 4 genres)</div>
+      <div class="section-body">
+        <div class="story-grid">
+        <div class="story-card">
+          <div class="genre-bar aesop_fables">🦊 Aesop's Fables</div>
+          <div class="card-body">
+            <h4>The Fox and the Grapes</h4>
+            <div class="summary">A fox unable to reach grapes declares them sour; abstinence means freely choosing not to pursue what we cannot or should not have, rather than resenting it.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-abstinence-aesop_fables</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">aesop_fables</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">CBT and willpower cultivation help clients develop the psychological strength to renounce harmful pursuits through reaso...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">299</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">medieval_illumination</div></div>
+              
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-abstinence-aesop_fables;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (299 words)</button>
+            <div class="story-full-text">A hungry Fox, prowling through the verdant countryside, came upon a vine heavy with clusters of ripe grapes that hung from an arbor high above his head. The sight of these sweet fruits caused his mouth to water with longing. He leapt upward, attempting to seize them, but they remained just beyond his reach. Again and again he bounded into the air, straining every muscle and sinew, yet the grapes seemed to retreat further with each attempt. His tongue lolled in thirst and exertion as he persisted in his efforts, running back a distance to gain momentum before hurling himself upward once more. But all his efforts proved fruitless, for the grapes were planted higher than his greatest leap could attain.<br><br>At last, exhausted and defeated, the Fox desisted in his attempts. He sat upon the ground, breathing heavily, and observed the grapes dangling mockingly above him. Rather than admit the truth of his failure, he turned his face away in disdain and began to walk off. As he departed, he called back over his shoulder with feigned indifference: &quot;I care not for these grapes! They are surely sour and would displease my palate in any case. Why should I exhaust myself pursuing what is unfit for consumption?&quot;<br><br>With this consoling falsehood, the Fox made his way onward, muttering to himself about the worthlessness of that which he could not obtain. Yet in his heart, he knew the grapes were sweet and wholesome; his words were born not of genuine conviction, but of wounded pride and the sting of his inability to achieve what he desired.<br><br>Thus does the Fox teach us that when we cannot attain something through virtue and honest effort, we ought not to diminish its worth through bitter words, nor console ourselves with false disdain.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar greek_roman_mythology">🏛️ Greek & Roman Mythology</div>
+          <div class="card-body">
+            <h4>Hippolytus and Chastity</h4>
+            <div class="summary">Hippolytus practices abstinence from sexual involvement, dedicating himself to Artemis and the hunt—his discipline becomes destructive when it denies natural human desires.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-abstinence-greek_roman_mythology</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">greek_roman_mythology</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Demonstrates willpower and CBT: conscious choice to abstain from impulses requires understanding both benefits and costs...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">205</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">renaissance_oil</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.classicalSource.en">virtueStory.classicalSource.en</code></div><div class="field-value">Euripides&#x27; Hippolytus</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-abstinence-greek_roman_mythology;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (205 words)</button>
+            <div class="story-full-text">Hippolytus, the virtuous stepson of King Theseus of Athens, dedicated his life entirely to chastity and the pursuit of wisdom. As recounted in Euripides&#x27; tragedy, the young prince refused all romantic entanglement, instead devoting himself to hunting and the worship of the virgin goddess Artemis. His stepmother Phaedra, inflamed by Aphrodite&#x27;s curse, fell madly in love with him. When Hippolytus learned of her forbidden passion, he recoiled in horror, rejecting her advances with revulsion at the very notion of betraying his sacred vows.<br><br>Phaedra, devastated and ashamed, accused Hippolytus of assault. Theseus, enraged by the false accusation, invoked a curse upon his son, calling upon Poseidon to bring death to the innocent youth. The sea god sent a monstrous bull that terrified Hippolytus&#x27;s horses, causing them to drag him to his death across rocky terrain. As he lay dying, the truth was revealed—Phaedra confessed her lies and took her own life. Hippolytus&#x27;s steadfast commitment to abstinence and virtue, even unto death, became legendary in ancient Athens. His story taught generations that the discipline of the body and the cultivation of inner purity constitute a profound strength, not a weakness, and that maintaining one&#x27;s principles against all worldly temptation represents the highest form of personal honor.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar grimm_fairy_tales">🏰 Grimm's Fairy Tales</div>
+          <div class="card-body">
+            <h4>The Devil&#x27;s Three Gold Hairs</h4>
+            <div class="summary">A young man demonstrates abstinence from greed and forbidden desires, resisting the devil&#x27;s temptations through disciplined will.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-abstinence-grimm_fairy_tales</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">grimm_fairy_tales</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">CBT and willpower development recognize that abstinence from destructive desires strengthens character and protects well...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">298</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">romantic_watercolor</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.grimmNumber">virtueStory.grimmNumber</code></div><div class="field-value">KHM 29</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-abstinence-grimm_fairy_tales;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (298 words)</button>
+            <div class="story-full-text">A poor man has a son born under a lucky star. A count, jealous of the prophecy that this boy will marry his daughter, casts the infant into a river. The boy is rescued and raised by a miller. Years later, the count discovers the boy alive and tasks him with an impossible quest: retrieve three gold hairs from the Devil&#x27;s head.<br><br>The boy travels to the Devil&#x27;s house, where the Devil&#x27;s grandmother takes pity on him. She hides him and, while the Devil sleeps, she pulls out three golden hairs, one at a time. As each hair is removed, the Devil cries out questions in his sleep, and the grandmother answers them. The first hair answers why a well that once flowed with wine now flows with water—a toad blocks it. The second reveals why a tree that bore golden fruit now bears none—a mouse gnaws its root. The third answers why a ferryman cannot leave his post—he must keep ferrrying until someone takes his place.<br><br>Armed with these answers, the boy returns to the count. He uses the first answer to earn a reward from a king whose well has failed, uses the second to earn riches from another king with a barren tree, and uses the third to trick the ferryman into taking his place. The boy becomes wealthy, the count sees his fortune is sealed, and the boy marries the count&#x27;s daughter as fate decreed.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar historical_biography">📜 Historical Biography</div>
+          <div class="card-body">
+            <h4>Susan B. Anthony&#x27;s Focus on Suffrage Over Personal Comfort</h4>
+            <div class="summary">Anthony sacrificed personal comfort, family life, and financial security for her political cause, remaining single and dedicating her entire life to women&#x27;s suffrage. Her abstinence from distractions enabled singular focus on her mission for systemic change.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-abstinence-historical_biography</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">historical_biography</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Abstinence through CBT and willpower training recognizes that intentionally limiting certain desires can direct energy t...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">240</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">historical_realism</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.historicalFigure.en">virtueStory.historicalFigure.en</code></div><div class="field-value">Susan B. Anthony</div></div><div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.era.en">virtueStory.era.en</code></div><div class="field-value">19th century</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-abstinence-historical_biography;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (240 words)</button>
+            <div class="story-full-text">Susan B. Anthony was born in 1820 in Massachusetts to a Quaker family that valued social justice and personal discipline. Throughout her life, she demonstrated remarkable abstinence not from sin, but from personal comfort and distraction in service of her larger mission: securing voting rights for women. While her contemporaries pursued marriage, children, and domestic life, Anthony remained single and devoted herself entirely to the suffrage movement. She traveled constantly, giving speeches across America despite the physical toll of nineteenth-century travel. She slept in humble accommodations, wore plain clothing, and denied herself luxuries that her growing prominence might have afforded. When arrested for voting illegally in 1872, she refused to pay the fine imposed upon her, enduring social ostracism rather than compromise her principles. Her abstinence was not ascetic rejection but strategic self-discipline—she understood that the suffrage cause required absolute dedication. She worked alongside Elizabeth Cady Stanton for over fifty years, their partnership strengthened by shared commitment rather than distracted by personal ambitions. Anthony survived on small donations and modest speaking fees, reinvesting everything into the movement. She lived to see the suffrage movement gain momentum, though the Nineteenth Amendment was ratified fourteen years after her death in 1906. Her life demonstrated how abstinence from personal comfort and self-indulgence, when directed toward justice, becomes a form of profound service. She showed that true freedom comes not from pursuing every desire, but from disciplining oneself in service of liberation for others.</div>
+        </div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">🌍 Translation Status</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Supported Languages</span>
+            <code class="field-name" title="Sanity field: virtue.translationStatus">virtue.translationStatus</code>
+          </div>
+          <div class="field-value">
+            <div class="list-inline">
+              <span class="tag" style="border-color: var(--green);">en ✓</span>
+              <span class="tag">es pending</span>
+              <span class="tag">fr pending</span>
+              <span class="tag">pt pending</span>
+              <span class="tag">it pending</span>
+              <span class="tag">de pending</span>
+              <span class="tag">pl pending</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Audio Narration</span>
+            <code class="field-name" title="Sanity field: virtueStory.contentAudio">virtueStory.contentAudio</code>
+          </div>
+          <div class="field-value"><span class="empty">Pending ElevenLabs generation — schema supports localeAudio for all 7 languages</span></div>
+        </div>
+      </div>
+    </div>
+</div>
+<footer>
+  <div class="container">
+    TruePresence Virtue Dataset — Divine Mercy University<br>
+    Sanity Project: <code>hx1r1wkd</code> / <code>production</code> —
+    <a href="https://virtuestories.sanity.studio" target="_blank">Open Sanity Studio</a>
+  </div>
+</footer>
+<script>
+function toggleStoryText(btn) {
+  const panel = btn.nextElementSibling;
+  panel.classList.toggle('open');
+  btn.textContent = panel.classList.contains('open') ? '▾ Hide Full Text' : '▸ Show Full Text';
+}
+</script>
+</body>
+</html>

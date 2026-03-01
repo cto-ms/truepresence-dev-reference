@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Good Counsel — TruePresence Developer Reference</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #c9d1d9;
+  --text-muted: #8b949e;
+  --accent: #58a6ff;
+  --accent-hover: #79c0ff;
+  --green: #3fb950;
+  --orange: #d29922;
+  --red: #f85149;
+  --purple: #bc8cff;
+  --pink: #f778ba;
+  --gold: #e3b341;
+  --prudence: #58a6ff;
+  --justice: #3fb950;
+  --fortitude: #f85149;
+  --temperance: #bc8cff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+  position: sticky; top: 0; z-index: 100;
+}
+header .container { display: flex; align-items: center; gap: 16px; }
+header h1 { font-size: 18px; font-weight: 600; }
+header h1 span { color: var(--text-muted); font-weight: 400; }
+header nav { margin-left: auto; display: flex; gap: 12px; font-size: 14px; }
+.breadcrumb { padding: 12px 0; font-size: 13px; color: var(--text-muted); }
+.breadcrumb a { color: var(--text-muted); }
+.breadcrumb a:hover { color: var(--accent); }
+
+/* Index page */
+.hero { padding: 48px 0 32px; text-align: center; }
+.hero h2 { font-size: 32px; margin-bottom: 8px; }
+.hero p { color: var(--text-muted); font-size: 16px; }
+.stats-row { display: flex; gap: 16px; justify-content: center; margin: 24px 0; flex-wrap: wrap; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 140px;
+}
+.stat-card .number { font-size: 28px; font-weight: 700; color: var(--accent); }
+.stat-card .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.cardinal-group { margin: 32px 0; }
+.cardinal-group h3 {
+  font-size: 20px;
+  padding: 12px 16px;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid var(--border);
+  border-bottom: none;
+}
+.cardinal-group h3.prudence { background: rgba(88,166,255,0.1); color: var(--prudence); }
+.cardinal-group h3.justice { background: rgba(63,185,80,0.1); color: var(--justice); }
+.cardinal-group h3.fortitude { background: rgba(248,81,73,0.1); color: var(--fortitude); }
+.cardinal-group h3.temperance { background: rgba(188,140,255,0.1); color: var(--temperance); }
+
+.virtue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+}
+.virtue-card {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  transition: background 0.15s;
+}
+.virtue-card:hover { background: var(--surface2); }
+.virtue-card .part-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.part-badge.cardinal { background: rgba(227,179,65,0.15); color: var(--gold); }
+.part-badge.integral { background: rgba(88,166,255,0.1); color: var(--accent); }
+.part-badge.subjective { background: rgba(63,185,80,0.1); color: var(--green); }
+.part-badge.potential { background: rgba(188,140,255,0.1); color: var(--purple); }
+.virtue-card .name { font-weight: 500; }
+.virtue-card .stories-count { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+
+/* Virtue detail page */
+.virtue-header { padding: 32px 0 24px; }
+.virtue-header h2 { font-size: 28px; margin-bottom: 4px; }
+.virtue-header .meta { color: var(--text-muted); font-size: 14px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.virtue-header .meta .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.section-header {
+  padding: 12px 16px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-body { padding: 16px; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+  align-items: start;
+}
+.field-row:last-child { border-bottom: none; }
+.field-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.field-label .human-name { font-weight: 600; color: var(--text); font-size: 14px; }
+.field-value { font-size: 14px; }
+.field-value .empty { color: var(--text-muted); font-style: italic; }
+
+code.field-name {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 11px;
+  background: rgba(88,166,255,0.1);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.list-inline { display: flex; flex-wrap: wrap; gap: 6px; }
+.list-inline .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+
+/* Story cards */
+.story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.story-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.story-card .genre-bar {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.story-card .genre-bar.aesop_fables { background: rgba(210,153,34,0.1); color: var(--orange); }
+.story-card .genre-bar.greek_roman_mythology { background: rgba(88,166,255,0.1); color: var(--accent); }
+.story-card .genre-bar.grimm_fairy_tales { background: rgba(63,185,80,0.1); color: var(--green); }
+.story-card .genre-bar.historical_biography { background: rgba(188,140,255,0.1); color: var(--purple); }
+.story-card .card-body { padding: 12px; }
+.story-card h4 { font-size: 15px; margin-bottom: 6px; }
+.story-card .summary { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+.story-card .story-meta { font-size: 12px; color: var(--text-muted); }
+.story-card .story-meta .field-row { grid-template-columns: 200px 1fr; padding: 4px 0; }
+
+.story-text-toggle {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--accent);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+.story-text-toggle:hover { background: var(--surface2); }
+.story-full-text {
+  display: none;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.7;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--bg);
+}
+.story-full-text.open { display: block; }
+
+.sanity-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: rgba(88,166,255,0.1);
+  border: 1px solid rgba(88,166,255,0.2);
+}
+.sanity-link:hover { background: rgba(88,166,255,0.2); text-decoration: none; }
+
+footer {
+  padding: 32px 0;
+  margin-top: 48px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+@media (max-width: 768px) {
+  .field-row { grid-template-columns: 1fr; }
+  .story-grid { grid-template-columns: 1fr; }
+  .stats-row { flex-direction: column; align-items: center; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>TruePresence <span>Developer Reference</span></h1>
+    <nav><a href="index.html#prudence" style="color: var(--prudence)">Prudence</a> <a href="index.html#justice" style="color: var(--justice)">Justice</a> <a href="index.html#fortitude" style="color: var(--fortitude)">Fortitude</a> <a href="index.html#temperance" style="color: var(--temperance)">Temperance</a></nav>
+  </div>
+</header>
+<div class="container">
+  <div class="breadcrumb"><a href="index.html">Virtues</a> / <a href="index.html#prudence">Prudence</a> / Good Counsel</div>
+  
+    <div class="virtue-header">
+      <h2>Good Counsel</h2>
+      <div class="meta">
+        <span class="tag part-badge potential">potential part</span>
+        <span style="color: var(--prudence)">Prudence</span>
+        <span>ID: <code class="field-name">virtue-good_counsel</code></span>
+        <a href="https://virtuestories.sanity.studio/intent/edit/id=virtue-good_counsel;type=virtue" target="_blank" class="sanity-link">Open in Sanity ↗</a>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">📝 Content</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Virtue Name</span>
+            <code class="field-name" title="Sanity field: virtue.name.en">virtue.name.en</code>
+          </div>
+          <div class="field-value">Good Counsel</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Slug</span>
+            <code class="field-name" title="Sanity field: virtue.slug.current">virtue.slug.current</code>
+          </div>
+          <div class="field-value">good_counsel</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Definition</span>
+            <code class="field-name" title="Sanity field: virtue.definition.en">virtue.definition.en</code>
+          </div>
+          <div class="field-value"><span class="empty">—</span></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Alternate Names</span>
+            <code class="field-name" title="Sanity field: virtue.alternateNames[].en">virtue.alternateNames[].en</code>
+          </div>
+          <div class="field-value"><span class="empty">—</span></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Overlap Notes</span>
+            <code class="field-name" title="Sanity field: virtue.overlapNotes.en">virtue.overlapNotes.en</code>
+          </div>
+          <div class="field-value"><span class="empty">—</span></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">📖 Aquinas / Summa</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Cardinal Virtue</span>
+            <code class="field-name" title="Sanity field: virtue.cardinalVirtue">virtue.cardinalVirtue</code>
+          </div>
+          <div class="field-value">Prudence</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Part Type</span>
+            <code class="field-name" title="Sanity field: virtue.partType">virtue.partType</code>
+          </div>
+          <div class="field-value">potential</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Summa Reference</span>
+            <code class="field-name" title="Sanity field: virtue.aquinasReference">virtue.aquinasReference</code>
+          </div>
+          <div class="field-value"><span class="empty">—</span></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">⛪ Traditions</div>
+      <div class="section-body"><span class="empty">No tradition data in unified list (Aquinas subdivision)</span></div>
+    </div>
+    <div class="section">
+      <div class="section-header">🧠 Therapeutic Integration</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Primary Approach</span>
+            <code class="field-name" title="Sanity field: virtue.primaryTherapeuticApproach.en">virtue.primaryTherapeuticApproach.en</code>
+          </div>
+          <div class="field-value">Collaborative Decision-Making; Values Clarification; Wisdom Dialogue</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Key Interventions</span>
+            <code class="field-name" title="Sanity field: virtue.keyInterventions[].en">virtue.keyInterventions[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Deliberative structured conversation</span> <span class="tag">Multiple perspective consideration</span> <span class="tag">Wise counsel seeking</span> <span class="tag">Decision clarity mapping</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Clinical Applications</span>
+            <code class="field-name" title="Sanity field: virtue.clinicalApplications[].en">virtue.clinicalApplications[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Indecision and analysis paralysis</span> <span class="tag">Major life transitions</span> <span class="tag">Moral ambiguity and ethical confusion</span> <span class="tag">Lack of trusted advisory relationships</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">CCMMP Integration</span>
+            <code class="field-name" title="Sanity field: virtue.ccmmpIntegration.en">virtue.ccmmpIntegration.en</code>
+          </div>
+          <div class="field-value">We are Created with the gift of finding good counsel—both within ourselves and through others&#x27; wisdom. Fallen counsel-seeking becomes either stubborn self-reliance or dependent passivity. Grace enables us to seek and offer wise guidance, cooperating with the Holy Spirit&#x27;s direction through both reason and relational wisdom.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Therapeutic Tags</span>
+            <code class="field-name" title="Sanity field: virtue.therapeuticTags">virtue.therapeuticTags</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">purpose</span> <span class="tag">stress</span> <span class="tag">anxiety</span></div></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">🌐 Perspectives (6 Audience Gates)</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Perspectives Array</span>
+            <code class="field-name" title="Sanity field: virtue.perspectives[]">virtue.perspectives[]</code>
+          </div>
+          <div class="field-value">
+            <span class="empty">Content pending — schema supports up to 6 gates:</span><br>
+            <div class="list-inline" style="margin-top: 6px;">
+              <span class="tag">✝️ Catholic</span>
+              <span class="tag">🕊️ Christian</span>
+              <span class="tag">✡️ Jewish</span>
+              <span class="tag">☪️ Muslim</span>
+              <span class="tag">🕉️ Hindu</span>
+              <span class="tag">🌐 Secular</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label"><span class="human-name">Each perspective has</span></div>
+          <div class="field-value">
+            <code class="field-name" title="Sanity field: perspectiveContent.audienceGate">perspectiveContent.audienceGate</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.displayName">perspectiveContent.displayName</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.blurb">perspectiveContent.blurb</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.article">perspectiveContent.article</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.reframe">perspectiveContent.reframe</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.bibliography[]">perspectiveContent.bibliography[]</code>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">📚 Stories (4 of 4 genres)</div>
+      <div class="section-body">
+        <div class="story-grid">
+        <div class="story-card">
+          <div class="genre-bar aesop_fables">🦊 Aesop's Fables</div>
+          <div class="card-body">
+            <h4>The Four Oxen and the Lion</h4>
+            <div class="summary">Four oxen stand together and defeat a lion; when they quarrel, the lion conquers them one by one, showing that good counsel emphasizes unity and collaborative wisdom.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-good_counsel-aesop_fables</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">aesop_fables</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Collaborative decision-making recognizes that seeking diverse counsel and maintaining unified purpose creates strength t...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">303</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">medieval_illumination</div></div>
+              
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-good_counsel-aesop_fables;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (303 words)</button>
+            <div class="story-full-text">In a certain pasture, four Oxen lived together in constant association, grazing peacefully and providing one another with companionship and protection. United in their strength and standing always together, they presented such a formidable force that no predator dared to attack them.<br><br>A hungry Lion, observing these creatures from a distance, longed to make one of them his prey, yet he recognized that he could never overcome four oxen acting in concert. He understood that their strength lay not merely in their individual power, but in their unity and their willingness to stand together. Therefore, the Lion devised a cunning stratagem.<br><br>He approached each ox separately and spoke to them words of such craft and deception that he succeeded in turning them against one another. To the first ox, he said, &quot;Your companions mock you behind your back and plan to drive you from the pasture.&quot; To the second, he whispered, &quot;The other three are plotting to betray you to me.&quot; He spoke similar deceits to the third and fourth, so that suspicion and mistrust grew in the heart of each.<br><br>Through these false counsels, the Lion succeeded in dividing the oxen. Each began to wander alone, no longer trusting the companionship of the others. The unity that had protected them dissolved, replaced by fear and suspicion.<br><br>Once they were separated, the Lion found it simple to attack each individually, subduing them one by one, until all four had fallen to his power.<br><br>Thus did the oxen learn too late that good counsel—honest advice from trusted sources—is essential to the maintenance of unity and strength. The evil counsel of the lion, working through deception and the corruption of trust, proved more powerful than their combined physical force. United in truth and good counsel, they were invincible; divided by false counsel, they were destroyed.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar greek_roman_mythology">🏛️ Greek & Roman Mythology</div>
+          <div class="card-body">
+            <h4>Nestor&#x27;s Advice in War</h4>
+            <div class="summary">Nestor, the elder, offers counsel to Agamemnon and Achilles, seeking to reconcile their conflict through wisdom and collaborative deliberation, prioritizing group decision-making.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-good_counsel-greek_roman_mythology</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">greek_roman_mythology</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Exemplifies collaborative decision-making: drawing on collective wisdom rather than individual authority to resolve disp...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">277</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">renaissance_oil</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.classicalSource.en">virtueStory.classicalSource.en</code></div><div class="field-value">Iliad, Book I</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-good_counsel-greek_roman_mythology;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (277 words)</button>
+            <div class="story-full-text">Among the Greek commanders at Troy, none was respected more widely than Nestor of Pylos, the elder statesman whose experience stretched back to an earlier generation of heroes. When Agamemnon and Achilles quarreled bitterly over honor and prizes, threatening the unity of the Greek alliance at a critical moment, Nestor stepped forward to offer counsel. His advice, as Homer recounts in the Iliad&#x27;s opening book, was not merely tactical but deeply wise about human nature and the requirements of effective leadership.<br><br>Nestor counseled Agamemnon to recognize Achilles&#x27; legitimate grievance and to make restitution, arguing that the strength of their coalition depended upon mutual respect among the leaders. To Achilles, he urged patience and a willingness to subordinate personal honor to the greater cause of the Greek war effort. Nestor&#x27;s counsel carried authority not from official position but from his evident wisdom, his long experience of both successes and failures in war and counsel, and his manifest concern for everyone&#x27;s welfare rather than any factional interest.<br><br>Homer emphasizes that Nestor&#x27;s good counsel was grounded in genuine understanding of human psychology and the requirements of communal action. He did not offer merely clever tactics but rather fundamental principles about how noble men should conduct themselves. His words were often lengthy and sometimes tedious—he frequently recalled his own past exploits—yet they carried weight precisely because they were grounded in hard-won experience. Good counsel, as Nestor exemplified it, requires both intellectual understanding and the emotional wisdom to perceive what will move human hearts toward right action. It requires patience to explain, clarity to illuminate, and genuine concern to ensure that those receiving counsel understand not just the what but the why.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar grimm_fairy_tales">🏰 Grimm's Fairy Tales</div>
+          <div class="card-body">
+            <h4>The Good Bargain</h4>
+            <div class="summary">A young man receives counsel about how to make his fortune and follows advice that leads him to make increasingly clever bargains, demonstrating the value of good counsel.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-good_counsel-grimm_fairy_tales</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">grimm_fairy_tales</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Collaborative decision-making improves outcomes; the protagonist&#x27;s willingness to seek and follow good counsel enables h...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">310</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">romantic_watercolor</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.grimmNumber">virtueStory.grimmNumber</code></div><div class="field-value">KHM 7</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-good_counsel-grimm_fairy_tales;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (310 words)</button>
+            <div class="story-full-text">A peasant sets out to seek good counsel from a wise man, hoping to improve his fortune. He journeys to a distant mountain where a sage dwells in a cave, listening to all who seek his wisdom.<br><br>The sage tells him: &quot;Good counsel costs money. Provide payment, and you shall have my best wisdom.&quot; The peasant, having little but trusting the sage, gives his last coins. The sage tells him: &quot;Never leave the old path for a new one, no matter how inviting. Never ask too many questions. Give away what you have freely, and you shall receive more in return.&quot;<br><br>Traveling home, the peasant encounters a beautiful woman who urges him to follow a shortcut through the forest. Though tempted, he remembers: never leave the old path. He declines and continues on the known road. Later, bandits emerge from the forest where the shortcut led, confirming the woman was a temptress.<br><br>At an inn, the innkeeper suggests the peasant taste a mysterious new wine. Remembering not to ask questions but to listen to his conscience, the peasant refuses. The innkeeper, frustrated, reveals the wine was poisoned.<br><br>Finally, a beggar approaches, and the peasant, following the sage&#x27;s counsel to give freely, shares his remaining food and money. The beggar reveals himself as the sage in disguise, testing whether the peasant would truly follow the counsel he had purchased.<br><br>The peasant becomes the sage&#x27;s heir, inheriting wisdom and comfort. Good counsel, rightly purchased and faithfully followed, transforms a poor man into a sage.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar historical_biography">📜 Historical Biography</div>
+          <div class="card-body">
+            <h4>Confucius&#x27; Mentorship of Disciples</h4>
+            <div class="summary">Confucius developed a method of collaborative consultation with his students, asking questions, listening to their reasoning, and helping them arrive at wisdom rather than imposing answers. His recorded dialogues show someone who gave counsel by drawing out his students&#x27; own understanding and judgment.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-good_counsel-historical_biography</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">historical_biography</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Good counsel through collaborative decision-making honors the client&#x27;s capacity for wisdom while offering perspective, c...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">394</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">historical_realism</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.historicalFigure.en">virtueStory.historicalFigure.en</code></div><div class="field-value">Confucius</div></div><div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.era.en">virtueStory.era.en</code></div><div class="field-value">Ancient China (551-479 BCE)</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-good_counsel-historical_biography;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (394 words)</button>
+            <div class="story-full-text">Kong Qiu, known as Confucius, was born in 551 BCE in the state of Lu in ancient China. He became one of history&#x27;s most influential philosophers, shaping East Asian thought for over two thousand years. Confucius demonstrated the virtue of good counsel—providing wise guidance that helped others develop virtue and navigate life&#x27;s challenges. Confucius lived during the Spring and Autumn period, an era of constant warfare and social disorder. He sought to restore social harmony through moral education and cultivation of virtue. Rather than holding high political office, he became a teacher, gathering a group of devoted students who preserved his teachings. Confucius&#x27; approach to good counsel emphasized personalized guidance tailored to individual students&#x27; needs and circumstances. His teachings, recorded in the &quot;Analects,&quot; reveal him responding to specific students&#x27; questions and situations. When asked about filial piety, Confucius explained that it required not just obedience but genuine respect and care for parents. When asked about governing, he emphasized that leaders must first cultivate their own virtue before attempting to govern others. His counsel responded to particular situations rather than offering universal prescriptions. Confucius believed that good counsel required understanding the person receiving it. He recognized different students&#x27; strengths and weaknesses and guided them accordingly. To ambitious students seeking power, he cautioned about the importance of virtue preceding political authority. To cautious students, he encouraged greater boldness in pursuing righteousness. He adapted his teaching method to individual learning needs. Confucius modeled the virtues he taught through his own conduct. His disciples learned through observation of his daily behavior as much as through his explicit teachings. When asked to summarize his philosophy, Confucius spoke of &quot;reciprocity&quot;—treating others as one wishes to be treated. This principle of mutuality and interconnection became central to his ethical vision. Confucius&#x27; counsel emphasized gradual moral development through study, ritual practice, and relationships. He taught that virtue was cultivated through engagement with tradition, through respectful relationships, and through consistent practice. His approach was not mystical but practical, focusing on how people could improve their conduct and create harmonious communities. Confucius died in 479 BCE, but his legacy transformed Chinese civilization and influenced Korean, Japanese, and Vietnamese cultures. His emphasis on good counsel—wisdom transmitted through relationship and adapted to particular circumstances—established ideals of mentorship that persist across cultures. His life demonstrates that good counsel requires wisdom, understanding, and genuine commitment to others&#x27; development.</div>
+        </div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">🌍 Translation Status</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Supported Languages</span>
+            <code class="field-name" title="Sanity field: virtue.translationStatus">virtue.translationStatus</code>
+          </div>
+          <div class="field-value">
+            <div class="list-inline">
+              <span class="tag" style="border-color: var(--green);">en ✓</span>
+              <span class="tag">es pending</span>
+              <span class="tag">fr pending</span>
+              <span class="tag">pt pending</span>
+              <span class="tag">it pending</span>
+              <span class="tag">de pending</span>
+              <span class="tag">pl pending</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Audio Narration</span>
+            <code class="field-name" title="Sanity field: virtueStory.contentAudio">virtueStory.contentAudio</code>
+          </div>
+          <div class="field-value"><span class="empty">Pending ElevenLabs generation — schema supports localeAudio for all 7 languages</span></div>
+        </div>
+      </div>
+    </div>
+</div>
+<footer>
+  <div class="container">
+    TruePresence Virtue Dataset — Divine Mercy University<br>
+    Sanity Project: <code>hx1r1wkd</code> / <code>production</code> —
+    <a href="https://virtuestories.sanity.studio" target="_blank">Open Sanity Studio</a>
+  </div>
+</footer>
+<script>
+function toggleStoryText(btn) {
+  const panel = btn.nextElementSibling;
+  panel.classList.toggle('open');
+  btn.textContent = panel.classList.contains('open') ? '▾ Hide Full Text' : '▸ Show Full Text';
+}
+</script>
+</body>
+</html>

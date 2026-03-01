@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Justice — TruePresence Developer Reference</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #c9d1d9;
+  --text-muted: #8b949e;
+  --accent: #58a6ff;
+  --accent-hover: #79c0ff;
+  --green: #3fb950;
+  --orange: #d29922;
+  --red: #f85149;
+  --purple: #bc8cff;
+  --pink: #f778ba;
+  --gold: #e3b341;
+  --prudence: #58a6ff;
+  --justice: #3fb950;
+  --fortitude: #f85149;
+  --temperance: #bc8cff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+  position: sticky; top: 0; z-index: 100;
+}
+header .container { display: flex; align-items: center; gap: 16px; }
+header h1 { font-size: 18px; font-weight: 600; }
+header h1 span { color: var(--text-muted); font-weight: 400; }
+header nav { margin-left: auto; display: flex; gap: 12px; font-size: 14px; }
+.breadcrumb { padding: 12px 0; font-size: 13px; color: var(--text-muted); }
+.breadcrumb a { color: var(--text-muted); }
+.breadcrumb a:hover { color: var(--accent); }
+
+/* Index page */
+.hero { padding: 48px 0 32px; text-align: center; }
+.hero h2 { font-size: 32px; margin-bottom: 8px; }
+.hero p { color: var(--text-muted); font-size: 16px; }
+.stats-row { display: flex; gap: 16px; justify-content: center; margin: 24px 0; flex-wrap: wrap; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 140px;
+}
+.stat-card .number { font-size: 28px; font-weight: 700; color: var(--accent); }
+.stat-card .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.cardinal-group { margin: 32px 0; }
+.cardinal-group h3 {
+  font-size: 20px;
+  padding: 12px 16px;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid var(--border);
+  border-bottom: none;
+}
+.cardinal-group h3.prudence { background: rgba(88,166,255,0.1); color: var(--prudence); }
+.cardinal-group h3.justice { background: rgba(63,185,80,0.1); color: var(--justice); }
+.cardinal-group h3.fortitude { background: rgba(248,81,73,0.1); color: var(--fortitude); }
+.cardinal-group h3.temperance { background: rgba(188,140,255,0.1); color: var(--temperance); }
+
+.virtue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+}
+.virtue-card {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  transition: background 0.15s;
+}
+.virtue-card:hover { background: var(--surface2); }
+.virtue-card .part-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.part-badge.cardinal { background: rgba(227,179,65,0.15); color: var(--gold); }
+.part-badge.integral { background: rgba(88,166,255,0.1); color: var(--accent); }
+.part-badge.subjective { background: rgba(63,185,80,0.1); color: var(--green); }
+.part-badge.potential { background: rgba(188,140,255,0.1); color: var(--purple); }
+.virtue-card .name { font-weight: 500; }
+.virtue-card .stories-count { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+
+/* Virtue detail page */
+.virtue-header { padding: 32px 0 24px; }
+.virtue-header h2 { font-size: 28px; margin-bottom: 4px; }
+.virtue-header .meta { color: var(--text-muted); font-size: 14px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.virtue-header .meta .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.section-header {
+  padding: 12px 16px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-body { padding: 16px; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+  align-items: start;
+}
+.field-row:last-child { border-bottom: none; }
+.field-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.field-label .human-name { font-weight: 600; color: var(--text); font-size: 14px; }
+.field-value { font-size: 14px; }
+.field-value .empty { color: var(--text-muted); font-style: italic; }
+
+code.field-name {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 11px;
+  background: rgba(88,166,255,0.1);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.list-inline { display: flex; flex-wrap: wrap; gap: 6px; }
+.list-inline .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+
+/* Story cards */
+.story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.story-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.story-card .genre-bar {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.story-card .genre-bar.aesop_fables { background: rgba(210,153,34,0.1); color: var(--orange); }
+.story-card .genre-bar.greek_roman_mythology { background: rgba(88,166,255,0.1); color: var(--accent); }
+.story-card .genre-bar.grimm_fairy_tales { background: rgba(63,185,80,0.1); color: var(--green); }
+.story-card .genre-bar.historical_biography { background: rgba(188,140,255,0.1); color: var(--purple); }
+.story-card .card-body { padding: 12px; }
+.story-card h4 { font-size: 15px; margin-bottom: 6px; }
+.story-card .summary { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+.story-card .story-meta { font-size: 12px; color: var(--text-muted); }
+.story-card .story-meta .field-row { grid-template-columns: 200px 1fr; padding: 4px 0; }
+
+.story-text-toggle {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--accent);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+.story-text-toggle:hover { background: var(--surface2); }
+.story-full-text {
+  display: none;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.7;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--bg);
+}
+.story-full-text.open { display: block; }
+
+.sanity-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: rgba(88,166,255,0.1);
+  border: 1px solid rgba(88,166,255,0.2);
+}
+.sanity-link:hover { background: rgba(88,166,255,0.2); text-decoration: none; }
+
+footer {
+  padding: 32px 0;
+  margin-top: 48px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+@media (max-width: 768px) {
+  .field-row { grid-template-columns: 1fr; }
+  .story-grid { grid-template-columns: 1fr; }
+  .stats-row { flex-direction: column; align-items: center; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>TruePresence <span>Developer Reference</span></h1>
+    <nav><a href="index.html#prudence" style="color: var(--prudence)">Prudence</a> <a href="index.html#justice" style="color: var(--justice)">Justice</a> <a href="index.html#fortitude" style="color: var(--fortitude)">Fortitude</a> <a href="index.html#temperance" style="color: var(--temperance)">Temperance</a></nav>
+  </div>
+</header>
+<div class="container">
+  <div class="breadcrumb"><a href="index.html">Virtues</a> / <a href="index.html#justice">Justice</a> / Justice</div>
+  
+    <div class="virtue-header">
+      <h2>Justice</h2>
+      <div class="meta">
+        <span class="tag part-badge cardinal">cardinal part</span>
+        <span style="color: var(--justice)">Justice</span>
+        <span>ID: <code class="field-name">virtue-justice</code></span>
+        <a href="https://virtuestories.sanity.studio/intent/edit/id=virtue-justice;type=virtue" target="_blank" class="sanity-link">Open in Sanity ↗</a>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">📝 Content</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Virtue Name</span>
+            <code class="field-name" title="Sanity field: virtue.name.en">virtue.name.en</code>
+          </div>
+          <div class="field-value">Justice</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Slug</span>
+            <code class="field-name" title="Sanity field: virtue.slug.current">virtue.slug.current</code>
+          </div>
+          <div class="field-value">justice</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Definition</span>
+            <code class="field-name" title="Sanity field: virtue.definition.en">virtue.definition.en</code>
+          </div>
+          <div class="field-value">Right action and fair treatment; giving each person their due; harmony in social relations based on equity and righteousness</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Alternate Names</span>
+            <code class="field-name" title="Sanity field: virtue.alternateNames[].en">virtue.alternateNames[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Righteousness</span> <span class="tag">Fairness</span> <span class="tag">Right Action</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Overlap Notes</span>
+            <code class="field-name" title="Sanity field: virtue.overlapNotes.en">virtue.overlapNotes.en</code>
+          </div>
+          <div class="field-value">All three traditions include justice. Catholic/Protestant emphasize divine justice and righteousness; VIA emphasizes fairness and equitable treatment.</div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">📖 Aquinas / Summa</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Cardinal Virtue</span>
+            <code class="field-name" title="Sanity field: virtue.cardinalVirtue">virtue.cardinalVirtue</code>
+          </div>
+          <div class="field-value">Justice</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Part Type</span>
+            <code class="field-name" title="Sanity field: virtue.partType">virtue.partType</code>
+          </div>
+          <div class="field-value">cardinal</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Summa Reference</span>
+            <code class="field-name" title="Sanity field: virtue.aquinasReference">virtue.aquinasReference</code>
+          </div>
+          <div class="field-value"><span class="empty">—</span></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">⛪ Traditions</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Tradition Tags</span>
+            <code class="field-name" title="Sanity field: virtue.traditionTags">virtue.traditionTags</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">catholic</span> <span class="tag">protestant</span> <span class="tag">via</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Catholic Category</span>
+            <code class="field-name" title="Sanity field: virtue.catholicCategory.en">virtue.catholicCategory.en</code>
+          </div>
+          <div class="field-value">cardinal</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Catechism Ref</span>
+            <code class="field-name" title="Sanity field: virtue.catechismRef">virtue.catechismRef</code>
+          </div>
+          <div class="field-value">CCC 1805-1809</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Protestant Category</span>
+            <code class="field-name" title="Sanity field: virtue.protestantCategory.en">virtue.protestantCategory.en</code>
+          </div>
+          <div class="field-value">moral</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Scripture Ref</span>
+            <code class="field-name" title="Sanity field: virtue.scriptureRef">virtue.scriptureRef</code>
+          </div>
+          <div class="field-value">Amos 5:24</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">VIA Strength</span>
+            <code class="field-name" title="Sanity field: virtue.viaStrength">virtue.viaStrength</code>
+          </div>
+          <div class="field-value">Fairness, Teamwork, Leadership</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">VIA Parent Virtue</span>
+            <code class="field-name" title="Sanity field: virtue.viaParentVirtue">virtue.viaParentVirtue</code>
+          </div>
+          <div class="field-value">Justice</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">VIA Definition</span>
+            <code class="field-name" title="Sanity field: virtue.viaDefinition.en">virtue.viaDefinition.en</code>
+          </div>
+          <div class="field-value">Treating all people equitably and proportionately; following rules and principles fairly</div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">🧠 Therapeutic Integration</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Primary Approach</span>
+            <code class="field-name" title="Sanity field: virtue.primaryTherapeuticApproach.en">virtue.primaryTherapeuticApproach.en</code>
+          </div>
+          <div class="field-value">Restorative Justice Practices; Motivational Interviewing; Values-Aligned Living</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Key Interventions</span>
+            <code class="field-name" title="Sanity field: virtue.keyInterventions[].en">virtue.keyInterventions[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Fairness and reciprocity reflection</span> <span class="tag">Equity awareness building</span> <span class="tag">Harm accountability and restoration</span> <span class="tag">Rights and dignity affirmation</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Clinical Applications</span>
+            <code class="field-name" title="Sanity field: virtue.clinicalApplications[].en">virtue.clinicalApplications[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Guilt about injustice perpetrated or witnessed</span> <span class="tag">Victimization and rage at unfairness</span> <span class="tag">Entitlement and exploitation patterns</span> <span class="tag">Moral confusion about fairness</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">CCMMP Integration</span>
+            <code class="field-name" title="Sanity field: virtue.ccmmpIntegration.en">virtue.ccmmpIntegration.en</code>
+          </div>
+          <div class="field-value">We are Created in God&#x27;s image with innate dignity that demands just treatment and invites us to extend justice to all. Fallen injustice manifests in exploitation, victimhood, or entitled passivity. Grace transforms us into instruments of God&#x27;s justice, enabling us to give others their due while forgiven ourselves and extending mercy.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Therapeutic Tags</span>
+            <code class="field-name" title="Sanity field: virtue.therapeuticTags">virtue.therapeuticTags</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">relationships</span> <span class="tag">anger</span> <span class="tag">purpose</span></div></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">🌐 Perspectives (6 Audience Gates)</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Perspectives Array</span>
+            <code class="field-name" title="Sanity field: virtue.perspectives[]">virtue.perspectives[]</code>
+          </div>
+          <div class="field-value">
+            <span class="empty">Content pending — schema supports up to 6 gates:</span><br>
+            <div class="list-inline" style="margin-top: 6px;">
+              <span class="tag">✝️ Catholic</span>
+              <span class="tag">🕊️ Christian</span>
+              <span class="tag">✡️ Jewish</span>
+              <span class="tag">☪️ Muslim</span>
+              <span class="tag">🕉️ Hindu</span>
+              <span class="tag">🌐 Secular</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label"><span class="human-name">Each perspective has</span></div>
+          <div class="field-value">
+            <code class="field-name" title="Sanity field: perspectiveContent.audienceGate">perspectiveContent.audienceGate</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.displayName">perspectiveContent.displayName</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.blurb">perspectiveContent.blurb</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.article">perspectiveContent.article</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.reframe">perspectiveContent.reframe</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.bibliography[]">perspectiveContent.bibliography[]</code>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">📚 Stories (4 of 4 genres)</div>
+      <div class="section-body">
+        <div class="story-grid">
+        <div class="story-card">
+          <div class="genre-bar aesop_fables">🦊 Aesop's Fables</div>
+          <div class="card-body">
+            <h4>The Wolf and the Lamb</h4>
+            <div class="summary">A wolf falsely accuses a lamb of past wrongs to justify killing it, illustrating how injustice twists facts to serve power; justice requires truthful accountability.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-justice-aesop_fables</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">aesop_fables</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Restorative justice emphasizes honest acknowledgment of harm and values-aligned accountability that respects the dignity...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">325</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">medieval_illumination</div></div>
+              
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-justice-aesop_fables;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (325 words)</button>
+            <div class="story-full-text">A Wolf, prowling the banks of a stream, came upon a young Lamb drinking from the water. The Wolf, noting that the Lamb was tender and would make a satisfying meal, began to formulate pretexts by which he might justify his attack.<br><br>&quot;Why do you muddy the water from which I am drinking?&quot; demanded the Wolf, his voice filled with feigned indignation.<br><br>The Lamb, startled and trembling, replied with perfect truth: &quot;Great Wolf, I do not muddy the water. Indeed, I stand downstream from you, so the water flows from you to me. Any muddying of the water would be caused by your drinking, not by mine.&quot;<br><br>The Wolf, stymied by this logical response but not abandoning his predatory intention, continued with another accusation: &quot;Then you must have spoken ill of me last year to my discredit among the other beasts!&quot;<br><br>The Lamb, innocent of any such transgression, replied: &quot;I was not yet born last year, so I could not possibly have spoken of you at all.&quot;<br><br>The Wolf, pressed again by truth, advanced yet another false accusation: &quot;Your mother must have then spoken against me, and I hold you accountable for her words!&quot;<br><br>At this point, the Lamb, recognizing that no truthful answer would satisfy the Wolf, whose mind was already made up to do violence, began to weep. &quot;My mother has always spoken well of you, and I know of no wrong she has done to you. Why do you seek reasons to harm me when you require no justification? If you are determined to eat me, then do so without pretense. Do not clothe your violence in false accusations and mock justice.&quot;<br><br>The Wolf, enraged that his hypocrisy had been exposed, seized the Lamb and devoured it, his cruelty undisguised at last.<br><br>Thus did the Lamb&#x27;s innocence and truthfulness avail nothing against a creature whose mind was predeterminded toward violence. Justice, when confronted with one determined to commit injustice, offers no defense.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar greek_roman_mythology">🏛️ Greek & Roman Mythology</div>
+          <div class="card-body">
+            <h4>Amphiaraus and Just Judgment</h4>
+            <div class="summary">Amphiaraus, though forced into war, maintains commitment to justice despite personal cost, representing the virtue of acting justly even when consequences are severe.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-justice-greek_roman_mythology</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">greek_roman_mythology</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Illustrates restorative justice&#x27;s values-aligned living: maintaining commitment to fairness and rightness despite pressu...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">264</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">renaissance_oil</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.classicalSource.en">virtueStory.classicalSource.en</code></div><div class="field-value">Greek tragedy (references in Aeschylus)</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-justice-greek_roman_mythology;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (264 words)</button>
+            <div class="story-full-text">Amphiaraus was a soothsayer and warrior who participated in the assault on Thebes known as the War of the Seven Against Thebes. Unlike many of the other heroes, Amphiaraus was reluctant to undertake this campaign, not from cowardice but from his foresight: he could perceive that the enterprise would end in failure and death for most of its participants. Yet when summoned through oaths and honor-bonds, he joined the expedition, understanding that justice required him to honor his commitments despite his knowledge of their tragic consequences.<br><br>Amphiaraus embodied the classical understanding of justice—not merely the mechanical distribution of rewards and punishments, but the complex navigation of competing obligations and duties that arise in human life. He recognized that refusing to fight would betray those who depended upon him, even though fighting would lead to his own death. His choice to honor his word and fulfill his duty, even at the cost of his life, exemplified the virtue of justice properly understood: not self-interested calculation but the commitment to preserve the bonds of obligation and trust upon which human society depends.<br><br>When Amphiaraus finally faced his destined death, he maintained his nobility and integrity, accepting what must come while having fulfilled his duties with honor. Aeschylus and other classical sources treat Amphiaraus not as a tragic victim but as a just man who recognized and honored the complex web of obligations that bind human beings together. Justice, in this understanding, requires more than fair distribution of goods; it requires the integrity and courage to maintain one&#x27;s commitments to others, even when doing so demands sacrifice.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar grimm_fairy_tales">🏰 Grimm's Fairy Tales</div>
+          <div class="card-body">
+            <h4>The Judgement of Solomon</h4>
+            <div class="summary">A tale emphasizing true justice through discernment of right action and fair judgment, where wisdom separates truth from false claims.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-justice-grimm_fairy_tales</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">grimm_fairy_tales</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Restorative justice seeks to align with true values; this tale exemplifies how authentic justice requires penetrating be...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">308</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">romantic_watercolor</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.grimmNumber">virtueStory.grimmNumber</code></div><div class="field-value">KHM 20</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-justice-grimm_fairy_tales;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (308 words)</button>
+            <div class="story-full-text">A wise judge sits in a town square, dispensing justice. Two women approach with a dispute that seems impossible to resolve. The first woman holds a child, claiming it is her own. The second woman also claims the child is hers, taken from her by trickery.<br><br>The judge listens to both accounts. The evidence is equal; both women seem to speak truthfully. The judge announces his decision: &quot;I shall divide the child equally between you. Each shall have half.&quot;<br><br>At this pronouncement, the second woman agrees, satisfied with half a child. But the first woman cries out in anguish: &quot;No! I cannot bear the harm to my child. Give the child wholly to her, if only the child will live!&quot;<br><br>The judge declares: &quot;The true mother is she who loves the child more than her own claim. Therefore, the child belongs wholly to the first woman.&quot;<br><br>The second woman, exposed as a liar and imposter, is cast out. Justice has been served not by law alone but by the judge&#x27;s wisdom in understanding human nature. A true mother&#x27;s love transcends her desire for possession.<br><br>The story illustrates that true justice requires more than knowing rules—it requires wisdom to perceive character, intention, and the deeper human truths beneath surface claims. A just judge must see into the hearts of those who come before him and render verdicts that serve not merely the law but genuine righteousness.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar historical_biography">📜 Historical Biography</div>
+          <div class="card-body">
+            <h4>Thurgood Marshall&#x27;s Systemic Justice Advocacy</h4>
+            <div class="summary">Marshall spent his career dismantling legal segregation through strategic litigation, culminating in Brown v. Board of Education, which legally ended school segregation. His work exemplified justice pursued through systematic change of unjust laws rather than individual charity, transforming institutions to align with principles.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-justice-historical_biography</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">historical_biography</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Justice through restorative justice and values-aligned living focuses on structural change that enables all individuals ...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">447</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">historical_realism</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.historicalFigure.en">virtueStory.historicalFigure.en</code></div><div class="field-value">Thurgood Marshall</div></div><div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.era.en">virtueStory.era.en</code></div><div class="field-value">20th century (1908-1993)</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-justice-historical_biography;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (447 words)</button>
+            <div class="story-full-text">Thurgood Marshall was born in 1908 in Baltimore, Maryland, the grandson of a slave. He became a lawyer, civil rights activist, and ultimately the first African American Supreme Court justice, fundamentally transforming American law and society through his commitment to justice. Marshall&#x27;s vision of justice extended beyond individual cases to systemic transformation. He recognized that legal inequality was embedded in institutional structures, not merely in individual prejudices. His life&#x27;s work addressed justice at this systemic level. After graduating from Howard University Law School, Marshall became the lawyer for the NAACP, leading the legal campaign against segregation. Rather than seeking incremental change, he identified segregation itself as fundamentally unjust and pursued cases specifically designed to undermine its legal foundations. His strategy targeted the &quot;separate but equal&quot; doctrine established in Plessy v. Ferguson (1896), which had legalized racial segregation for sixty years. Marshall won numerous cases in lower courts, steadily building a legal foundation for challenges to segregation. His most important case came in 1954 when Brown v. Board of Education reached the Supreme Court. Marshall argued that segregation in schools violated the Fourteenth Amendment&#x27;s guarantee of equal protection, regardless of whether segregated facilities were materially equal. The Supreme Court ruled unanimously that &quot;separate educational facilities are inherently unequal,&quot; effectively overturning Plessy. This decision represented not just a legal victory but a fundamental reorientation of American justice toward racial equality. Marshall&#x27;s pursuit of justice was strategic and comprehensive. He understood that legal victories required careful preparation and documentation of evidence demonstrating segregation&#x27;s harmful effects. He coordinated with social scientists to present evidence about segregation&#x27;s psychological impacts on children. He built cases systematically, addressing not just the immediate controversy but the underlying systemic injustice. After Brown, Marshall continued his civil rights work, arguing cases addressing voting rights, employment discrimination, and capital punishment. Throughout his career, he emphasized that justice required legal structures protecting the vulnerable from the powerful. When appointed to the Supreme Court in 1967, Marshall brought this vision to his judicial opinions. He wrote powerfully about justice as requiring protection of individual rights against state power. He opposed capital punishment as inherently unjust, arguing that executing human beings violated constitutional prohibitions on cruel and unusual punishment. He advocated for interpreting constitutional protections broadly to encompass modern injustices unforeseen by the framers. Marshall remained on the Court for twenty-four years, retiring in 1991. He died in 1993, having witnessed enormous transformations in American law and society. His legacy extends beyond specific legal victories to a vision of justice as systemic transformation aimed at protecting the vulnerable and advancing equality. His life demonstrates that true justice requires legal innovation, strategic vision, and unwavering commitment to equality as a fundamental principle.</div>
+        </div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">🌍 Translation Status</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Supported Languages</span>
+            <code class="field-name" title="Sanity field: virtue.translationStatus">virtue.translationStatus</code>
+          </div>
+          <div class="field-value">
+            <div class="list-inline">
+              <span class="tag" style="border-color: var(--green);">en ✓</span>
+              <span class="tag">es pending</span>
+              <span class="tag">fr pending</span>
+              <span class="tag">pt pending</span>
+              <span class="tag">it pending</span>
+              <span class="tag">de pending</span>
+              <span class="tag">pl pending</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Audio Narration</span>
+            <code class="field-name" title="Sanity field: virtueStory.contentAudio">virtueStory.contentAudio</code>
+          </div>
+          <div class="field-value"><span class="empty">Pending ElevenLabs generation — schema supports localeAudio for all 7 languages</span></div>
+        </div>
+      </div>
+    </div>
+</div>
+<footer>
+  <div class="container">
+    TruePresence Virtue Dataset — Divine Mercy University<br>
+    Sanity Project: <code>hx1r1wkd</code> / <code>production</code> —
+    <a href="https://virtuestories.sanity.studio" target="_blank">Open Sanity Studio</a>
+  </div>
+</footer>
+<script>
+function toggleStoryText(btn) {
+  const panel = btn.nextElementSibling;
+  panel.classList.toggle('open');
+  btn.textContent = panel.classList.contains('open') ? '▾ Hide Full Text' : '▸ Show Full Text';
+}
+</script>
+</body>
+</html>

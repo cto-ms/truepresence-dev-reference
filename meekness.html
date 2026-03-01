@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meekness — TruePresence Developer Reference</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #c9d1d9;
+  --text-muted: #8b949e;
+  --accent: #58a6ff;
+  --accent-hover: #79c0ff;
+  --green: #3fb950;
+  --orange: #d29922;
+  --red: #f85149;
+  --purple: #bc8cff;
+  --pink: #f778ba;
+  --gold: #e3b341;
+  --prudence: #58a6ff;
+  --justice: #3fb950;
+  --fortitude: #f85149;
+  --temperance: #bc8cff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+  position: sticky; top: 0; z-index: 100;
+}
+header .container { display: flex; align-items: center; gap: 16px; }
+header h1 { font-size: 18px; font-weight: 600; }
+header h1 span { color: var(--text-muted); font-weight: 400; }
+header nav { margin-left: auto; display: flex; gap: 12px; font-size: 14px; }
+.breadcrumb { padding: 12px 0; font-size: 13px; color: var(--text-muted); }
+.breadcrumb a { color: var(--text-muted); }
+.breadcrumb a:hover { color: var(--accent); }
+
+/* Index page */
+.hero { padding: 48px 0 32px; text-align: center; }
+.hero h2 { font-size: 32px; margin-bottom: 8px; }
+.hero p { color: var(--text-muted); font-size: 16px; }
+.stats-row { display: flex; gap: 16px; justify-content: center; margin: 24px 0; flex-wrap: wrap; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 140px;
+}
+.stat-card .number { font-size: 28px; font-weight: 700; color: var(--accent); }
+.stat-card .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.cardinal-group { margin: 32px 0; }
+.cardinal-group h3 {
+  font-size: 20px;
+  padding: 12px 16px;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid var(--border);
+  border-bottom: none;
+}
+.cardinal-group h3.prudence { background: rgba(88,166,255,0.1); color: var(--prudence); }
+.cardinal-group h3.justice { background: rgba(63,185,80,0.1); color: var(--justice); }
+.cardinal-group h3.fortitude { background: rgba(248,81,73,0.1); color: var(--fortitude); }
+.cardinal-group h3.temperance { background: rgba(188,140,255,0.1); color: var(--temperance); }
+
+.virtue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+}
+.virtue-card {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  transition: background 0.15s;
+}
+.virtue-card:hover { background: var(--surface2); }
+.virtue-card .part-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.part-badge.cardinal { background: rgba(227,179,65,0.15); color: var(--gold); }
+.part-badge.integral { background: rgba(88,166,255,0.1); color: var(--accent); }
+.part-badge.subjective { background: rgba(63,185,80,0.1); color: var(--green); }
+.part-badge.potential { background: rgba(188,140,255,0.1); color: var(--purple); }
+.virtue-card .name { font-weight: 500; }
+.virtue-card .stories-count { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+
+/* Virtue detail page */
+.virtue-header { padding: 32px 0 24px; }
+.virtue-header h2 { font-size: 28px; margin-bottom: 4px; }
+.virtue-header .meta { color: var(--text-muted); font-size: 14px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.virtue-header .meta .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.section-header {
+  padding: 12px 16px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-body { padding: 16px; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+  align-items: start;
+}
+.field-row:last-child { border-bottom: none; }
+.field-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.field-label .human-name { font-weight: 600; color: var(--text); font-size: 14px; }
+.field-value { font-size: 14px; }
+.field-value .empty { color: var(--text-muted); font-style: italic; }
+
+code.field-name {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 11px;
+  background: rgba(88,166,255,0.1);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.list-inline { display: flex; flex-wrap: wrap; gap: 6px; }
+.list-inline .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+
+/* Story cards */
+.story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.story-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.story-card .genre-bar {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.story-card .genre-bar.aesop_fables { background: rgba(210,153,34,0.1); color: var(--orange); }
+.story-card .genre-bar.greek_roman_mythology { background: rgba(88,166,255,0.1); color: var(--accent); }
+.story-card .genre-bar.grimm_fairy_tales { background: rgba(63,185,80,0.1); color: var(--green); }
+.story-card .genre-bar.historical_biography { background: rgba(188,140,255,0.1); color: var(--purple); }
+.story-card .card-body { padding: 12px; }
+.story-card h4 { font-size: 15px; margin-bottom: 6px; }
+.story-card .summary { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+.story-card .story-meta { font-size: 12px; color: var(--text-muted); }
+.story-card .story-meta .field-row { grid-template-columns: 200px 1fr; padding: 4px 0; }
+
+.story-text-toggle {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--accent);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+.story-text-toggle:hover { background: var(--surface2); }
+.story-full-text {
+  display: none;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.7;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--bg);
+}
+.story-full-text.open { display: block; }
+
+.sanity-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: rgba(88,166,255,0.1);
+  border: 1px solid rgba(88,166,255,0.2);
+}
+.sanity-link:hover { background: rgba(88,166,255,0.2); text-decoration: none; }
+
+footer {
+  padding: 32px 0;
+  margin-top: 48px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+@media (max-width: 768px) {
+  .field-row { grid-template-columns: 1fr; }
+  .story-grid { grid-template-columns: 1fr; }
+  .stats-row { flex-direction: column; align-items: center; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>TruePresence <span>Developer Reference</span></h1>
+    <nav><a href="index.html#prudence" style="color: var(--prudence)">Prudence</a> <a href="index.html#justice" style="color: var(--justice)">Justice</a> <a href="index.html#fortitude" style="color: var(--fortitude)">Fortitude</a> <a href="index.html#temperance" style="color: var(--temperance)">Temperance</a></nav>
+  </div>
+</header>
+<div class="container">
+  <div class="breadcrumb"><a href="index.html">Virtues</a> / <a href="index.html#temperance">Temperance</a> / Meekness</div>
+  
+    <div class="virtue-header">
+      <h2>Meekness</h2>
+      <div class="meta">
+        <span class="tag part-badge potential">potential part</span>
+        <span style="color: var(--temperance)">Temperance</span>
+        <span>ID: <code class="field-name">virtue-meekness</code></span>
+        <a href="https://virtuestories.sanity.studio/intent/edit/id=virtue-meekness;type=virtue" target="_blank" class="sanity-link">Open in Sanity ↗</a>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">📝 Content</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Virtue Name</span>
+            <code class="field-name" title="Sanity field: virtue.name.en">virtue.name.en</code>
+          </div>
+          <div class="field-value">Meekness</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Slug</span>
+            <code class="field-name" title="Sanity field: virtue.slug.current">virtue.slug.current</code>
+          </div>
+          <div class="field-value">meekness</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Definition</span>
+            <code class="field-name" title="Sanity field: virtue.definition.en">virtue.definition.en</code>
+          </div>
+          <div class="field-value">Gentle and humble demeanor; strength controlled and directed aright; not aggressive or harsh</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Alternate Names</span>
+            <code class="field-name" title="Sanity field: virtue.alternateNames[].en">virtue.alternateNames[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Gentleness</span> <span class="tag">Mildness</span> <span class="tag">Humility</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Overlap Notes</span>
+            <code class="field-name" title="Sanity field: virtue.overlapNotes.en">virtue.overlapNotes.en</code>
+          </div>
+          <div class="field-value">Catholic and Protestant beatitude. Meekness as power under control.</div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">📖 Aquinas / Summa</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Cardinal Virtue</span>
+            <code class="field-name" title="Sanity field: virtue.cardinalVirtue">virtue.cardinalVirtue</code>
+          </div>
+          <div class="field-value">Temperance</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Part Type</span>
+            <code class="field-name" title="Sanity field: virtue.partType">virtue.partType</code>
+          </div>
+          <div class="field-value">potential</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Summa Reference</span>
+            <code class="field-name" title="Sanity field: virtue.aquinasReference">virtue.aquinasReference</code>
+          </div>
+          <div class="field-value"><span class="empty">—</span></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">⛪ Traditions</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Tradition Tags</span>
+            <code class="field-name" title="Sanity field: virtue.traditionTags">virtue.traditionTags</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">catholic</span> <span class="tag">protestant</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Catholic Category</span>
+            <code class="field-name" title="Sanity field: virtue.catholicCategory.en">virtue.catholicCategory.en</code>
+          </div>
+          <div class="field-value">beatitude</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Catechism Ref</span>
+            <code class="field-name" title="Sanity field: virtue.catechismRef">virtue.catechismRef</code>
+          </div>
+          <div class="field-value">CCC 2434</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Protestant Category</span>
+            <code class="field-name" title="Sanity field: virtue.protestantCategory.en">virtue.protestantCategory.en</code>
+          </div>
+          <div class="field-value">beatitudes</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Scripture Ref</span>
+            <code class="field-name" title="Sanity field: virtue.scriptureRef">virtue.scriptureRef</code>
+          </div>
+          <div class="field-value">Matthew 5:5</div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">🧠 Therapeutic Integration</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Primary Approach</span>
+            <code class="field-name" title="Sanity field: virtue.primaryTherapeuticApproach.en">virtue.primaryTherapeuticApproach.en</code>
+          </div>
+          <div class="field-value">Anger Management; Assertiveness Training; Emotional Regulation</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Key Interventions</span>
+            <code class="field-name" title="Sanity field: virtue.keyInterventions[].en">virtue.keyInterventions[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Anger awareness and expression practice</span> <span class="tag">Gentle strength development</span> <span class="tag">Non-reactive presence</span> <span class="tag">Assertive kindness skill building</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Clinical Applications</span>
+            <code class="field-name" title="Sanity field: virtue.clinicalApplications[].en">virtue.clinicalApplications[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Anger outbursts and aggression</span> <span class="tag">Passive-aggressive patterns</span> <span class="tag">Rage damaging relationships</span> <span class="tag">Difficulty expressing anger appropriately</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">CCMMP Integration</span>
+            <code class="field-name" title="Sanity field: virtue.ccmmpIntegration.en">virtue.ccmmpIntegration.en</code>
+          </div>
+          <div class="field-value">We are Created meek—capable of gentle strength that doesn&#x27;t blast others with rage. Fallen meekness becomes either seething resentment or out-of-control anger. Grace enables meek strength—powerful enough to set boundaries yet gentle enough to respect others&#x27; dignity.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Therapeutic Tags</span>
+            <code class="field-name" title="Sanity field: virtue.therapeuticTags">virtue.therapeuticTags</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">anger</span> <span class="tag">relationships</span> <span class="tag">stress</span></div></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">🌐 Perspectives (6 Audience Gates)</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Perspectives Array</span>
+            <code class="field-name" title="Sanity field: virtue.perspectives[]">virtue.perspectives[]</code>
+          </div>
+          <div class="field-value">
+            <span class="empty">Content pending — schema supports up to 6 gates:</span><br>
+            <div class="list-inline" style="margin-top: 6px;">
+              <span class="tag">✝️ Catholic</span>
+              <span class="tag">🕊️ Christian</span>
+              <span class="tag">✡️ Jewish</span>
+              <span class="tag">☪️ Muslim</span>
+              <span class="tag">🕉️ Hindu</span>
+              <span class="tag">🌐 Secular</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label"><span class="human-name">Each perspective has</span></div>
+          <div class="field-value">
+            <code class="field-name" title="Sanity field: perspectiveContent.audienceGate">perspectiveContent.audienceGate</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.displayName">perspectiveContent.displayName</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.blurb">perspectiveContent.blurb</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.article">perspectiveContent.article</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.reframe">perspectiveContent.reframe</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.bibliography[]">perspectiveContent.bibliography[]</code>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">📚 Stories (4 of 4 genres)</div>
+      <div class="section-body">
+        <div class="story-grid">
+        <div class="story-card">
+          <div class="genre-bar aesop_fables">🦊 Aesop's Fables</div>
+          <div class="card-body">
+            <h4>The Lamb and the Wolf</h4>
+            <div class="summary">A lamb&#x27;s gentleness cannot save it from a wolf&#x27;s nature, yet meekness itself remains virtuous; meekness is strength without defensiveness.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-meekness-aesop_fables</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">aesop_fables</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Anger management and emotional regulation cultivate meekness as the capacity to remain gentle despite provocation, acces...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">301</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">medieval_illumination</div></div>
+              
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-meekness-aesop_fables;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (301 words)</button>
+            <div class="story-full-text">A gentle Lamb, grazing peacefully in a meadow, encountered a Wolf who regarded the creature with the hunger of a predator. The Wolf opened his mouth to speak harsh words and to threaten the Lamb, preparing to strike with teeth and claws.<br><br>Yet the Lamb, rather than fleeing in terror or responding with any form of aggression, spoke to the Wolf with gentleness and calm: &quot;I see that you are thin and hungry, and I understand the hardship this brings you. I will not run from you, nor will I curse you or speak harsh words in return. If you must take my life to ease your suffering, then I accept this fate with meekness.&quot;<br><br>The Wolf, expecting resistance or fearful cries, was taken aback by the Lamb&#x27;s gentle acceptance. The creature&#x27;s words struck something within the Wolf&#x27;s heart—some buried memory of kindness or recognition of shared suffering beneath his predatory nature.<br><br>The Wolf lowered his head, his hunger undiminished yet somehow tempered by the Lamb&#x27;s extraordinary gentleness. He circled the Lamb slowly, and after a long moment, he turned away and walked back into the forest, leaving the Lamb unharmed.<br><br>In the days that followed, the Wolf found himself unable to forget the Lamb&#x27;s meekness. He realized that the Lamb had shown him more dignity by remaining calm and accepting than the Wolf had shown by his aggression. The gentleness of the Lamb had transformed a moment that might have ended in violence into something approaching reconciliation.<br><br>The Lamb remained in that meadow, grazing peacefully, no longer fearing the Wolf. And the Wolf, transformed by the encounter, came occasionally to stand at the edge of the meadow, looking upon the gentle creature, reminded that even in a world governed by survival and struggle, meekness possesses a power all its own.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar greek_roman_mythology">🏛️ Greek & Roman Mythology</div>
+          <div class="card-body">
+            <h4>Aeneas Controls His Anger</h4>
+            <div class="summary">Aeneas, angered by Turnus&#x27;s provocation and Lavinia&#x27;s plight, learns to master his anger, controlling his violence and pursuing justice rather than vengeance.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-meekness-greek_roman_mythology</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">greek_roman_mythology</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Demonstrates anger management and emotional regulation: witnessing anger without being controlled by it, choosing measur...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">257</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">renaissance_oil</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.classicalSource.en">virtueStory.classicalSource.en</code></div><div class="field-value">Aeneid, Book XII</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-meekness-greek_roman_mythology;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (257 words)</button>
+            <div class="story-full-text">In the final book of the Aeneid, Aeneas faced Turnus in single combat to determine the fate of Italy and his own claim to rule. The conflict was personal: Turnus had hoped to marry Lavinia, Aeneas&#x27;s bride-to-be, and their enmity ran deep. During the battle, Aeneas became enraged, his anger kindled by memories of fallen friends and the blood-soaked struggle for dominion. In a moment of fury, he prepared to strike down the defeated Turnus without mercy.<br><br>Yet in this moment, Virgil recounts, Aeneas perceived Turnus&#x27;s helplessness and mortality. Rather than succumbing to his rage and striking an unnecessary blow, Aeneas paused and reflected. He recognized that while Turnus was his enemy and his death was necessary to secure the future, excessive cruelty and desecration of the fallen would diminish Aeneas&#x27;s own nobility. He controlled his anger, choosing the measure and manner of Turnus&#x27;s defeat in a way consistent with his heroic dignity.<br><br>This scene illustrates meekness—not weakness or cowardice, but the strength to control one&#x27;s passions, to limit one&#x27;s response to what justice genuinely requires rather than what rage demands. Aeneas&#x27;s meekness did not prevent him from fighting or from defeating his enemy; it merely meant he fought and defeated him without the cruel excess that anger would have produced. Virgil suggests that the truly strong can afford to be meek, for their power rests on an unshakeable foundation that does not require constant validation through acts of violence. Meekness is the virtue of the genuinely powerful, who need not prove their strength through unnecessary cruelty.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar grimm_fairy_tales">🏰 Grimm's Fairy Tales</div>
+          <div class="card-body">
+            <h4>Cinderella</h4>
+            <div class="summary">Cinderella maintains gentleness, patience, and meekness despite cruel treatment, and her inner beauty is ultimately recognized and honored.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-meekness-grimm_fairy_tales</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">grimm_fairy_tales</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Anger management and emotional regulation approaches recognize meekness not as weakness but as strength under control.</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">314</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">romantic_watercolor</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.grimmNumber">virtueStory.grimmNumber</code></div><div class="field-value">KHM 21</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-meekness-grimm_fairy_tales;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (314 words)</button>
+            <div class="story-full-text">A gentleman&#x27;s second wife brings two daughters to his household. After his death, the widow mistreats his only daughter from his first marriage, dressing her in rags and forcing her to labor as a servant in her own home. Yet the girl, called Cinderella for the cinders in which she sits, bears her suffering with meekness and patience.<br><br>When the king proclaims a grand ball so his son might choose a bride, the stepmother forbids Cinderella to attend. But a fairy godmother, moved by Cinderella&#x27;s gentle heart, appears and transforms her rags into a magnificent gown, her bare feet into glass slippers, and a pumpkin into a coach.<br><br>At the ball, the prince is captivated by the mysterious maiden&#x27;s grace and beauty. He dances with her all evening. As midnight approaches, Cinderella flees, losing one glass slipper on the palace steps. The prince, determined to find her, has the slipper brought throughout the kingdom. The stepmother&#x27;s daughters attempt to force their feet into the shoe; it fits none but Cinderella.<br><br>Revealed at last, Cinderella forgives her stepmother and stepsisters without a moment&#x27;s hesitation. She marries the prince, not through ambition but through her fundamental meekness—her refusal to let cruelty corrupt her gentle spirit. Her stepmother and stepsisters, moved by her forgiveness, ask pardon, and she grants it freely.<br><br>Cinderella becomes a just and beloved queen, ruling with the same gentleness that sustained her through hardship. Her meekness—her refusal to answer cruelty with cruelty—proved stronger than her stepmother&#x27;s malice and elevated her to a throne.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar historical_biography">📜 Historical Biography</div>
+          <div class="card-body">
+            <h4>Desmond Tutu&#x27;s Gentle Strength in Truth Commission</h4>
+            <div class="summary">As chair of South Africa&#x27;s Truth and Reconciliation Commission, Tutu brought profound gentleness and spiritual presence to meetings where people confronted those who had tortured or killed their loved ones. His meekness—strength without aggression—enabled healing conversations that might otherwise have fostered revenge.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-meekness-historical_biography</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">historical_biography</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Meekness through anger management and emotional regulation teaches that power can be expressed through gentleness and th...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">455</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">historical_realism</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.historicalFigure.en">virtueStory.historicalFigure.en</code></div><div class="field-value">Desmond Tutu</div></div><div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.era.en">virtueStory.era.en</code></div><div class="field-value">20th century</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-meekness-historical_biography;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (455 words)</button>
+            <div class="story-full-text">Desmond Mpilo Tutu was born in 1931 in Klerksdorp, South Africa, and became one of the twentieth century&#x27;s most important moral leaders. An Anglican bishop who opposed apartheid from the Church&#x27;s pulpit, Tutu demonstrated the virtue of meekness—gentle strength that advocates for justice without arrogance or violence. Tutu&#x27;s opposition to apartheid was rooted in theological conviction. He taught that Christian faith required standing with the oppressed, that racial injustice violated God&#x27;s intention for human dignity. He used the Church&#x27;s platform to criticize apartheid, speaking with prophetic clarity while maintaining pastoral gentleness. He endured harassment, imprisonment, and threats from apartheid authorities, yet he responded with measured moral critique rather than hateful condemnation. After South Africa&#x27;s political transition, President Nelson Mandela appointed Tutu chair of the Truth and Reconciliation Commission. This role exemplified Tutu&#x27;s meekness. The Commission was tasked with investigating apartheid atrocities while promoting national healing. Tutu chaired hearings where victims testified about murders, torture, and brutality perpetrated by apartheid agents. Rather than presiding with judicial harshness, Tutu demonstrated pastoral gentleness. He wept as victims recounted their suffering. He addressed perpetrators with moral seriousness while remaining open to their capacity for remorse and change. Tutu&#x27;s meekness manifested in his conviction that reconciliation required both truth and mercy. He believed that pursuing purely punitive justice would perpetuate cycles of violence and hatred. He advocated for amnesty for perpetrators who truthfully confessed their crimes, a position some victims&#x27; families found deeply troubling. Tutu explained that forgiveness was not denial of injury but recognition that continuing cycles of revenge prevented healing. His gentle insistence on reconciliation guided the Commission&#x27;s work. Victims received acknowledgment of their suffering and truth about what happened to loved ones. Perpetrators confessed their crimes publicly, often experiencing shame and remorse. The Commission documented apartheid&#x27;s horrors while creating possibility for continuing to live together. Tutu&#x27;s meekness extended to how he advocated for his vision. He did not demand agreement but rather appealed to conscience and compassion. He spoke of ubuntu—the African concept that personhood is interdependent, that one&#x27;s humanity is bound up with others&#x27; humanity. He taught that reconciliation served everyone&#x27;s interests, not just victims or perpetrators. Tutu argued with moral conviction but without arrogance, modeling that strength and gentleness are compatible. After the Commission&#x27;s work, Tutu continued advocating for justice and healing. He addressed international conflicts, always emphasizing forgiveness and reconciliation alongside accountability. He spoke about suffering, particularly regarding HIV/AIDS, with unusual compassion and theological depth. Tutu retired from his bishop position in 2000 and spent his final years engaged in humanitarian work. He died in 2021, having profoundly shaped how the world understands reconciliation and justice. Tutu&#x27;s life demonstrates that meekness—gentle strength in service of justice—transforms individuals and societies in ways that violence cannot.</div>
+        </div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">🌍 Translation Status</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Supported Languages</span>
+            <code class="field-name" title="Sanity field: virtue.translationStatus">virtue.translationStatus</code>
+          </div>
+          <div class="field-value">
+            <div class="list-inline">
+              <span class="tag" style="border-color: var(--green);">en ✓</span>
+              <span class="tag">es pending</span>
+              <span class="tag">fr pending</span>
+              <span class="tag">pt pending</span>
+              <span class="tag">it pending</span>
+              <span class="tag">de pending</span>
+              <span class="tag">pl pending</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Audio Narration</span>
+            <code class="field-name" title="Sanity field: virtueStory.contentAudio">virtueStory.contentAudio</code>
+          </div>
+          <div class="field-value"><span class="empty">Pending ElevenLabs generation — schema supports localeAudio for all 7 languages</span></div>
+        </div>
+      </div>
+    </div>
+</div>
+<footer>
+  <div class="container">
+    TruePresence Virtue Dataset — Divine Mercy University<br>
+    Sanity Project: <code>hx1r1wkd</code> / <code>production</code> —
+    <a href="https://virtuestories.sanity.studio" target="_blank">Open Sanity Studio</a>
+  </div>
+</footer>
+<script>
+function toggleStoryText(btn) {
+  const panel = btn.nextElementSibling;
+  panel.classList.toggle('open');
+  btn.textContent = panel.classList.contains('open') ? '▾ Hide Full Text' : '▸ Show Full Text';
+}
+</script>
+</body>
+</html>

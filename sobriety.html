@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sobriety — TruePresence Developer Reference</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #c9d1d9;
+  --text-muted: #8b949e;
+  --accent: #58a6ff;
+  --accent-hover: #79c0ff;
+  --green: #3fb950;
+  --orange: #d29922;
+  --red: #f85149;
+  --purple: #bc8cff;
+  --pink: #f778ba;
+  --gold: #e3b341;
+  --prudence: #58a6ff;
+  --justice: #3fb950;
+  --fortitude: #f85149;
+  --temperance: #bc8cff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+  position: sticky; top: 0; z-index: 100;
+}
+header .container { display: flex; align-items: center; gap: 16px; }
+header h1 { font-size: 18px; font-weight: 600; }
+header h1 span { color: var(--text-muted); font-weight: 400; }
+header nav { margin-left: auto; display: flex; gap: 12px; font-size: 14px; }
+.breadcrumb { padding: 12px 0; font-size: 13px; color: var(--text-muted); }
+.breadcrumb a { color: var(--text-muted); }
+.breadcrumb a:hover { color: var(--accent); }
+
+/* Index page */
+.hero { padding: 48px 0 32px; text-align: center; }
+.hero h2 { font-size: 32px; margin-bottom: 8px; }
+.hero p { color: var(--text-muted); font-size: 16px; }
+.stats-row { display: flex; gap: 16px; justify-content: center; margin: 24px 0; flex-wrap: wrap; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 140px;
+}
+.stat-card .number { font-size: 28px; font-weight: 700; color: var(--accent); }
+.stat-card .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.cardinal-group { margin: 32px 0; }
+.cardinal-group h3 {
+  font-size: 20px;
+  padding: 12px 16px;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid var(--border);
+  border-bottom: none;
+}
+.cardinal-group h3.prudence { background: rgba(88,166,255,0.1); color: var(--prudence); }
+.cardinal-group h3.justice { background: rgba(63,185,80,0.1); color: var(--justice); }
+.cardinal-group h3.fortitude { background: rgba(248,81,73,0.1); color: var(--fortitude); }
+.cardinal-group h3.temperance { background: rgba(188,140,255,0.1); color: var(--temperance); }
+
+.virtue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+}
+.virtue-card {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  transition: background 0.15s;
+}
+.virtue-card:hover { background: var(--surface2); }
+.virtue-card .part-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.part-badge.cardinal { background: rgba(227,179,65,0.15); color: var(--gold); }
+.part-badge.integral { background: rgba(88,166,255,0.1); color: var(--accent); }
+.part-badge.subjective { background: rgba(63,185,80,0.1); color: var(--green); }
+.part-badge.potential { background: rgba(188,140,255,0.1); color: var(--purple); }
+.virtue-card .name { font-weight: 500; }
+.virtue-card .stories-count { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+
+/* Virtue detail page */
+.virtue-header { padding: 32px 0 24px; }
+.virtue-header h2 { font-size: 28px; margin-bottom: 4px; }
+.virtue-header .meta { color: var(--text-muted); font-size: 14px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.virtue-header .meta .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.section-header {
+  padding: 12px 16px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-body { padding: 16px; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+  align-items: start;
+}
+.field-row:last-child { border-bottom: none; }
+.field-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.field-label .human-name { font-weight: 600; color: var(--text); font-size: 14px; }
+.field-value { font-size: 14px; }
+.field-value .empty { color: var(--text-muted); font-style: italic; }
+
+code.field-name {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 11px;
+  background: rgba(88,166,255,0.1);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.list-inline { display: flex; flex-wrap: wrap; gap: 6px; }
+.list-inline .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+
+/* Story cards */
+.story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.story-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.story-card .genre-bar {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.story-card .genre-bar.aesop_fables { background: rgba(210,153,34,0.1); color: var(--orange); }
+.story-card .genre-bar.greek_roman_mythology { background: rgba(88,166,255,0.1); color: var(--accent); }
+.story-card .genre-bar.grimm_fairy_tales { background: rgba(63,185,80,0.1); color: var(--green); }
+.story-card .genre-bar.historical_biography { background: rgba(188,140,255,0.1); color: var(--purple); }
+.story-card .card-body { padding: 12px; }
+.story-card h4 { font-size: 15px; margin-bottom: 6px; }
+.story-card .summary { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+.story-card .story-meta { font-size: 12px; color: var(--text-muted); }
+.story-card .story-meta .field-row { grid-template-columns: 200px 1fr; padding: 4px 0; }
+
+.story-text-toggle {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--accent);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+.story-text-toggle:hover { background: var(--surface2); }
+.story-full-text {
+  display: none;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.7;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--bg);
+}
+.story-full-text.open { display: block; }
+
+.sanity-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: rgba(88,166,255,0.1);
+  border: 1px solid rgba(88,166,255,0.2);
+}
+.sanity-link:hover { background: rgba(88,166,255,0.2); text-decoration: none; }
+
+footer {
+  padding: 32px 0;
+  margin-top: 48px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+@media (max-width: 768px) {
+  .field-row { grid-template-columns: 1fr; }
+  .story-grid { grid-template-columns: 1fr; }
+  .stats-row { flex-direction: column; align-items: center; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>TruePresence <span>Developer Reference</span></h1>
+    <nav><a href="index.html#prudence" style="color: var(--prudence)">Prudence</a> <a href="index.html#justice" style="color: var(--justice)">Justice</a> <a href="index.html#fortitude" style="color: var(--fortitude)">Fortitude</a> <a href="index.html#temperance" style="color: var(--temperance)">Temperance</a></nav>
+  </div>
+</header>
+<div class="container">
+  <div class="breadcrumb"><a href="index.html">Virtues</a> / <a href="index.html#temperance">Temperance</a> / Sobriety</div>
+  
+    <div class="virtue-header">
+      <h2>Sobriety</h2>
+      <div class="meta">
+        <span class="tag part-badge subjective">subjective part</span>
+        <span style="color: var(--temperance)">Temperance</span>
+        <span>ID: <code class="field-name">virtue-sobriety</code></span>
+        <a href="https://virtuestories.sanity.studio/intent/edit/id=virtue-sobriety;type=virtue" target="_blank" class="sanity-link">Open in Sanity ↗</a>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">📝 Content</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Virtue Name</span>
+            <code class="field-name" title="Sanity field: virtue.name.en">virtue.name.en</code>
+          </div>
+          <div class="field-value">Sobriety</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Slug</span>
+            <code class="field-name" title="Sanity field: virtue.slug.current">virtue.slug.current</code>
+          </div>
+          <div class="field-value">sobriety</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Definition</span>
+            <code class="field-name" title="Sanity field: virtue.definition.en">virtue.definition.en</code>
+          </div>
+          <div class="field-value">Clear-mindedness and seriousness; freedom from intoxication and frivolity; mental clarity</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Alternate Names</span>
+            <code class="field-name" title="Sanity field: virtue.alternateNames[].en">virtue.alternateNames[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Seriousness</span> <span class="tag">Clear-Mindedness</span> <span class="tag">Restraint</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Overlap Notes</span>
+            <code class="field-name" title="Sanity field: virtue.overlapNotes.en">virtue.overlapNotes.en</code>
+          </div>
+          <div class="field-value">Protestant virtue. Related to temperance and self-control.</div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">📖 Aquinas / Summa</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Cardinal Virtue</span>
+            <code class="field-name" title="Sanity field: virtue.cardinalVirtue">virtue.cardinalVirtue</code>
+          </div>
+          <div class="field-value">Temperance</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Part Type</span>
+            <code class="field-name" title="Sanity field: virtue.partType">virtue.partType</code>
+          </div>
+          <div class="field-value">subjective</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Summa Reference</span>
+            <code class="field-name" title="Sanity field: virtue.aquinasReference">virtue.aquinasReference</code>
+          </div>
+          <div class="field-value"><span class="empty">—</span></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">⛪ Traditions</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Tradition Tags</span>
+            <code class="field-name" title="Sanity field: virtue.traditionTags">virtue.traditionTags</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">protestant</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Protestant Category</span>
+            <code class="field-name" title="Sanity field: virtue.protestantCategory.en">virtue.protestantCategory.en</code>
+          </div>
+          <div class="field-value">moral</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Scripture Ref</span>
+            <code class="field-name" title="Sanity field: virtue.scriptureRef">virtue.scriptureRef</code>
+          </div>
+          <div class="field-value">1 Peter 5:8</div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">🧠 Therapeutic Integration</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Primary Approach</span>
+            <code class="field-name" title="Sanity field: virtue.primaryTherapeuticApproach.en">virtue.primaryTherapeuticApproach.en</code>
+          </div>
+          <div class="field-value">Substance Use Disorder Treatment; Cognitive Behavioral Therapy; Recovery Community Support</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Key Interventions</span>
+            <code class="field-name" title="Sanity field: virtue.keyInterventions[].en">virtue.keyInterventions[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Clarity of mind cultivation</span> <span class="tag">Substance use reduction/elimination</span> <span class="tag">Recovery program engagement</span> <span class="tag">Sober identity development</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Clinical Applications</span>
+            <code class="field-name" title="Sanity field: virtue.clinicalApplications[].en">virtue.clinicalApplications[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Alcohol and substance use disorders</span> <span class="tag">Loss of mental clarity</span> <span class="tag">Escapism through intoxication</span> <span class="tag">Addiction recovery and relapse prevention</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">CCMMP Integration</span>
+            <code class="field-name" title="Sanity field: virtue.ccmmpIntegration.en">virtue.ccmmpIntegration.en</code>
+          </div>
+          <div class="field-value">We are Created for clarity of mind—capacity to think and decide with full consciousness. Fallen drunkenness clouds judgment and abandons responsibility. Grace restores sobriety, liberating us from enslavement to intoxication into the clarity and freedom to think and choose truthfully.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Therapeutic Tags</span>
+            <code class="field-name" title="Sanity field: virtue.therapeuticTags">virtue.therapeuticTags</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">resilience</span> <span class="tag">stress</span> <span class="tag">self_esteem</span></div></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">🌐 Perspectives (6 Audience Gates)</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Perspectives Array</span>
+            <code class="field-name" title="Sanity field: virtue.perspectives[]">virtue.perspectives[]</code>
+          </div>
+          <div class="field-value">
+            <span class="empty">Content pending — schema supports up to 6 gates:</span><br>
+            <div class="list-inline" style="margin-top: 6px;">
+              <span class="tag">✝️ Catholic</span>
+              <span class="tag">🕊️ Christian</span>
+              <span class="tag">✡️ Jewish</span>
+              <span class="tag">☪️ Muslim</span>
+              <span class="tag">🕉️ Hindu</span>
+              <span class="tag">🌐 Secular</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label"><span class="human-name">Each perspective has</span></div>
+          <div class="field-value">
+            <code class="field-name" title="Sanity field: perspectiveContent.audienceGate">perspectiveContent.audienceGate</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.displayName">perspectiveContent.displayName</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.blurb">perspectiveContent.blurb</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.article">perspectiveContent.article</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.reframe">perspectiveContent.reframe</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.bibliography[]">perspectiveContent.bibliography[]</code>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">📚 Stories (4 of 4 genres)</div>
+      <div class="section-body">
+        <div class="story-grid">
+        <div class="story-card">
+          <div class="genre-bar aesop_fables">🦊 Aesop's Fables</div>
+          <div class="card-body">
+            <h4>The Inebriate and His Servant</h4>
+            <div class="summary">A drunk man cannot navigate safely and becomes vulnerable; sobriety means maintaining mental clarity to preserve dignity and make wise choices.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-sobriety-aesop_fables</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">aesop_fables</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Substance use treatment and CBT recognize sobriety as reclaiming agency and the capacity for authentic decision-making a...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">371</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">medieval_illumination</div></div>
+              
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-sobriety-aesop_fables;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (371 words)</button>
+            <div class="story-full-text">A wealthy man, initially temperate and prudent in his consumption of wine, gradually surrendered to the temptation to drink more heavily. Day by day, his consumption of wine increased, and day by day his mind became more confused and his body more weakened. His servant, loyal and devoted, watched with increasing sadness as his master descended into the vice of drunkenness.<br><br>The servant attempted to remonstrate with his master, begging him to moderate his drinking. &quot;Sir,&quot; he pleaded, &quot;you are destroying your health and your fortune. The wine that you consume with such eagerness will be your undoing. Please, I implore you, return to sobriety.&quot;<br><br>But the master, intoxicated and beyond reason, only laughed at his servant&#x27;s concerns. &quot;You are a fool,&quot; he said. &quot;The wine brings me pleasure and release from the cares of the world. Why should I deny myself this joy?&quot;<br><br>As the months passed, the master&#x27;s condition worsened. His body, weakened by constant indulgence in wine, began to fail him. He could no longer walk without assistance, and his mind, clouded by drink, became unable to manage even simple affairs. His fortune, which he had inherited and which had seemed sufficient for a lifetime, began to diminish as he neglected his properties and his business affairs.<br><br>The servant, remaining faithful despite his master&#x27;s rejection of his counsel, attempted to manage the household and preserve what wealth remained. Yet it was a losing battle, as the master&#x27;s deterioration accelerated.<br><br>At last, the master, weakened to the point of death by his indulgence, lay upon his bed and called for his servant. With a voice barely above a whisper, he said: &quot;I have learned too late the value of sobriety. The wine, which I thought brought me pleasure, has instead stolen from me my health, my fortune, my dignity, and my life. The pain I now endure in my body and in my mind far exceeds any pleasure the wine ever provided. I was enslaved by my vice, and I did not recognize the chains until they had bound me so completely that escape was impossible.&quot;<br><br>The master died soon after, leaving his faithful servant with only regrets—regrets that his master had not embraced sobriety when counsel was offered.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar greek_roman_mythology">🏛️ Greek & Roman Mythology</div>
+          <div class="card-body">
+            <h4>Odysseus Escapes Wine-Based Oblivion</h4>
+            <div class="summary">Odysseus maintains sobriety and mental clarity while his men succumb to wine and lotus, allowing him to navigate dangers and save those who abandon reason.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-sobriety-greek_roman_mythology</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">greek_roman_mythology</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Illustrates substance use treatment&#x27;s clarity: maintaining mental awareness and agency rather than surrendering to subst...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">241</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">renaissance_oil</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.classicalSource.en">virtueStory.classicalSource.en</code></div><div class="field-value">Odyssey, Book IX-X</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-sobriety-greek_roman_mythology;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (241 words)</button>
+            <div class="story-full-text">Throughout his long journey home, Odysseus encountered temptations designed to seduce him away from his purpose. One of the most subtle and dangerous was the temptation toward complete relaxation and oblivion—the desire to cease striving, to abandon the hard work of return, and to surrender to pleasure or numbness. These temptations often came in the form of wine or intoxication that promised release from suffering and struggle.<br><br>Odysseus&#x27;s shrewdness included a clear-eyed recognition of the dangers that intoxication presented. He understood that wine could dull the senses, cloud judgment, and lead to the abandonment of reason that civilization itself depended upon. Unlike some of his men, who eagerly consumed wine and other intoxicants and thereby lost themselves in pleasure, Odysseus practiced sobriety—the virtue of clear-headed clarity that allows one to maintain control of one&#x27;s faculties and to pursue meaningful purposes.<br><br>Sobriety, as presented in Homer&#x27;s account, is not joyless asceticism but rather the commitment to remaining clear-headed enough to act effectively. Odysseus did not abstain from wine entirely; he enjoyed it as part of civilized hospitality. Yet he maintained prudent limits, refusing to become intoxicated to the point that his judgment was compromised. He recognized that the state of complete intoxication—the numbing of consciousness—represented a kind of death to everything that made him human: his reason, his will, his capacity to pursue meaningful purposes. Sobriety kept him connected to reality and capable of maintaining the long commitment required to return home.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar grimm_fairy_tales">🏰 Grimm's Fairy Tales</div>
+          <div class="card-body">
+            <h4>The Drunkard and the Devil</h4>
+            <div class="summary">A character entangled with the devil through intoxication and loss of control must reclaim sobriety and clear judgment to escape the devil&#x27;s grip.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-sobriety-grimm_fairy_tales</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">grimm_fairy_tales</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Substance use treatment and CBT recognize that sobriety restores agency, clarity, and the ability to make choices aligne...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">327</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">romantic_watercolor</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.grimmNumber">virtueStory.grimmNumber</code></div><div class="field-value">KHM 72</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-sobriety-grimm_fairy_tales;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (327 words)</button>
+            <div class="story-full-text">A man is known throughout his village as a drunkard—he spends all his money on ale and wine and returns home each evening thoroughly intoxicated. His wife, ashamed of his behavior, pleads with him to reform, but he refuses to listen.<br><br>One day, drunk and wandering in the forest, the man encounters a mysterious stranger who offers him a bargain: &quot;Give me your soul, and I will grant you the finest wines and ales imaginable, endless quantities, at no cost.&quot; The drunkard, scarcely believing his good fortune, agrees immediately.<br><br>Frenzied with excitement, he begins drinking. But something strange occurs: no matter how much he consumes, he cannot become intoxicated. The wine loses all pleasure; it tastes like water. His entire reason for drinking was the excitement of drunkenness, the escape from reality. Without that escape, the drinking becomes meaningless.<br><br>Realizing he has been deceived—the Devil has offered him endless wine but taken away the only thing that made drinking pleasurable—the drunkard becomes desperate. He encounters a wise monk who explains that sobriety is not deprivation but liberation. The Devil sought to enslave him through drink; he can be freed by choosing clarity of mind.<br><br>The drunkard, inspired by the monk&#x27;s words, resolves to reform. He fights terribly with his desire, but gradually, through prayer and discipline, he achieves sobriety. His wife rejoices at his return to sense. He becomes known throughout the land as a man transformed by the virtue of sobriety—not as a man deprived of pleasure, but as a man who has reclaimed his freedom and dignity.<br><br>Sobriety is the refusal to enslave oneself to substances or desires. It is reclaiming mastery over one&#x27;s own will.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar historical_biography">📜 Historical Biography</div>
+          <div class="card-body">
+            <h4>Bill Wilson&#x27;s Recovery and AA Founding</h4>
+            <div class="summary">After struggling with alcoholism, Wilson achieved sobriety through spiritual practice and founded Alcoholics Anonymous, helping millions recover from substance addiction. His own recovery and the recovery movement he established demonstrated how sobriety becomes the foundation for all other virtues.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-sobriety-historical_biography</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">historical_biography</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Sobriety through substance use treatment and CBT recognizes that freedom from chemical dependency enables authentic self...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">554</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">historical_realism</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.historicalFigure.en">virtueStory.historicalFigure.en</code></div><div class="field-value">Bill W. (Bill Wilson)</div></div><div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.era.en">virtueStory.era.en</code></div><div class="field-value">20th century</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-sobriety-historical_biography;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (554 words)</button>
+            <div class="story-full-text">William Griffith Wilson was born in 1895 and became an alcoholic whose decades of drinking devastated his life, his marriage, and his livelihood. His own recovery and his subsequent founding of Alcoholics Anonymous transformed how the world understands addiction and recovery. Bill Wilson&#x27;s sobriety—abstinence from alcohol combined with spiritual transformation—became a model for millions seeking freedom from addiction. Wilson began drinking in his twenties and quickly developed severe alcoholism. His condition worsened through the 1920s and 1930s despite his attempts to stop. He lost jobs, lost money, suffered repeated hospitalizations, humiliated himself repeatedly, and nearly destroyed his marriage to his wife Lois. Despite his intentions and his awareness that alcoholism was destroying him, he could not stop drinking. This experience of powerlessness before addiction characterized his condition when he finally encountered recovery. In 1934, Bill Wilson received a letter from an old drinking buddy, Ebby Thacher, who had found recovery through the Oxford Group Movement, a spiritual organization emphasizing confession, restitution, and conscious reliance on God. Wilson visited Ebby and encountered him sober, clearly changed. Moved by Ebby&#x27;s transformation, Wilson decided to attempt recovery through spiritual means. He entered Towns Hospital in New York for detoxification and, on his final night, experienced what he described as profound spiritual encounter. He felt overwhelming presence of divine grace and experienced conviction that he would never need to drink again. He walked out of the hospital a transformed man. Wilson remained sober for the remainder of his life—more than thirty-six years until his death in 1971. Yet he recognized that his own recovery, while profoundly important, meant little unless he could help others recover. In 1935, he encountered Dr. Bob Smith, an Oxford Group member and physician struggling with alcoholism. The two men began meeting regularly, discussing their recoveries and supporting each other in maintaining sobriety. This relationship became the foundation for Alcoholics Anonymous. Bill and Bob developed a program based on their experience: acknowledgment of powerlessness before addiction, reliance on spiritual power beyond oneself, moral inventory and restitution, and helping others in recovery. They emphasized that recovery required both personal spiritual development and supportive community. Alcoholics Anonymous grew explosively, spreading across America and eventually worldwide. The program adapted the principles Bill and Bob had discovered into twelve steps that millions have followed toward recovery. The program&#x27;s emphasis on complete sobriety—total abstinence rather than attempts at controlled drinking—reflected Bill&#x27;s experience that alcoholism was a condition requiring absolute behavioral change. The program&#x27;s spiritual foundation, while ecumenical and respectful of diverse beliefs, reflected Bill&#x27;s conviction that recovery required acknowledging power beyond oneself. Bill spent the remainder of his life developing and promoting Alcoholics Anonymous. He wrote extensively about the program&#x27;s principles. He ensured that AA maintained independence from religious organizations and medical institutions, protecting its unique approach to recovery. He advocated for AA members maintaining anonymity, shifting focus from individuals to the program itself. Bill Wilson&#x27;s sobriety became his life&#x27;s meaning. Rather than seeking personal glory or financial gain from AA, he maintained his simple life, devoted entirely to helping others recover from addiction. His personal sobriety and his founding of AA transformed how the world understands addiction recovery. Bill Wilson&#x27;s life demonstrates that sobriety—freedom from addiction and commitment to spiritual development—transforms not just individual lives but has capacity to heal millions through appropriate community structure and spiritual principles.</div>
+        </div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">🌍 Translation Status</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Supported Languages</span>
+            <code class="field-name" title="Sanity field: virtue.translationStatus">virtue.translationStatus</code>
+          </div>
+          <div class="field-value">
+            <div class="list-inline">
+              <span class="tag" style="border-color: var(--green);">en ✓</span>
+              <span class="tag">es pending</span>
+              <span class="tag">fr pending</span>
+              <span class="tag">pt pending</span>
+              <span class="tag">it pending</span>
+              <span class="tag">de pending</span>
+              <span class="tag">pl pending</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Audio Narration</span>
+            <code class="field-name" title="Sanity field: virtueStory.contentAudio">virtueStory.contentAudio</code>
+          </div>
+          <div class="field-value"><span class="empty">Pending ElevenLabs generation — schema supports localeAudio for all 7 languages</span></div>
+        </div>
+      </div>
+    </div>
+</div>
+<footer>
+  <div class="container">
+    TruePresence Virtue Dataset — Divine Mercy University<br>
+    Sanity Project: <code>hx1r1wkd</code> / <code>production</code> —
+    <a href="https://virtuestories.sanity.studio" target="_blank">Open Sanity Studio</a>
+  </div>
+</footer>
+<script>
+function toggleStoryText(btn) {
+  const panel = btn.nextElementSibling;
+  panel.classList.toggle('open');
+  btn.textContent = panel.classList.contains('open') ? '▾ Hide Full Text' : '▸ Show Full Text';
+}
+</script>
+</body>
+</html>

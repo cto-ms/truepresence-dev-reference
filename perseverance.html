@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perseverance — TruePresence Developer Reference</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #c9d1d9;
+  --text-muted: #8b949e;
+  --accent: #58a6ff;
+  --accent-hover: #79c0ff;
+  --green: #3fb950;
+  --orange: #d29922;
+  --red: #f85149;
+  --purple: #bc8cff;
+  --pink: #f778ba;
+  --gold: #e3b341;
+  --prudence: #58a6ff;
+  --justice: #3fb950;
+  --fortitude: #f85149;
+  --temperance: #bc8cff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+  position: sticky; top: 0; z-index: 100;
+}
+header .container { display: flex; align-items: center; gap: 16px; }
+header h1 { font-size: 18px; font-weight: 600; }
+header h1 span { color: var(--text-muted); font-weight: 400; }
+header nav { margin-left: auto; display: flex; gap: 12px; font-size: 14px; }
+.breadcrumb { padding: 12px 0; font-size: 13px; color: var(--text-muted); }
+.breadcrumb a { color: var(--text-muted); }
+.breadcrumb a:hover { color: var(--accent); }
+
+/* Index page */
+.hero { padding: 48px 0 32px; text-align: center; }
+.hero h2 { font-size: 32px; margin-bottom: 8px; }
+.hero p { color: var(--text-muted); font-size: 16px; }
+.stats-row { display: flex; gap: 16px; justify-content: center; margin: 24px 0; flex-wrap: wrap; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 140px;
+}
+.stat-card .number { font-size: 28px; font-weight: 700; color: var(--accent); }
+.stat-card .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.cardinal-group { margin: 32px 0; }
+.cardinal-group h3 {
+  font-size: 20px;
+  padding: 12px 16px;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid var(--border);
+  border-bottom: none;
+}
+.cardinal-group h3.prudence { background: rgba(88,166,255,0.1); color: var(--prudence); }
+.cardinal-group h3.justice { background: rgba(63,185,80,0.1); color: var(--justice); }
+.cardinal-group h3.fortitude { background: rgba(248,81,73,0.1); color: var(--fortitude); }
+.cardinal-group h3.temperance { background: rgba(188,140,255,0.1); color: var(--temperance); }
+
+.virtue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+}
+.virtue-card {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  transition: background 0.15s;
+}
+.virtue-card:hover { background: var(--surface2); }
+.virtue-card .part-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.part-badge.cardinal { background: rgba(227,179,65,0.15); color: var(--gold); }
+.part-badge.integral { background: rgba(88,166,255,0.1); color: var(--accent); }
+.part-badge.subjective { background: rgba(63,185,80,0.1); color: var(--green); }
+.part-badge.potential { background: rgba(188,140,255,0.1); color: var(--purple); }
+.virtue-card .name { font-weight: 500; }
+.virtue-card .stories-count { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+
+/* Virtue detail page */
+.virtue-header { padding: 32px 0 24px; }
+.virtue-header h2 { font-size: 28px; margin-bottom: 4px; }
+.virtue-header .meta { color: var(--text-muted); font-size: 14px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.virtue-header .meta .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.section-header {
+  padding: 12px 16px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-body { padding: 16px; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+  align-items: start;
+}
+.field-row:last-child { border-bottom: none; }
+.field-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.field-label .human-name { font-weight: 600; color: var(--text); font-size: 14px; }
+.field-value { font-size: 14px; }
+.field-value .empty { color: var(--text-muted); font-style: italic; }
+
+code.field-name {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 11px;
+  background: rgba(88,166,255,0.1);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.list-inline { display: flex; flex-wrap: wrap; gap: 6px; }
+.list-inline .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+
+/* Story cards */
+.story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.story-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.story-card .genre-bar {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.story-card .genre-bar.aesop_fables { background: rgba(210,153,34,0.1); color: var(--orange); }
+.story-card .genre-bar.greek_roman_mythology { background: rgba(88,166,255,0.1); color: var(--accent); }
+.story-card .genre-bar.grimm_fairy_tales { background: rgba(63,185,80,0.1); color: var(--green); }
+.story-card .genre-bar.historical_biography { background: rgba(188,140,255,0.1); color: var(--purple); }
+.story-card .card-body { padding: 12px; }
+.story-card h4 { font-size: 15px; margin-bottom: 6px; }
+.story-card .summary { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+.story-card .story-meta { font-size: 12px; color: var(--text-muted); }
+.story-card .story-meta .field-row { grid-template-columns: 200px 1fr; padding: 4px 0; }
+
+.story-text-toggle {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--accent);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+.story-text-toggle:hover { background: var(--surface2); }
+.story-full-text {
+  display: none;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.7;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--bg);
+}
+.story-full-text.open { display: block; }
+
+.sanity-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: rgba(88,166,255,0.1);
+  border: 1px solid rgba(88,166,255,0.2);
+}
+.sanity-link:hover { background: rgba(88,166,255,0.2); text-decoration: none; }
+
+footer {
+  padding: 32px 0;
+  margin-top: 48px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+@media (max-width: 768px) {
+  .field-row { grid-template-columns: 1fr; }
+  .story-grid { grid-template-columns: 1fr; }
+  .stats-row { flex-direction: column; align-items: center; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>TruePresence <span>Developer Reference</span></h1>
+    <nav><a href="index.html#prudence" style="color: var(--prudence)">Prudence</a> <a href="index.html#justice" style="color: var(--justice)">Justice</a> <a href="index.html#fortitude" style="color: var(--fortitude)">Fortitude</a> <a href="index.html#temperance" style="color: var(--temperance)">Temperance</a></nav>
+  </div>
+</header>
+<div class="container">
+  <div class="breadcrumb"><a href="index.html">Virtues</a> / <a href="index.html#fortitude">Fortitude</a> / Perseverance</div>
+  
+    <div class="virtue-header">
+      <h2>Perseverance</h2>
+      <div class="meta">
+        <span class="tag part-badge potential">potential part</span>
+        <span style="color: var(--fortitude)">Fortitude</span>
+        <span>ID: <code class="field-name">virtue-perseverance</code></span>
+        <a href="https://virtuestories.sanity.studio/intent/edit/id=virtue-perseverance;type=virtue" target="_blank" class="sanity-link">Open in Sanity ↗</a>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">📝 Content</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Virtue Name</span>
+            <code class="field-name" title="Sanity field: virtue.name.en">virtue.name.en</code>
+          </div>
+          <div class="field-value">Perseverance</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Slug</span>
+            <code class="field-name" title="Sanity field: virtue.slug.current">virtue.slug.current</code>
+          </div>
+          <div class="field-value">perseverance</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Definition</span>
+            <code class="field-name" title="Sanity field: virtue.definition.en">virtue.definition.en</code>
+          </div>
+          <div class="field-value">Steadfast continuation despite obstacles and difficulty; determination to complete what is begun</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Alternate Names</span>
+            <code class="field-name" title="Sanity field: virtue.alternateNames[].en">virtue.alternateNames[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Persistence</span> <span class="tag">Steadfastness</span> <span class="tag">Endurance</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Overlap Notes</span>
+            <code class="field-name" title="Sanity field: virtue.overlapNotes.en">virtue.overlapNotes.en</code>
+          </div>
+          <div class="field-value">All three traditions include perseverance. Catholic/Protestant connect to spiritual endurance; VIA emphasizes finishing what one starts.</div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">📖 Aquinas / Summa</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Cardinal Virtue</span>
+            <code class="field-name" title="Sanity field: virtue.cardinalVirtue">virtue.cardinalVirtue</code>
+          </div>
+          <div class="field-value">Fortitude</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Part Type</span>
+            <code class="field-name" title="Sanity field: virtue.partType">virtue.partType</code>
+          </div>
+          <div class="field-value">potential</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Summa Reference</span>
+            <code class="field-name" title="Sanity field: virtue.aquinasReference">virtue.aquinasReference</code>
+          </div>
+          <div class="field-value"><span class="empty">—</span></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">⛪ Traditions</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Tradition Tags</span>
+            <code class="field-name" title="Sanity field: virtue.traditionTags">virtue.traditionTags</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">catholic</span> <span class="tag">protestant</span> <span class="tag">via</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Catholic Category</span>
+            <code class="field-name" title="Sanity field: virtue.catholicCategory.en">virtue.catholicCategory.en</code>
+          </div>
+          <div class="field-value">capital virtue (Fortitude) and Beatitude</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Catechism Ref</span>
+            <code class="field-name" title="Sanity field: virtue.catechismRef">virtue.catechismRef</code>
+          </div>
+          <div class="field-value">CCC 1805-1809</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Protestant Category</span>
+            <code class="field-name" title="Sanity field: virtue.protestantCategory.en">virtue.protestantCategory.en</code>
+          </div>
+          <div class="field-value">moral and beatitudes</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Scripture Ref</span>
+            <code class="field-name" title="Sanity field: virtue.scriptureRef">virtue.scriptureRef</code>
+          </div>
+          <div class="field-value">Romans 5:3-4</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">VIA Strength</span>
+            <code class="field-name" title="Sanity field: virtue.viaStrength">virtue.viaStrength</code>
+          </div>
+          <div class="field-value">Perseverance</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">VIA Parent Virtue</span>
+            <code class="field-name" title="Sanity field: virtue.viaParentVirtue">virtue.viaParentVirtue</code>
+          </div>
+          <div class="field-value">Courage</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">VIA Definition</span>
+            <code class="field-name" title="Sanity field: virtue.viaDefinition.en">virtue.viaDefinition.en</code>
+          </div>
+          <div class="field-value">Finishing what one starts; persisting in the face of obstacles; diligence</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Bennett Chapters</span>
+            <code class="field-name" title="Sanity field: virtue.bennettChapters">virtue.bennettChapters</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Perseverance</span></div></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">🧠 Therapeutic Integration</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Primary Approach</span>
+            <code class="field-name" title="Sanity field: virtue.primaryTherapeuticApproach.en">virtue.primaryTherapeuticApproach.en</code>
+          </div>
+          <div class="field-value">Behavioral Activation; Commitment-Based Therapy; Goal-Directed Therapy</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Key Interventions</span>
+            <code class="field-name" title="Sanity field: virtue.keyInterventions[].en">virtue.keyInterventions[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Long-term goal commitment</span> <span class="tag">Obstacle anticipation and planning</span> <span class="tag">Motivation renewal practices</span> <span class="tag">Persistence skill development</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Clinical Applications</span>
+            <code class="field-name" title="Sanity field: virtue.clinicalApplications[].en">virtue.clinicalApplications[].en</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">Treatment dropout and inconsistency</span> <span class="tag">Difficulty with sustained effort</span> <span class="tag">Frustration giving way to abandonment</span> <span class="tag">Lack of follow-through</span></div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">CCMMP Integration</span>
+            <code class="field-name" title="Sanity field: virtue.ccmmpIntegration.en">virtue.ccmmpIntegration.en</code>
+          </div>
+          <div class="field-value">We are Created capable of steadfast persistence—following through despite obstacles. Fallen quitting abandons worthy goals when difficulty comes. Grace sustains us through trials, enabling faithful continuation toward authentic goods.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Therapeutic Tags</span>
+            <code class="field-name" title="Sanity field: virtue.therapeuticTags">virtue.therapeuticTags</code>
+          </div>
+          <div class="field-value"><div class="list-inline"><span class="tag">resilience</span> <span class="tag">purpose</span> <span class="tag">stress</span></div></div>
+        </div></div>
+    </div>
+    <div class="section">
+      <div class="section-header">🌐 Perspectives (6 Audience Gates)</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Perspectives Array</span>
+            <code class="field-name" title="Sanity field: virtue.perspectives[]">virtue.perspectives[]</code>
+          </div>
+          <div class="field-value">
+            <span class="empty">Content pending — schema supports up to 6 gates:</span><br>
+            <div class="list-inline" style="margin-top: 6px;">
+              <span class="tag">✝️ Catholic</span>
+              <span class="tag">🕊️ Christian</span>
+              <span class="tag">✡️ Jewish</span>
+              <span class="tag">☪️ Muslim</span>
+              <span class="tag">🕉️ Hindu</span>
+              <span class="tag">🌐 Secular</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label"><span class="human-name">Each perspective has</span></div>
+          <div class="field-value">
+            <code class="field-name" title="Sanity field: perspectiveContent.audienceGate">perspectiveContent.audienceGate</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.displayName">perspectiveContent.displayName</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.blurb">perspectiveContent.blurb</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.article">perspectiveContent.article</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.reframe">perspectiveContent.reframe</code>
+            <code class="field-name" title="Sanity field: perspectiveContent.bibliography[]">perspectiveContent.bibliography[]</code>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">📚 Stories (4 of 4 genres)</div>
+      <div class="section-body">
+        <div class="story-grid">
+        <div class="story-card">
+          <div class="genre-bar aesop_fables">🦊 Aesop's Fables</div>
+          <div class="card-body">
+            <h4>The Crow and the Pitcher</h4>
+            <div class="summary">A thirsty crow perseveres in dropping pebbles until the water rises enough to drink; perseverance means continuing effort toward meaningful goals despite difficulty.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-perseverance-aesop_fables</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">aesop_fables</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Behavioral activation and commitment work recognize perseverance as the practice of sustained action toward values despi...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">395</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">medieval_illumination</div></div>
+              
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-perseverance-aesop_fables;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (395 words)</button>
+            <div class="story-full-text">A Crow, parched with terrible thirst on a hot summer&#x27;s day, flew about the countryside seeking water. At last, he discovered a large pitcher standing in the yard of a house, and he hastened toward it, hoping to drink. But when he peered into the vessel, he found that the water lay far below the rim, beyond the reach of his beak, no matter how he stretched his neck.<br><br>The Crow, facing this obstacle that seemed insurmountable, did not abandon his effort, though the task appeared hopeless. Instead, he looked about and observed some small pebbles scattered upon the ground nearby. An idea stirred within his mind—what if he were to drop these pebbles into the pitcher? Would they not displace the water and bring it closer to the surface?<br><br>With determination and perseverance, the Crow began his labor. One by one, he picked up the pebbles in his beak and dropped them into the pitcher. Each pebble sank into the water with a soft splash, causing the water level to rise incrementally. Yet the progress was slow, and there remained many more pebbles to drop before the water would rise enough for him to drink.<br><br>The Crow&#x27;s beak grew tired from the repetitive motion. His legs ached from walking back and forth, carrying pebbles from the ground to the pitcher&#x27;s rim. The sun beat down mercilessly upon his head. There was no assurance that his effort would succeed—the pitcher was large, and the pebbles were small. It seemed that he might collapse from exhaustion before the water rose sufficiently.<br><br>Yet the Crow did not stop. Though the task was arduous and the outcome uncertain, he persevered. He continued dropping pebbles, one after another, refusing to give up despite the difficulty and the slow progress. Each time his resolve began to falter, he reminded himself of his thirst and the goal that lay before him.<br><br>At last, after many hours of persevering effort, the water rose sufficiently that the Crow could reach it with his beak. He drank deeply and fully, quenching the terrible thirst that had tormented him. In his perseverance—his refusal to abandon effort despite difficulty and uncertainty—the Crow had transformed an impossible situation into one of triumph.<br><br>As he flew away, satisfied and refreshed, the Crow understood that perseverance through hardship and doubt was a virtue that could accomplish what seemed impossible.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar greek_roman_mythology">🏛️ Greek & Roman Mythology</div>
+          <div class="card-body">
+            <h4>Odysseus&#x27;s Long Journey Home</h4>
+            <div class="summary">Odysseus perseveres through ten years of obstacles, dangers, and setbacks in his journey home, never abandoning his goal despite numerous temptations to surrender.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-perseverance-greek_roman_mythology</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">greek_roman_mythology</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Illustrates behavioral activation and commitment: sustained effort toward meaningful goals despite fatigue, disappointme...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">248</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">renaissance_oil</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.classicalSource.en">virtueStory.classicalSource.en</code></div><div class="field-value">Odyssey, Books I-XXIV</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-perseverance-greek_roman_mythology;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (248 words)</button>
+            <div class="story-full-text">For ten years after the Trojan War, Odysseus struggled to return to his homeland of Ithaca. His journey should have taken mere weeks; instead, he encountered one obstacle after another—storms that destroyed his ships, a Cyclops who devoured his men, enchantresses who detained him, monsters that blocked his passage. At numerous points, any reasonable person would have abandoned hope. Yet Odysseus, despite everything, persevered.<br><br>Homer&#x27;s account emphasizes that perseverance is not merely the absence of quitting but rather the active commitment to maintain effort despite repeated failures and setbacks. Odysseus experienced complete destruction—his ships were wrecked, his crews were slaughtered, his resources were depleted. At one point, all his remaining men were killed, and he alone survived, clinging to driftwood in the open sea. He faced temptations to abandon his quest: the lotus-eaters offered a kind of drugged oblivion, the enchantress Circe offered comfort and pleasure, even the nymph Calypso offered immortality itself if he would remain with her.<br><br>Yet through all these trials, Odysseus maintained his fundamental purpose: to return home to Ithaca, to Penelope, to Telemachus, to the life that was truly his. His perseverance was not blind determination but rather a reasoned commitment to an ultimate good, sustained through impossible challenges. When he finally reached Ithaca after twenty years, he was unrecognizable—scarred, aged, diminished—yet his spirit remained unbroken. Homer&#x27;s Odyssey is fundamentally the story of perseverance: the virtue of maintaining commitment to one&#x27;s true purpose despite obstacles, setbacks, and suffering that would break most people.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar grimm_fairy_tales">🏰 Grimm's Fairy Tales</div>
+          <div class="card-body">
+            <h4>The Golden Bird</h4>
+            <div class="summary">A young man perseveres through repeated failure and loss, never giving up despite each task seeming impossible, until he ultimately succeeds.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-perseverance-grimm_fairy_tales</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">grimm_fairy_tales</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Behavioral activation and commitment to goals despite setbacks are exemplified through the protagonist&#x27;s refusal to aban...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">318</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">romantic_watercolor</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.grimmNumber">virtueStory.grimmNumber</code></div><div class="field-value">KHM 57</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-perseverance-grimm_fairy_tales;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (318 words)</button>
+            <div class="story-full-text">A king&#x27;s golden bird, which sings the most beautiful songs and fills the kingdom with joy, is stolen by a mysterious thief. The king&#x27;s three sons resolve to recover it. The eldest ventures forth with great confidence but grows impatient when challenges arise. He abandons his quest and settles in a distant village.<br><br>The second son, also determined, perseveres longer but, encountering difficulty, eventually surrenders hope. The youngest son, though warned by his elder brothers of the futility of the quest, perseveres forward despite setbacks and discouragements.<br><br>He travels through dark forests and across treacherous mountains. He is betrayed by false companions and robbed of his provisions. Yet each time he falls, he rises again. His unwavering commitment to his task, despite repeated failure, becomes his defining characteristic.<br><br>At last, he encounters an old woman who provides him cryptic counsel: the bird is guarded by a princess under an evil spell. Only one who perseveres in love—who continues to cherish her despite seeing her apparent indifference or cruelty—can break the spell.<br><br>The youngest son, through his patient, persevering love, breaks the curse. The princess awakens; the golden bird sings again. The eldest and second brothers, returning with shame, witness their youngest brother&#x27;s triumph and recognize that perseverance—the refusal to abandon a goal despite repeated failure—is the truest measure of strength.<br><br>Perseverance, the tale teaches, is not the absence of obstacles but the commitment to overcome them repeatedly, as many times as necessary, until success arrives.</div>
+        </div>
+        <div class="story-card">
+          <div class="genre-bar historical_biography">📜 Historical Biography</div>
+          <div class="card-body">
+            <h4>Thomas Edison&#x27;s Persistence in Developing the Light Bulb</h4>
+            <div class="summary">Edison tested thousands of materials for the incandescent light bulb filament, failing repeatedly over months before finding carbonized cotton that worked. His famous remark that he hadn&#x27;t failed but found thousands of ways that didn&#x27;t work exemplified perseverance as sustained commitment despite repeated setbacks.</div>
+            <div class="story-meta">
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory._id">virtueStory._id</code></div><div class="field-value"><code class="field-name">story-perseverance-historical_biography</code></div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.genre">virtueStory.genre</code></div><div class="field-value">historical_biography</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.summary.en">virtueStory.summary.en</code></div><div class="field-value">✓ Populated</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.therapeuticConnection.en">virtueStory.therapeuticConnection.en</code></div><div class="field-value">Perseverance through behavioral activation and commitment therapy recognizes that sustained action despite apparent fail...</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.wordCount">virtueStory.wordCount</code></div><div class="field-value">436</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.aiGeneratedIllustration.artStyle">virtueStory.aiGeneratedIllustration.artStyle</code></div><div class="field-value">historical_realism</div></div>
+              <div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.historicalFigure.en">virtueStory.historicalFigure.en</code></div><div class="field-value">Thomas Edison</div></div><div class="field-row"><div class="field-label"><code class="field-name" title="Sanity field: virtueStory.era.en">virtueStory.era.en</code></div><div class="field-value">19th century</div></div>
+            </div>
+            <a href="https://virtuestories.sanity.studio/intent/edit/id=story-perseverance-historical_biography;type=virtueStory" target="_blank" class="sanity-link" style="margin-top: 8px;">Open Story in Sanity ↗</a>
+          </div>
+          
+            <button class="story-text-toggle" onclick="toggleStoryText(this)">▸ Show Full Text (436 words)</button>
+            <div class="story-full-text">Thomas Alva Edison was born in 1847 in Ohio and became one of history&#x27;s most prolific inventors, with over one thousand patents to his name. His development of the commercially practical electric light bulb exemplifies perseverance—sustained effort toward a goal despite repeated failures and obstacles. Edison did not invent the electric light, which had been conceptualized and experimented with since the early nineteenth century. However, earlier inventors created light bulbs that burned out almost immediately or required impractically expensive power sources. The challenge was creating an electric bulb that burned long enough and efficiently enough to be commercially viable. Edison decided to develop a practical light bulb and assembled a team to work on the project. He approached the problem systematically, testing thousands of materials as potential filament elements. His team tested carbonized cotton, carbonized paper, and countless other materials, seeking something that would glow brightly without burning out rapidly. Each failure provided information about which materials did not work, contributing to eventual success. Edison famously said that his failures were not failures but learnings, steps toward eventual success. His perseverance was legendary. He worked constantly, sleeping in his laboratory, maintaining intense focus on the problem. He drove his team with similar intensity, creating a collaborative working environment devoted entirely to solving the light bulb challenge. He combined patience—willingness to test thousands of possibilities—with persistent energy driving toward eventual breakthrough. In 1879, after thousands of experiments, Edison and his team discovered that a carbonized cotton filament would burn for hours without burning out. They achieved a bulb that could operate for forty hours, then improved it further. The breakthrough came through sheer perseverance combined with systematic methodology. Edison did not give up when early attempts failed; he persisted, treating failures as information rather than defeat. Edison&#x27;s perseverance extended beyond developing the light bulb to creating the entire electrical infrastructure necessary for commercial use. A light bulb alone was insufficient; he needed generators, wiring systems, and safety mechanisms. He persevered in creating these complementary technologies, developing an integrated electrical system. This systemic approach required even more perseverance than developing the bulb itself. Edison&#x27;s perseverance made him wealthy and famous. Yet his approach to invention involved persevering through countless failures, maintaining focus despite setbacks, and treating obstacles as problems to be solved rather than barriers preventing success. He remained active and inventive until his death in 1931 at age eighty-four. Edison&#x27;s approach to innovation established the template for modern invention: systematic experimentation, methodical testing, learning from failures, and persisting until breakthrough occurs. His life demonstrates that perseverance—sustained effort toward difficult goals—enables achievement that appears impossible during early failures.</div>
+        </div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">🌍 Translation Status</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Supported Languages</span>
+            <code class="field-name" title="Sanity field: virtue.translationStatus">virtue.translationStatus</code>
+          </div>
+          <div class="field-value">
+            <div class="list-inline">
+              <span class="tag" style="border-color: var(--green);">en ✓</span>
+              <span class="tag">es pending</span>
+              <span class="tag">fr pending</span>
+              <span class="tag">pt pending</span>
+              <span class="tag">it pending</span>
+              <span class="tag">de pending</span>
+              <span class="tag">pl pending</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="human-name">Audio Narration</span>
+            <code class="field-name" title="Sanity field: virtueStory.contentAudio">virtueStory.contentAudio</code>
+          </div>
+          <div class="field-value"><span class="empty">Pending ElevenLabs generation — schema supports localeAudio for all 7 languages</span></div>
+        </div>
+      </div>
+    </div>
+</div>
+<footer>
+  <div class="container">
+    TruePresence Virtue Dataset — Divine Mercy University<br>
+    Sanity Project: <code>hx1r1wkd</code> / <code>production</code> —
+    <a href="https://virtuestories.sanity.studio" target="_blank">Open Sanity Studio</a>
+  </div>
+</footer>
+<script>
+function toggleStoryText(btn) {
+  const panel = btn.nextElementSibling;
+  panel.classList.toggle('open');
+  btn.textContent = panel.classList.contains('open') ? '▾ Hide Full Text' : '▸ Show Full Text';
+}
+</script>
+</body>
+</html>

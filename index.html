@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtue Dataset — TruePresence Developer Reference</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #c9d1d9;
+  --text-muted: #8b949e;
+  --accent: #58a6ff;
+  --accent-hover: #79c0ff;
+  --green: #3fb950;
+  --orange: #d29922;
+  --red: #f85149;
+  --purple: #bc8cff;
+  --pink: #f778ba;
+  --gold: #e3b341;
+  --prudence: #58a6ff;
+  --justice: #3fb950;
+  --fortitude: #f85149;
+  --temperance: #bc8cff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+  position: sticky; top: 0; z-index: 100;
+}
+header .container { display: flex; align-items: center; gap: 16px; }
+header h1 { font-size: 18px; font-weight: 600; }
+header h1 span { color: var(--text-muted); font-weight: 400; }
+header nav { margin-left: auto; display: flex; gap: 12px; font-size: 14px; }
+.breadcrumb { padding: 12px 0; font-size: 13px; color: var(--text-muted); }
+.breadcrumb a { color: var(--text-muted); }
+.breadcrumb a:hover { color: var(--accent); }
+
+/* Index page */
+.hero { padding: 48px 0 32px; text-align: center; }
+.hero h2 { font-size: 32px; margin-bottom: 8px; }
+.hero p { color: var(--text-muted); font-size: 16px; }
+.stats-row { display: flex; gap: 16px; justify-content: center; margin: 24px 0; flex-wrap: wrap; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 140px;
+}
+.stat-card .number { font-size: 28px; font-weight: 700; color: var(--accent); }
+.stat-card .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.cardinal-group { margin: 32px 0; }
+.cardinal-group h3 {
+  font-size: 20px;
+  padding: 12px 16px;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid var(--border);
+  border-bottom: none;
+}
+.cardinal-group h3.prudence { background: rgba(88,166,255,0.1); color: var(--prudence); }
+.cardinal-group h3.justice { background: rgba(63,185,80,0.1); color: var(--justice); }
+.cardinal-group h3.fortitude { background: rgba(248,81,73,0.1); color: var(--fortitude); }
+.cardinal-group h3.temperance { background: rgba(188,140,255,0.1); color: var(--temperance); }
+
+.virtue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+}
+.virtue-card {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  transition: background 0.15s;
+}
+.virtue-card:hover { background: var(--surface2); }
+.virtue-card .part-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.part-badge.cardinal { background: rgba(227,179,65,0.15); color: var(--gold); }
+.part-badge.integral { background: rgba(88,166,255,0.1); color: var(--accent); }
+.part-badge.subjective { background: rgba(63,185,80,0.1); color: var(--green); }
+.part-badge.potential { background: rgba(188,140,255,0.1); color: var(--purple); }
+.virtue-card .name { font-weight: 500; }
+.virtue-card .stories-count { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+
+/* Virtue detail page */
+.virtue-header { padding: 32px 0 24px; }
+.virtue-header h2 { font-size: 28px; margin-bottom: 4px; }
+.virtue-header .meta { color: var(--text-muted); font-size: 14px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.virtue-header .meta .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.section-header {
+  padding: 12px 16px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-body { padding: 16px; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+  align-items: start;
+}
+.field-row:last-child { border-bottom: none; }
+.field-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.field-label .human-name { font-weight: 600; color: var(--text); font-size: 14px; }
+.field-value { font-size: 14px; }
+.field-value .empty { color: var(--text-muted); font-style: italic; }
+
+code.field-name {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 11px;
+  background: rgba(88,166,255,0.1);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.list-inline { display: flex; flex-wrap: wrap; gap: 6px; }
+.list-inline .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+
+/* Story cards */
+.story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.story-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.story-card .genre-bar {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.story-card .genre-bar.aesop_fables { background: rgba(210,153,34,0.1); color: var(--orange); }
+.story-card .genre-bar.greek_roman_mythology { background: rgba(88,166,255,0.1); color: var(--accent); }
+.story-card .genre-bar.grimm_fairy_tales { background: rgba(63,185,80,0.1); color: var(--green); }
+.story-card .genre-bar.historical_biography { background: rgba(188,140,255,0.1); color: var(--purple); }
+.story-card .card-body { padding: 12px; }
+.story-card h4 { font-size: 15px; margin-bottom: 6px; }
+.story-card .summary { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+.story-card .story-meta { font-size: 12px; color: var(--text-muted); }
+.story-card .story-meta .field-row { grid-template-columns: 200px 1fr; padding: 4px 0; }
+
+.story-text-toggle {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--accent);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+.story-text-toggle:hover { background: var(--surface2); }
+.story-full-text {
+  display: none;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.7;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--bg);
+}
+.story-full-text.open { display: block; }
+
+.sanity-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: rgba(88,166,255,0.1);
+  border: 1px solid rgba(88,166,255,0.2);
+}
+.sanity-link:hover { background: rgba(88,166,255,0.2); text-decoration: none; }
+
+footer {
+  padding: 32px 0;
+  margin-top: 48px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+@media (max-width: 768px) {
+  .field-row { grid-template-columns: 1fr; }
+  .story-grid { grid-template-columns: 1fr; }
+  .stats-row { flex-direction: column; align-items: center; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>TruePresence <span>Developer Reference</span></h1>
+    <nav><a href="index.html#prudence" style="color: var(--prudence)">Prudence</a> <a href="index.html#justice" style="color: var(--justice)">Justice</a> <a href="index.html#fortitude" style="color: var(--fortitude)">Fortitude</a> <a href="index.html#temperance" style="color: var(--temperance)">Temperance</a></nav>
+  </div>
+</header>
+<div class="container">
+  <div class="breadcrumb"><a href="index.html">Virtues</a></div>
+  
+    <div class="hero">
+      <h2>TruePresence Virtue Dataset</h2>
+      <p>Developer reference for the Daily Spotlight content system — all data with Sanity CMS field names</p>
+      <div class="stats-row">
+        <div class="stat-card"><div class="number">56</div><div class="label">Virtues</div></div>
+        <div class="stat-card"><div class="number">223</div><div class="label">Stories</div></div>
+        <div class="stat-card"><div class="number">6</div><div class="label">Audience Gates</div></div>
+        <div class="stat-card"><div class="number">7</div><div class="label">Languages</div></div>
+        <div class="stat-card"><div class="number">219</div><div class="label">AI Images</div></div>
+        <div class="stat-card"><a href="story-image-map.html" style="color:inherit;text-decoration:none"><div class="number">551</div><div class="label">Public Domain Images →</div></a></div>
+      </div>
+    </div>
+        <div class="cardinal-group" id="prudence">
+          <h3 class="prudence">Prudence (16 virtues)</h3>
+          <div class="virtue-grid">
+            <a href="prudence.html" class="virtue-card">
+              <span class="part-badge cardinal">cardinal</span>
+              <span class="name">Prudence</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="memory.html" class="virtue-card">
+              <span class="part-badge integral">integral</span>
+              <span class="name">Memory</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="understanding_prudence.html" class="virtue-card">
+              <span class="part-badge integral">integral</span>
+              <span class="name">Understanding Prudence</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="docility.html" class="virtue-card">
+              <span class="part-badge integral">integral</span>
+              <span class="name">Docility</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="shrewdness.html" class="virtue-card">
+              <span class="part-badge integral">integral</span>
+              <span class="name">Shrewdness</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="reason_prudence.html" class="virtue-card">
+              <span class="part-badge integral">integral</span>
+              <span class="name">Reason Prudence</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="foresight.html" class="virtue-card">
+              <span class="part-badge integral">integral</span>
+              <span class="name">Foresight</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="circumspection.html" class="virtue-card">
+              <span class="part-badge integral">integral</span>
+              <span class="name">Circumspection</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="caution.html" class="virtue-card">
+              <span class="part-badge integral">integral</span>
+              <span class="name">Caution</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="personal_prudence.html" class="virtue-card">
+              <span class="part-badge subjective">subjective</span>
+              <span class="name">Personal Prudence</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="domestic_prudence.html" class="virtue-card">
+              <span class="part-badge subjective">subjective</span>
+              <span class="name">Domestic Prudence</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="political_prudence.html" class="virtue-card">
+              <span class="part-badge subjective">subjective</span>
+              <span class="name">Political Prudence</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="military_prudence.html" class="virtue-card">
+              <span class="part-badge subjective">subjective</span>
+              <span class="name">Military Prudence</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="good_counsel.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Good Counsel</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="sound_judgment.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Sound Judgment</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="exceptional_judgment.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Exceptional Judgment</span>
+              <span class="stories-count">4 stories</span>
+            </a></div>
+        </div>
+        <div class="cardinal-group" id="justice">
+          <h3 class="justice">Justice (19 virtues)</h3>
+          <div class="virtue-grid">
+            <a href="justice.html" class="virtue-card">
+              <span class="part-badge cardinal">cardinal</span>
+              <span class="name">Justice</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="religion.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Religion</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="devotion.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Devotion</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="prayer.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Prayer</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="adoration.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Adoration</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="sacrifice.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Sacrifice</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="vows.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Vows</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="tithing.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Tithing</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="obedience.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Obedience</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="gratitude.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Gratitude</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="vindication.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Vindication</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="truthfulness.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Truthfulness</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="friendliness.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Friendliness</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="generosity.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Generosity</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="epikeia.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Epikeia</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="observance.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Observance</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="piety_filial.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Piety Filial</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="distributive_justice.html" class="virtue-card">
+              <span class="part-badge subjective">subjective</span>
+              <span class="name">Distributive Justice</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="commutative_justice.html" class="virtue-card">
+              <span class="part-badge subjective">subjective</span>
+              <span class="name">Commutative Justice</span>
+              <span class="stories-count">4 stories</span>
+            </a></div>
+        </div>
+        <div class="cardinal-group" id="fortitude">
+          <h3 class="fortitude">Fortitude (5 virtues)</h3>
+          <div class="virtue-grid">
+            <a href="fortitude.html" class="virtue-card">
+              <span class="part-badge cardinal">cardinal</span>
+              <span class="name">Fortitude</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="magnanimity.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Magnanimity</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="magnificence.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Magnificence</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="patience.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Patience</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="perseverance.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Perseverance</span>
+              <span class="stories-count">4 stories</span>
+            </a></div>
+        </div>
+        <div class="cardinal-group" id="temperance">
+          <h3 class="temperance">Temperance (16 virtues)</h3>
+          <div class="virtue-grid">
+            <a href="temperance.html" class="virtue-card">
+              <span class="part-badge cardinal">cardinal</span>
+              <span class="name">Temperance</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="abstinence.html" class="virtue-card">
+              <span class="part-badge subjective">subjective</span>
+              <span class="name">Abstinence</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="fasting.html" class="virtue-card">
+              <span class="part-badge subjective">subjective</span>
+              <span class="name">Fasting</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="sobriety.html" class="virtue-card">
+              <span class="part-badge subjective">subjective</span>
+              <span class="name">Sobriety</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="chastity.html" class="virtue-card">
+              <span class="part-badge subjective">subjective</span>
+              <span class="name">Chastity</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="virginity.html" class="virtue-card">
+              <span class="part-badge subjective">subjective</span>
+              <span class="name">Virginity</span>
+              <span class="stories-count">3 stories</span>
+            </a>
+            <a href="continence.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Continence</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="humility.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Humility</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="studiousness.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Studiousness</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="eutrapelia.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Eutrapelia</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="modesty_dress.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Modesty Dress</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="modesty_movement.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Modesty Movement</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="honesty_beauty.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Honesty Beauty</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="shamefacedness.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Shamefacedness</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="clemency.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Clemency</span>
+              <span class="stories-count">4 stories</span>
+            </a>
+            <a href="meekness.html" class="virtue-card">
+              <span class="part-badge potential">potential</span>
+              <span class="name">Meekness</span>
+              <span class="stories-count">4 stories</span>
+            </a></div>
+        </div>
+    <div class="section" style="margin-top: 32px;">
+      <div class="section-header">📋 Sanity Schema Quick Reference</div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-label"><span class="human-name">Virtue Document</span></div>
+          <div class="field-value"><code class="field-name">virtue</code> — 33 fields, 7 groups (Content, Aquinas, Perspectives, Traditions, Therapeutic, Metadata, Translations)</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label"><span class="human-name">Virtue Story Document</span></div>
+          <div class="field-value"><code class="field-name">virtueStory</code> — 30+ fields, 5 groups (Content, Genre &amp; Source, Metadata, Images, Translations)</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label"><span class="human-name">Perspective Content</span></div>
+          <div class="field-value"><code class="field-name">perspectiveContent</code> — Object type for 6 audience gates (audienceGate, displayName, blurb, article, reframe, bibliography)</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label"><span class="human-name">Locale Types</span></div>
+          <div class="field-value"><code class="field-name">localeString</code> <code class="field-name">localeText</code> <code class="field-name">localeRichText</code> <code class="field-name">localeAudio</code> — 7 languages: en, es, fr, pt, it, de, pl</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label"><span class="human-name">Document ID Patterns</span></div>
+          <div class="field-value">Virtue: <code class="field-name">virtue-{id}</code> — Story: <code class="field-name">story-{virtue_id}-{genre}</code></div>
+        </div>
+      </div>
+    </div>
+</div>
+<footer>
+  <div class="container">
+    TruePresence Virtue Dataset — Divine Mercy University<br>
+    Sanity Project: <code>hx1r1wkd</code> / <code>production</code> —
+    <a href="https://virtuestories.sanity.studio" target="_blank">Open Sanity Studio</a>
+  </div>
+</footer>
+<script>
+function toggleStoryText(btn) {
+  const panel = btn.nextElementSibling;
+  panel.classList.toggle('open');
+  btn.textContent = panel.classList.contains('open') ? '▾ Hide Full Text' : '▸ Show Full Text';
+}
+</script>
+</body>
+</html>
