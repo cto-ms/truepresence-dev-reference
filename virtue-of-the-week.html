@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtue of the Week — TruePresence Developer Reference</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #c9d1d9;
+  --text-muted: #8b949e;
+  --accent: #58a6ff;
+  --accent-hover: #79c0ff;
+  --green: #3fb950;
+  --orange: #d29922;
+  --red: #f85149;
+  --purple: #bc8cff;
+  --pink: #f778ba;
+  --gold: #e3b341;
+  --prudence: #58a6ff;
+  --justice: #3fb950;
+  --fortitude: #f85149;
+  --temperance: #bc8cff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+  position: sticky; top: 0; z-index: 100;
+}
+header .container { display: flex; align-items: center; gap: 16px; }
+header h1 { font-size: 18px; font-weight: 600; }
+header h1 span { color: var(--text-muted); font-weight: 400; }
+header nav { margin-left: auto; display: flex; gap: 12px; font-size: 14px; }
+.breadcrumb { padding: 12px 0; font-size: 13px; color: var(--text-muted); }
+.breadcrumb a { color: var(--text-muted); }
+.breadcrumb a:hover { color: var(--accent); }
+
+/* Index page */
+.hero { padding: 48px 0 32px; text-align: center; }
+.hero h2 { font-size: 32px; margin-bottom: 8px; }
+.hero p { color: var(--text-muted); font-size: 16px; }
+.stats-row { display: flex; gap: 16px; justify-content: center; margin: 24px 0; flex-wrap: wrap; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 140px;
+}
+.stat-card .number { font-size: 28px; font-weight: 700; color: var(--accent); }
+.stat-card .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.cardinal-group { margin: 32px 0; }
+.cardinal-group h3 {
+  font-size: 20px;
+  padding: 12px 16px;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid var(--border);
+  border-bottom: none;
+}
+.cardinal-group h3.prudence { background: rgba(88,166,255,0.1); color: var(--prudence); }
+.cardinal-group h3.justice { background: rgba(63,185,80,0.1); color: var(--justice); }
+.cardinal-group h3.fortitude { background: rgba(248,81,73,0.1); color: var(--fortitude); }
+.cardinal-group h3.temperance { background: rgba(188,140,255,0.1); color: var(--temperance); }
+
+.virtue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+}
+.virtue-card {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  transition: background 0.15s;
+}
+.virtue-card:hover { background: var(--surface2); }
+.virtue-card .part-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.part-badge.cardinal { background: rgba(227,179,65,0.15); color: var(--gold); }
+.part-badge.integral { background: rgba(88,166,255,0.1); color: var(--accent); }
+.part-badge.subjective { background: rgba(63,185,80,0.1); color: var(--green); }
+.part-badge.potential { background: rgba(188,140,255,0.1); color: var(--purple); }
+.virtue-card .name { font-weight: 500; }
+.virtue-card .modern-name { font-size: 12px; color: var(--orange); font-style: italic; }
+.virtue-card .stories-count { margin-left: auto; font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+/* Virtue detail page */
+.virtue-header { padding: 32px 0 24px; }
+.virtue-header h2 { font-size: 28px; margin-bottom: 4px; }
+.virtue-header .meta { color: var(--text-muted); font-size: 14px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.virtue-header .meta .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.section-header {
+  padding: 12px 16px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-body { padding: 16px; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+  align-items: start;
+}
+.field-row:last-child { border-bottom: none; }
+.field-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.field-label .human-name { font-weight: 600; color: var(--text); font-size: 14px; }
+.field-value { font-size: 14px; }
+.field-value .empty { color: var(--text-muted); font-style: italic; }
+
+code.field-name {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 11px;
+  background: rgba(88,166,255,0.1);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.list-inline { display: flex; flex-wrap: wrap; gap: 6px; }
+.list-inline .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+
+/* Story cards */
+.story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.story-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.story-card .genre-bar {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.story-card .genre-bar.aesop_fables { background: rgba(210,153,34,0.1); color: var(--orange); }
+.story-card .genre-bar.greek_roman_mythology { background: rgba(88,166,255,0.1); color: var(--accent); }
+.story-card .genre-bar.grimm_fairy_tales { background: rgba(63,185,80,0.1); color: var(--green); }
+.story-card .genre-bar.historical_biography { background: rgba(188,140,255,0.1); color: var(--purple); }
+.story-card .card-body { padding: 12px; }
+.story-card h4 { font-size: 15px; margin-bottom: 6px; }
+.story-card .summary { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+.story-card .story-meta { font-size: 12px; color: var(--text-muted); }
+.story-card .story-meta .field-row { grid-template-columns: 200px 1fr; padding: 4px 0; }
+
+.story-text-toggle {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--accent);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+.story-text-toggle:hover { background: var(--surface2); }
+.story-full-text {
+  display: none;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.7;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--bg);
+}
+.story-full-text.open { display: block; }
+
+.sanity-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: rgba(88,166,255,0.1);
+  border: 1px solid rgba(88,166,255,0.2);
+}
+.sanity-link:hover { background: rgba(88,166,255,0.2); text-decoration: none; }
+
+footer {
+  padding: 32px 0;
+  margin-top: 48px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+@media (max-width: 768px) {
+  .field-row { grid-template-columns: 1fr; }
+  .story-grid { grid-template-columns: 1fr; }
+  .stats-row { flex-direction: column; align-items: center; }
+}
+
+.votw-today {
+  background: var(--surface);
+  border: 2px solid var(--green);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 24px 0;
+  text-align: center;
+}
+.votw-today .week-num { font-size: 48px; font-weight: 700; color: var(--green); }
+.votw-today .virtue-name { font-size: 24px; font-weight: 600; margin: 8px 0; }
+.votw-today .aquinas-name { font-size: 14px; color: var(--text-muted); }
+.votw-today .phase-badge {
+  display: inline-block; padding: 4px 12px; border-radius: 16px;
+  font-size: 13px; margin-top: 8px;
+  background: rgba(63,185,80,0.1); color: var(--green);
+}
+.votw-today .connection { font-size: 14px; color: var(--text-muted); margin-top: 12px; max-width: 700px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+
+.phase-section { margin: 32px 0; }
+.phase-section h3 {
+  font-size: 18px; padding: 12px 16px;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid var(--border); border-bottom: none;
+}
+.phase-section h3.advent { background: rgba(188,140,255,0.1); color: var(--purple); }
+.phase-section h3.christmas { background: rgba(227,179,65,0.15); color: var(--gold); }
+.phase-section h3.ordinary-time-i { background: rgba(63,185,80,0.1); color: var(--green); }
+.phase-section h3.lent { background: rgba(248,81,73,0.1); color: var(--red); }
+.phase-section h3.easter { background: rgba(227,179,65,0.15); color: var(--gold); }
+.phase-section h3.ordinary-time-ii { background: rgba(63,185,80,0.1); color: var(--green); }
+
+.votw-table {
+  width: 100%; border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+}
+.votw-table th {
+  background: var(--surface2);
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+.votw-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+  font-size: 14px;
+  vertical-align: top;
+}
+.votw-table tr:hover { background: var(--surface2); }
+.votw-table .week-col { width: 50px; text-align: center; font-weight: 700; color: var(--accent); }
+.votw-table .virtue-col { font-weight: 600; white-space: nowrap; }
+.votw-table .aquinas-col { color: var(--text-muted); font-size: 13px; }
+.votw-table .cardinal-col { font-size: 12px; }
+.votw-table .context-col { font-size: 13px; }
+.votw-table .connection-col { font-size: 13px; color: var(--text-muted); max-width: 400px; }
+
+.algo-section { margin: 32px 0; }
+.algo-section pre {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text);
+}
+.algo-section code { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; }
+
+.dates-table {
+  width: 100%; border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 16px 0;
+}
+.dates-table th {
+  background: var(--surface2);
+  padding: 8px 12px;
+  text-align: left;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+.dates-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+  font-size: 13px;
+}
+.dates-table tr:hover { background: var(--surface2); }
+
+.phase-map-table {
+  width: 100%; border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 16px 0;
+}
+.phase-map-table th {
+  background: var(--surface2);
+  padding: 8px 12px;
+  text-align: left;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+.phase-map-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+  font-size: 13px;
+}
+.phase-map-table tr:hover { background: var(--surface2); }
+.flex-badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.flex-badge.fixed { background: rgba(63,185,80,0.1); color: var(--green); }
+.flex-badge.flex { background: rgba(210,153,34,0.15); color: var(--orange); }
+
+.cardinal-summary { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin: 16px 0; }
+.cardinal-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+.cardinal-box h4 { font-size: 16px; margin-bottom: 8px; }
+.cardinal-box .count { font-size: 28px; font-weight: 700; }
+.cardinal-box .virtues-list { font-size: 13px; color: var(--text-muted); margin-top: 8px; line-height: 1.7; }
+
+.omitted-table {
+  width: 100%; border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 16px 0;
+}
+.omitted-table th {
+  background: var(--surface2);
+  padding: 8px 12px;
+  text-align: left;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.omitted-table td { padding: 8px 12px; font-size: 13px; border-bottom: 1px solid rgba(48,54,61,0.5); }
+
+.quick-ref { margin: 32px 0; }
+.quick-ref h4 { margin: 16px 0 8px; color: var(--accent); }
+
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>TruePresence <span>Developer Reference</span></h1>
+    <nav><a href="index.html#prudence" style="color: var(--prudence)">Prudence</a> <a href="index.html#justice" style="color: var(--justice)">Justice</a> <a href="index.html#fortitude" style="color: var(--fortitude)">Fortitude</a> <a href="index.html#temperance" style="color: var(--temperance)">Temperance</a></nav>
+  </div>
+</header>
+<div class="container">
+  <div class="breadcrumb"><a href="index.html">Virtues</a> / Virtue of the Week</div>
+  
+    <div class="virtue-header">
+      <h2>Virtue of the Week</h2>
+      <div class="meta">
+        <span>52 Thomistic virtues mapped to the Catholic liturgical cycle</span>
+        <span>·</span>
+        <span>Based on Andrew Abela's Superhabits framework</span>
+      </div>
+    </div>
+
+    <div class="votw-today" id="today-virtue">
+      <div style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">This Week's Virtue</div>
+      <div class="week-num" id="tv-week">—</div>
+      <div class="virtue-name" id="tv-virtue">Loading…</div>
+      <div class="aquinas-name" id="tv-aquinas"></div>
+      <div class="phase-badge" id="tv-phase"></div>
+      <div style="margin-top:8px;font-size:13px;color:var(--text-muted);" id="tv-context"></div>
+      <div class="connection" id="tv-connection"></div>
+    </div>
+        <div class="phase-section">
+          <h3 class="advent">Advent — Watching and Waiting <span style="float:right;font-size:13px;font-weight:400;color:var(--text-muted);">Weeks 1–4 · Fixed</span></h3>
+          <table class="votw-table">
+            <thead><tr>
+              <th>Wk</th><th>Virtue</th><th>Aquinas Name</th><th>Cardinal</th><th>Liturgical Context</th><th>Connection</th>
+            </tr></thead>
+            <tbody>
+            <tr>
+              <td class="week-col">1</td>
+              <td class="virtue-col"><a href="foresight.html">Foresight</a></td>
+              <td class="aquinas-col">Foresight</td>
+              <td class="cardinal-col" style="color:var(--prudence)">Prudence</td>
+              <td class="context-col">Advent 1 — &quot;Stay awake, be ready&quot;</td>
+              <td class="connection-col">Advent opens with the command to watch. Foresight is the virtue of looking ahead, reading the signs, and anticipating what God is bringing.</td>
+            </tr>
+            <tr>
+              <td class="week-col">2</td>
+              <td class="virtue-col"><a href="caution.html">Preparedness</a></td>
+              <td class="aquinas-col">Caution</td>
+              <td class="cardinal-col" style="color:var(--prudence)">Prudence</td>
+              <td class="context-col">Advent 2 — John the Baptist: &quot;Prepare the way&quot;</td>
+              <td class="connection-col">The Baptist&#x27;s entire mission is preparation. Preparedness (caution) means taking practical steps now for what lies ahead.</td>
+            </tr>
+            <tr>
+              <td class="week-col">3</td>
+              <td class="virtue-col"><a href="prayer.html">Prayer</a></td>
+              <td class="aquinas-col">Prayer</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">Advent 3 (Gaudete) — &quot;Rejoice always, pray without ceasing&quot;</td>
+              <td class="connection-col">Gaudete Sunday calls us to rejoice — and the means is prayer. Paul&#x27;s command in 1 Thessalonians 5:17 makes prayer the virtue of this joyful week.</td>
+            </tr>
+            <tr>
+              <td class="week-col">4</td>
+              <td class="virtue-col"><a href="humility.html">Humility</a></td>
+              <td class="aquinas-col">Humility</td>
+              <td class="cardinal-col" style="color:var(--temperance)">Temperance</td>
+              <td class="context-col">Advent 4 — The Annunciation to Mary</td>
+              <td class="connection-col">Mary&#x27;s fiat — &quot;Let it be done to me&quot; — is the supreme act of humility. She receives the greatest mission in history without a trace of self-assertion.</td>
+            </tr></tbody>
+          </table>
+        </div>
+        <div class="phase-section">
+          <h3 class="christmas">Christmas — God With Us <span style="float:right;font-size:13px;font-weight:400;color:var(--text-muted);">Weeks 5–6 · Fixed</span></h3>
+          <table class="votw-table">
+            <thead><tr>
+              <th>Wk</th><th>Virtue</th><th>Aquinas Name</th><th>Cardinal</th><th>Liturgical Context</th><th>Connection</th>
+            </tr></thead>
+            <tbody>
+            <tr>
+              <td class="week-col">5</td>
+              <td class="virtue-col"><a href="adoration.html">Adoration</a></td>
+              <td class="aquinas-col">Adoration</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">Christmas / Holy Family — The Nativity</td>
+              <td class="connection-col">Shepherds fall to their knees. Angels sing. The only fitting response to the Incarnation is adoration — giving God the worship that is His due.</td>
+            </tr>
+            <tr>
+              <td class="week-col">6</td>
+              <td class="virtue-col"><a href="generosity.html">Generosity</a></td>
+              <td class="aquinas-col">Generosity</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">Epiphany / Baptism of the Lord — The Magi bring gifts</td>
+              <td class="connection-col">The Magi travel far and offer their finest treasures. Epiphany reveals that the generous heart recognizes the King.</td>
+            </tr></tbody>
+          </table>
+        </div>
+        <div class="phase-section">
+          <h3 class="ordinary-time-i">Ordinary Time I — Called and Sent <span style="float:right;font-size:13px;font-weight:400;color:var(--text-muted);">Weeks 7–13 · Flex</span></h3>
+          <table class="votw-table">
+            <thead><tr>
+              <th>Wk</th><th>Virtue</th><th>Aquinas Name</th><th>Cardinal</th><th>Liturgical Context</th><th>Connection</th>
+            </tr></thead>
+            <tbody>
+            <tr>
+              <td class="week-col">7</td>
+              <td class="virtue-col"><a href="docility.html">Teachability</a></td>
+              <td class="aquinas-col">Docility</td>
+              <td class="cardinal-col" style="color:var(--prudence)">Prudence</td>
+              <td class="context-col">OT Week 2 — &quot;Come and see&quot; / Calling of disciples</td>
+              <td class="connection-col">The first disciples drop everything to learn from Jesus. Teachability is the willingness to be formed by a master — the starting point of discipleship.</td>
+            </tr>
+            <tr>
+              <td class="week-col">8</td>
+              <td class="virtue-col"><a href="fortitude.html">Courage</a></td>
+              <td class="aquinas-col">Fortitude</td>
+              <td class="cardinal-col" style="color:var(--fortitude)">Fortitude</td>
+              <td class="context-col">OT Week 3 — &quot;Follow me&quot; / Early ministry</td>
+              <td class="connection-col">Leaving nets, tax booths, and families requires fortitude. The call to follow Christ is always a call to be brave.</td>
+            </tr>
+            <tr>
+              <td class="week-col">9</td>
+              <td class="virtue-col"><a href="truthfulness.html">Truthfulness</a></td>
+              <td class="aquinas-col">Truthfulness</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">OT Week 4 — The Beatitudes</td>
+              <td class="connection-col">The Beatitudes turn the world&#x27;s values upside down. Only the truthful person can receive these hard sayings without flinching.</td>
+            </tr>
+            <tr>
+              <td class="week-col">10</td>
+              <td class="virtue-col"><a href="honesty_beauty.html">Integrity</a></td>
+              <td class="aquinas-col">Honesty/Beauty</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">OT Week 5 — &quot;You are salt and light&quot;</td>
+              <td class="connection-col">Salt that loses its flavor is thrown out. Light hidden under a basket serves no one. Integrity means being the same person inside and out — radiant and uncompromised.</td>
+            </tr>
+            <tr>
+              <td class="week-col">11</td>
+              <td class="virtue-col"><a href="reason_prudence.html">Reasoning</a></td>
+              <td class="aquinas-col">Reason (Prudence)</td>
+              <td class="cardinal-col" style="color:var(--prudence)">Prudence</td>
+              <td class="context-col">OT Week 6 — &quot;You have heard it said… but I say to you&quot;</td>
+              <td class="connection-col">Jesus deepens the Mosaic Law through rigorous moral reasoning. He does not abolish but fulfills — showing that reason illuminated by faith goes deeper than the letter.</td>
+            </tr>
+            <tr>
+              <td class="week-col">12</td>
+              <td class="virtue-col"><a href="clemency.html">Forgiveness</a></td>
+              <td class="aquinas-col">Clemency</td>
+              <td class="cardinal-col" style="color:var(--temperance)">Temperance</td>
+              <td class="context-col">OT Week 7 — &quot;Love your enemies&quot;</td>
+              <td class="connection-col">The most radical command in the Gospel. Forgiveness is the temperance virtue that restrains our instinct for retaliation and frees us to love beyond merit.</td>
+            </tr>
+            <tr>
+              <td class="week-col">13</td>
+              <td class="virtue-col"><a href="prudence.html">Practical Wisdom</a></td>
+              <td class="aquinas-col">Prudence</td>
+              <td class="cardinal-col" style="color:var(--prudence)">Prudence</td>
+              <td class="context-col">OT Week 8 — &quot;The wise man built on rock&quot;</td>
+              <td class="connection-col">The capstone of the Sermon on the Mount. Prudence — practical wisdom — is the master virtue that builds one&#x27;s life on the solid foundation of Christ&#x27;s teaching.</td>
+            </tr></tbody>
+          </table>
+        </div>
+        <div class="phase-section">
+          <h3 class="lent">Lent — Dying to Self <span style="float:right;font-size:13px;font-weight:400;color:var(--text-muted);">Weeks 14–19 · Fixed</span></h3>
+          <table class="votw-table">
+            <thead><tr>
+              <th>Wk</th><th>Virtue</th><th>Aquinas Name</th><th>Cardinal</th><th>Liturgical Context</th><th>Connection</th>
+            </tr></thead>
+            <tbody>
+            <tr>
+              <td class="week-col">14</td>
+              <td class="virtue-col"><a href="abstinence.html">Restraint</a></td>
+              <td class="aquinas-col">Abstinence</td>
+              <td class="cardinal-col" style="color:var(--temperance)">Temperance</td>
+              <td class="context-col">Lent 1 — Ash Wednesday / Temptation in the Desert</td>
+              <td class="connection-col">Lent begins with fasting. Jesus refuses bread, spectacle, and power. Restraint — the habit of saying no to legitimate goods for a higher purpose — is the gateway to Lenten conversion.</td>
+            </tr>
+            <tr>
+              <td class="week-col">15</td>
+              <td class="virtue-col"><a href="fasting.html">Fasting</a></td>
+              <td class="aquinas-col">Fasting</td>
+              <td class="cardinal-col" style="color:var(--temperance)">Temperance</td>
+              <td class="context-col">Lent 2 — The Transfiguration</td>
+              <td class="connection-col">The disciples glimpse glory on Tabor but must descend. Fasting strips away comfort so that we can see clearly — the Transfiguration reveals what fasting prepares us to behold.</td>
+            </tr>
+            <tr>
+              <td class="week-col">16</td>
+              <td class="virtue-col"><a href="temperance.html">Self-Discipline</a></td>
+              <td class="aquinas-col">Temperance</td>
+              <td class="cardinal-col" style="color:var(--temperance)">Temperance</td>
+              <td class="context-col">Lent 3 — Conversion and repentance</td>
+              <td class="connection-col">Mid-Lent deepens the call to interior conversion. Self-discipline is the cardinal virtue itself — the ordering of desires so that what we want serves what we love.</td>
+            </tr>
+            <tr>
+              <td class="week-col">17</td>
+              <td class="virtue-col"><a href="meekness.html">Gentlefirmness</a></td>
+              <td class="aquinas-col">Meekness</td>
+              <td class="cardinal-col" style="color:var(--temperance)">Temperance</td>
+              <td class="context-col">Lent 4 (Laetare) — The Prodigal Son / Healing</td>
+              <td class="connection-col">The father runs to meet his wayward son — gentle in embrace yet firm in truth. Meekness is not weakness but strength held in check by love. Laetare&#x27;s joy springs from this tender reunion.</td>
+            </tr>
+            <tr>
+              <td class="week-col">18</td>
+              <td class="virtue-col"><a href="perseverance.html">Perseverance</a></td>
+              <td class="aquinas-col">Perseverance</td>
+              <td class="cardinal-col" style="color:var(--fortitude)">Fortitude</td>
+              <td class="context-col">Lent 5 — &quot;Unless a grain of wheat falls and dies…&quot;</td>
+              <td class="connection-col">Jesus sets his face toward Jerusalem. The grain must fall. Perseverance is the fortitude to keep going when the cost becomes clear and the road narrows.</td>
+            </tr>
+            <tr>
+              <td class="week-col">19</td>
+              <td class="virtue-col"><a href="sacrifice.html">Sacrifice</a></td>
+              <td class="aquinas-col">Sacrifice</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">Holy Week / Palm Sunday — The Passion</td>
+              <td class="connection-col">Christ lays down His life — the just offering that restores what sin has broken. Sacrifice is the justice virtue of giving to God what is most costly because He is most worthy.</td>
+            </tr></tbody>
+          </table>
+        </div>
+        <div class="phase-section">
+          <h3 class="easter">Easter — He Is Risen <span style="float:right;font-size:13px;font-weight:400;color:var(--text-muted);">Weeks 20–27 · Fixed</span></h3>
+          <table class="votw-table">
+            <thead><tr>
+              <th>Wk</th><th>Virtue</th><th>Aquinas Name</th><th>Cardinal</th><th>Liturgical Context</th><th>Connection</th>
+            </tr></thead>
+            <tbody>
+            <tr>
+              <td class="week-col">20</td>
+              <td class="virtue-col"><a href="gratitude.html">Gratitude</a></td>
+              <td class="aquinas-col">Gratitude</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">Easter Sunday — The Resurrection</td>
+              <td class="connection-col">Alleluia! Death is conquered. Gratitude is the only adequate response — not earning, not striving, but receiving the gift of life with overflowing thanks.</td>
+            </tr>
+            <tr>
+              <td class="week-col">21</td>
+              <td class="virtue-col"><a href="magnanimity.html">Big-Souledness</a></td>
+              <td class="aquinas-col">Magnanimity</td>
+              <td class="cardinal-col" style="color:var(--fortitude)">Fortitude</td>
+              <td class="context-col">Easter 2 (Divine Mercy Sunday) — Thomas touches the wounds</td>
+              <td class="connection-col">Thomas moves from doubt to &quot;My Lord and my God!&quot; — the most expansive act of faith in the Gospels. Magnanimity, big-souledness, is the courage to believe greatly.</td>
+            </tr>
+            <tr>
+              <td class="week-col">22</td>
+              <td class="virtue-col"><a href="understanding_prudence.html">Understanding</a></td>
+              <td class="aquinas-col">Understanding</td>
+              <td class="cardinal-col" style="color:var(--prudence)">Prudence</td>
+              <td class="context-col">Easter 3 — The Road to Emmaus</td>
+              <td class="connection-col">&quot;Were not our hearts burning?&quot; The Emmaus disciples&#x27; eyes are opened through Scripture. Understanding — the prudence virtue that grasps the meaning beneath the surface — turns grief into recognition.</td>
+            </tr>
+            <tr>
+              <td class="week-col">23</td>
+              <td class="virtue-col"><a href="devotion.html">Devotion</a></td>
+              <td class="aquinas-col">Devotion</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">Easter 4 (Good Shepherd Sunday) — &quot;I am the Good Shepherd&quot;</td>
+              <td class="connection-col">The shepherd lays down his life for the sheep. Devotion is the prompt willingness to give oneself entirely to God&#x27;s service — the shepherd&#x27;s defining quality.</td>
+            </tr>
+            <tr>
+              <td class="week-col">24</td>
+              <td class="virtue-col"><a href="vows.html">Commitment</a></td>
+              <td class="aquinas-col">Vows</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">Easter 5 — &quot;I am the vine, you are the branches&quot;</td>
+              <td class="connection-col">&quot;Abide in me.&quot; To remain on the vine is a choice renewed daily. Commitment is the justice virtue of following through on what we have promised — staying grafted to Christ.</td>
+            </tr>
+            <tr>
+              <td class="week-col">25</td>
+              <td class="virtue-col"><a href="friendliness.html">Friendliness</a></td>
+              <td class="aquinas-col">Friendliness</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">Easter 6 — &quot;I call you friends&quot; / The New Commandment</td>
+              <td class="connection-col">&quot;I no longer call you servants but friends.&quot; The risen Christ elevates His disciples into friendship. Friendliness is the virtue that makes us approachable, warm, and present to others.</td>
+            </tr>
+            <tr>
+              <td class="week-col">26</td>
+              <td class="virtue-col"><a href="studiousness.html">Diligence</a></td>
+              <td class="aquinas-col">Studiousness</td>
+              <td class="cardinal-col" style="color:var(--temperance)">Temperance</td>
+              <td class="context-col">Ascension / Easter 7 — &quot;Go and make disciples of all nations&quot;</td>
+              <td class="connection-col">The Great Commission demands industrious effort. Diligence — the measured, sustained application of energy to the work at hand — is how the Church carries out the Ascension mandate.</td>
+            </tr>
+            <tr>
+              <td class="week-col">27</td>
+              <td class="virtue-col"><a href="shrewdness.html">Creativity</a></td>
+              <td class="aquinas-col">Shrewdness</td>
+              <td class="cardinal-col" style="color:var(--prudence)">Prudence</td>
+              <td class="context-col">Pentecost — The Holy Spirit descends in fire and wind</td>
+              <td class="connection-col">The Spirit speaks in every tongue, invents new ways to reach every heart. Creativity — the prudence virtue of finding unexpected solutions — is the Spirit&#x27;s signature gift.</td>
+            </tr></tbody>
+          </table>
+        </div>
+        <div class="phase-section">
+          <h3 class="ordinary-time-ii">Ordinary Time II — Growing in the Green Season <span style="float:right;font-size:13px;font-weight:400;color:var(--text-muted);">Weeks 28–52 · Flex</span></h3>
+          <table class="votw-table">
+            <thead><tr>
+              <th>Wk</th><th>Virtue</th><th>Aquinas Name</th><th>Cardinal</th><th>Liturgical Context</th><th>Connection</th>
+            </tr></thead>
+            <tbody>
+            <tr>
+              <td class="week-col">28</td>
+              <td class="virtue-col"><a href="memory.html">Memory</a></td>
+              <td class="aquinas-col">Memory</td>
+              <td class="cardinal-col" style="color:var(--prudence)">Prudence</td>
+              <td class="context-col">Trinity Sunday</td>
+              <td class="connection-col">The Church recalls the deepest mystery of God&#x27;s inner life. Memory — the prudence virtue of holding truth present in the mind — is how we treasure what has been revealed.</td>
+            </tr>
+            <tr>
+              <td class="week-col">29</td>
+              <td class="virtue-col"><a href="tithing.html">Generous Giving</a></td>
+              <td class="aquinas-col">Tithing</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">Corpus Christi — &quot;This is my Body, given for you&quot;</td>
+              <td class="connection-col">God holds nothing back. In the Eucharist, He gives His entire self. Generous giving — the habit of offering our substance, not just our surplus — mirrors this total gift.</td>
+            </tr>
+            <tr>
+              <td class="week-col">30</td>
+              <td class="virtue-col"><a href="religion.html">Worship</a></td>
+              <td class="aquinas-col">Religion</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">Sacred Heart of Jesus (mid-June)</td>
+              <td class="connection-col">The Solemnity of the Sacred Heart invites us into the burning love of Christ&#x27;s own heart. Worship — the virtue of rendering God the honor due to Him — is our entry into that fire.</td>
+            </tr>
+            <tr>
+              <td class="week-col">31</td>
+              <td class="virtue-col"><a href="justice.html">Justice</a></td>
+              <td class="aquinas-col">Justice</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">Sts. Peter and Paul (June 29)</td>
+              <td class="connection-col">Peter the rock. Paul the apostle to the nations. Together they establish the Church&#x27;s order in truth and right relationship. Justice itself — giving each person what is due — is their shared legacy.</td>
+            </tr>
+            <tr>
+              <td class="week-col">32</td>
+              <td class="virtue-col"><a href="sound_judgment.html">Sound Judgment</a></td>
+              <td class="aquinas-col">Sound Judgment</td>
+              <td class="cardinal-col" style="color:var(--prudence)">Prudence</td>
+              <td class="context-col">St. Thomas the Apostle (July 3)</td>
+              <td class="connection-col">Thomas demanded evidence. Jesus honored the demand. Sound judgment — the capacity to assess a situation rightly — leads Thomas from skepticism to the greatest confession of faith.</td>
+            </tr>
+            <tr>
+              <td class="week-col">33</td>
+              <td class="virtue-col"><a href="obedience.html">Obedience</a></td>
+              <td class="aquinas-col">Obedience</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">St. Benedict (July 11)</td>
+              <td class="connection-col">&quot;Listen&quot; — the first word of St. Benedict&#x27;s Rule. Benedictine obedience is not servile compliance but the deep listening that orients the whole person toward God&#x27;s will.</td>
+            </tr>
+            <tr>
+              <td class="week-col">34</td>
+              <td class="virtue-col"><a href="observance.html">Respect</a></td>
+              <td class="aquinas-col">Observance</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">St. Mary Magdalene (July 22)</td>
+              <td class="connection-col">&quot;Rabboni!&quot; — Mary Magdalene greets the risen Lord with reverent awe. Respect (observance) is the justice virtue of honoring those who are set above us, beginning with Christ Himself.</td>
+            </tr>
+            <tr>
+              <td class="week-col">35</td>
+              <td class="virtue-col"><a href="piety_filial.html">Filial Piety</a></td>
+              <td class="aquinas-col">Piety (Filial)</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">Sts. Joachim and Anne (July 26)</td>
+              <td class="connection-col">The grandparents of Jesus. Filial piety — the love and honor owed to parents and ancestors — is embodied in the hidden faithfulness of Joachim and Anne, who prepared the way for Mary.</td>
+            </tr>
+            <tr>
+              <td class="week-col">36</td>
+              <td class="virtue-col"><a href="good_counsel.html">Good Counsel</a></td>
+              <td class="aquinas-col">Good Counsel</td>
+              <td class="cardinal-col" style="color:var(--prudence)">Prudence</td>
+              <td class="context-col">OT Week 18 — Summer parables of the kingdom</td>
+              <td class="connection-col">The kingdom parables (treasure in a field, pearl of great price) invite deliberation: what is worth everything? Good counsel is the virtue of seeking and giving wise advice before acting.</td>
+            </tr>
+            <tr>
+              <td class="week-col">37</td>
+              <td class="virtue-col"><a href="circumspection.html">Alertness</a></td>
+              <td class="aquinas-col">Circumspection</td>
+              <td class="cardinal-col" style="color:var(--prudence)">Prudence</td>
+              <td class="context-col">The Transfiguration (Aug 6) / St. Dominic (Aug 8)</td>
+              <td class="connection-col">&quot;This is my beloved Son — listen to Him!&quot; Alertness — attentiveness to all the circumstances around us — is what the drowsy disciples on Tabor most needed, and what Dominic exercised in founding the Order of Preachers.</td>
+            </tr>
+            <tr>
+              <td class="week-col">38</td>
+              <td class="virtue-col"><a href="shamefacedness.html">Poise</a></td>
+              <td class="aquinas-col">Shamefacedness</td>
+              <td class="cardinal-col" style="color:var(--temperance)">Temperance</td>
+              <td class="context-col">The Assumption (August 15)</td>
+              <td class="connection-col">Mary is taken up body and soul into heaven — the ultimate composure before God. Poise is the temperance virtue of carrying oneself with dignity and grace, neither anxious nor presumptuous.</td>
+            </tr>
+            <tr>
+              <td class="week-col">39</td>
+              <td class="virtue-col"><a href="continence.html">Self-Control</a></td>
+              <td class="aquinas-col">Continence</td>
+              <td class="cardinal-col" style="color:var(--temperance)">Temperance</td>
+              <td class="context-col">St. Augustine (August 28)</td>
+              <td class="connection-col">&quot;Grant me chastity and continence — but not yet.&quot; Augustine&#x27;s long struggle and eventual victory make him the patron of self-control: the power to master disordered desires through grace.</td>
+            </tr>
+            <tr>
+              <td class="week-col">40</td>
+              <td class="virtue-col"><a href="modesty_movement.html">Gracefulness</a></td>
+              <td class="aquinas-col">Modesty of Movement</td>
+              <td class="cardinal-col" style="color:var(--temperance)">Temperance</td>
+              <td class="context-col">Birth of the Blessed Virgin Mary (September 8)</td>
+              <td class="connection-col">Mary enters the world with quiet grace. Gracefulness — beauty in movement and manner — reflects the inner order of one who is &quot;full of grace.&quot;</td>
+            </tr>
+            <tr>
+              <td class="week-col">41</td>
+              <td class="virtue-col"><a href="patience.html">Patience</a></td>
+              <td class="aquinas-col">Patience</td>
+              <td class="cardinal-col" style="color:var(--fortitude)">Fortitude</td>
+              <td class="context-col">Exaltation of the Holy Cross (September 14)</td>
+              <td class="connection-col">The Cross is not just endured but exalted. Patience is the fortitude to bear suffering without being broken — transforming pain into offering.</td>
+            </tr>
+            <tr>
+              <td class="week-col">42</td>
+              <td class="virtue-col"><a href="sobriety.html">Sobriety</a></td>
+              <td class="aquinas-col">Sobriety</td>
+              <td class="cardinal-col" style="color:var(--temperance)">Temperance</td>
+              <td class="context-col">Our Lady of Sorrows (September 15)</td>
+              <td class="connection-col">Mary stands at the foot of the Cross with clear-eyed grief — no hysteria, no denial. Sobriety is the temperance of a mind that remains unclouded even in the deepest pain.</td>
+            </tr>
+            <tr>
+              <td class="week-col">43</td>
+              <td class="virtue-col"><a href="military_prudence.html">Strategic Wisdom</a></td>
+              <td class="aquinas-col">Military Prudence</td>
+              <td class="cardinal-col" style="color:var(--prudence)">Prudence</td>
+              <td class="context-col">Sts. Michael, Gabriel, and Raphael (September 29)</td>
+              <td class="connection-col">Michael battles the dragon. Gabriel delivers the message. Raphael guides the journey. Strategic wisdom — the capacity to coordinate complex efforts toward victory — is the archangels&#x27; gift.</td>
+            </tr>
+            <tr>
+              <td class="week-col">44</td>
+              <td class="virtue-col">Orderliness</td>
+              <td class="aquinas-col">Orderliness</td>
+              <td class="cardinal-col" style="color:var(--temperance)">Temperance</td>
+              <td class="context-col">St. Thérèse of Lisieux (October 1)</td>
+              <td class="connection-col">The &quot;Little Way&quot; — doing small things with great love, in order. St. Thérèse found holiness not in grand gestures but in the careful ordering of daily life toward God.</td>
+            </tr>
+            <tr>
+              <td class="week-col">45</td>
+              <td class="virtue-col"><a href="eutrapelia.html">Playing Well</a></td>
+              <td class="aquinas-col">Eutrapelia</td>
+              <td class="cardinal-col" style="color:var(--temperance)">Temperance</td>
+              <td class="context-col">St. Francis of Assisi (Oct 4) / Our Lady of the Rosary (Oct 7)</td>
+              <td class="connection-col">Francis preached to birds, danced with Brother Sun, and called death &quot;Sister.&quot; Playing well — the virtue of wholesome recreation and joy — is the Franciscan charism: finding delight in God&#x27;s creation.</td>
+            </tr>
+            <tr>
+              <td class="week-col">46</td>
+              <td class="virtue-col"><a href="personal_prudence.html">Personal Wisdom</a></td>
+              <td class="aquinas-col">Personal Prudence</td>
+              <td class="cardinal-col" style="color:var(--prudence)">Prudence</td>
+              <td class="context-col">St. Teresa of Ávila (October 15)</td>
+              <td class="connection-col">Teresa mapped the soul&#x27;s journey through seven mansions. Personal wisdom — prudence directed at one&#x27;s own spiritual growth — is the interior knowledge she cultivated and taught.</td>
+            </tr>
+            <tr>
+              <td class="week-col">47</td>
+              <td class="virtue-col"><a href="epikeia.html">Equity</a></td>
+              <td class="aquinas-col">Epikeia</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">St. Luke the Evangelist (October 18)</td>
+              <td class="connection-col">Luke, the physician-evangelist, tells the stories of the poor, the outcast, the Samaritan. Equity — the virtue of applying the spirit of the law when the letter falls short — pervades his Gospel.</td>
+            </tr>
+            <tr>
+              <td class="week-col">48</td>
+              <td class="virtue-col"><a href="commutative_justice.html">Fair Exchange</a></td>
+              <td class="aquinas-col">Commutative Justice</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">Sts. Simon and Jude (October 28)</td>
+              <td class="connection-col">The &quot;hidden apostles&quot; gave their lives for the Gospel and received the crown. Fair exchange — the justice of equal giving and receiving — is fulfilled in martyrdom: life given, eternal life received.</td>
+            </tr>
+            <tr>
+              <td class="week-col">49</td>
+              <td class="virtue-col"><a href="modesty_dress.html">Modesty</a></td>
+              <td class="aquinas-col">Modesty of Dress</td>
+              <td class="cardinal-col" style="color:var(--temperance)">Temperance</td>
+              <td class="context-col">All Saints (November 1)</td>
+              <td class="connection-col">The saints include kings and beggars, doctors and peasants — but all are clothed in white. Modesty, the virtue of presenting oneself appropriately, reminds us that holiness is the only garment that matters.</td>
+            </tr>
+            <tr>
+              <td class="week-col">50</td>
+              <td class="virtue-col"><a href="chastity.html">Chasteness</a></td>
+              <td class="aquinas-col">Chastity</td>
+              <td class="cardinal-col" style="color:var(--temperance)">Temperance</td>
+              <td class="context-col">All Souls / OT Week 32 — Parable of the wise and foolish virgins</td>
+              <td class="connection-col">The wise virgins kept their lamps burning. Chasteness — purity of heart and body — is the oil that keeps the flame alive as we await the Bridegroom.</td>
+            </tr>
+            <tr>
+              <td class="week-col">51</td>
+              <td class="virtue-col"><a href="vindication.html">Just Correction</a></td>
+              <td class="aquinas-col">Vindication</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">OT Week 33 — Parable of the talents / End-time accountability</td>
+              <td class="connection-col">The master returns and settles accounts. Just correction — the virtue of righting wrongs and holding others accountable with fairness — is the theme of these eschatological parables.</td>
+            </tr>
+            <tr>
+              <td class="week-col">52</td>
+              <td class="virtue-col"><a href="distributive_justice.html">Fair Distribution</a></td>
+              <td class="aquinas-col">Distributive Justice</td>
+              <td class="cardinal-col" style="color:var(--justice)">Justice</td>
+              <td class="context-col">Christ the King — &quot;Whatever you did for the least of these…&quot;</td>
+              <td class="connection-col">The final Sunday of the liturgical year. Christ the King judges the nations: did you feed the hungry, clothe the naked, visit the prisoner? Fair distribution — giving to each according to their need — is the measure of His kingdom.</td>
+            </tr></tbody>
+          </table>
+        </div>
+    <div class="section" style="margin-top:32px;">
+      <div class="section-header">⚙️ Algorithm — How to Determine the Virtue Week</div>
+      <div class="section-body">
+
+        <h3 style="margin-bottom:12px;font-size:16px;">The Core Problem</h3>
+        <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px;">
+          The Catholic liturgical year does <strong>not</strong> align with the calendar year. It begins on the
+          <strong>First Sunday of Advent</strong> (late November) and ends the Saturday before the next Advent 1.
+          Within that year, the length of Ordinary Time varies because Easter moves. Developers need a reliable way
+          to map any calendar date → virtue week (1–52).
+        </p>
+
+        <h3 style="margin-bottom:12px;font-size:16px;">Phase Mapping</h3>
+        <table class="phase-map-table">
+          <thead><tr><th>Phase</th><th>Virtue Weeks</th><th>Fixed?</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Advent</td><td>1–4</td><td><span class="flex-badge fixed">Fixed (4 wks)</span></td><td>Advent Sunday 1 → Week 1, etc.</td></tr>
+            <tr><td>Christmas</td><td>5–6</td><td><span class="flex-badge fixed">Fixed (2 wks)</span></td><td>Christmas octave → Week 5, Epiphany/Baptism → Week 6</td></tr>
+            <tr><td>Ordinary Time I</td><td>7–13</td><td><span class="flex-badge flex">Flex (5–9 wks)</span></td><td>Between Baptism of the Lord and Ash Wednesday</td></tr>
+            <tr><td>Lent</td><td>14–19</td><td><span class="flex-badge fixed">Fixed (6 wks)</span></td><td>Ash Wednesday week → Week 14, … Holy Week → Week 19</td></tr>
+            <tr><td>Easter</td><td>20–27</td><td><span class="flex-badge fixed">Fixed (8 wks)</span></td><td>Easter → Week 20, … Pentecost → Week 27</td></tr>
+            <tr><td>Ordinary Time II</td><td>28–52</td><td><span class="flex-badge flex">Flex (24–28 wks)</span></td><td>Day after Pentecost through Saturday before next Advent 1</td></tr>
+          </tbody>
+        </table>
+
+        <h3 style="margin:20px 0 12px;font-size:16px;">Handling the Flex Zones</h3>
+        <p style="font-size:14px;color:var(--text-muted);margin-bottom:8px;">
+          <strong>Ordinary Time I</strong> has 7 virtue-week slots (weeks 7–13) but the actual number of calendar weeks varies from ~5 to ~9.<br>
+          <strong>Ordinary Time II</strong> has 25 virtue-week slots (weeks 28–52) but the actual number of calendar weeks varies from ~24 to ~28.
+        </p>
+        <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px;">
+          <strong>Rule:</strong> Distribute virtue weeks proportionally across the actual calendar weeks in each flex zone:
+        </p>
+        <pre><code>virtue_week = start_virtue_week + floor(days_elapsed / total_phase_days * num_virtue_slots)</code></pre>
+
+        <h3 style="margin:20px 0 12px;font-size:16px;">Pseudocode</h3>
+        <div class="algo-section">
+          <pre><code>function getVirtueWeek(date):
+
+  1. Find the current liturgical year:
+     - If date >= Advent1(current_calendar_year), liturgical year starts this year
+     - Else, liturgical year started last year's Advent 1
+
+  2. Calculate key dates for this liturgical year:
+     - advent1         = First Sunday of Advent
+     - christmas       = Dec 25
+     - baptism         = Sunday after Epiphany (see formula below)
+     - ashWednesday    = Easter - 46 days
+     - easter          = Computus algorithm
+     - pentecost       = Easter + 49 days
+     - nextAdvent1     = First Sunday of Advent next year
+
+  3. Determine phase and virtue week:
+
+     IF date is in [advent1, Dec 24]:
+        virtue_week = floor((date - advent1) / 7) + 1      // 1-4
+
+     ELSE IF date is in [Dec 25, baptism - 1]:
+        virtue_week = 5 + floor((date - Dec 25) / 7)       // 5-6
+
+     ELSE IF date is in [baptism, ashWednesday - 1]:        // FLEX ZONE
+        virtue_week = 7 + floor(days_elapsed / total * 7)
+        clamp(7, 13)
+
+     ELSE IF date is in [ashWednesday, easter - 1]:
+        virtue_week = 14 + floor((date - ashWed) / 7)      // 14-19
+
+     ELSE IF date is in [easter, pentecost + 6]:
+        virtue_week = 20 + floor((date - easter) / 7)      // 20-27
+
+     ELSE IF date is in [pentecost + 7, nextAdvent1 - 1]:   // FLEX ZONE
+        virtue_week = 28 + floor(days_elapsed / total * 25)
+        clamp(28, 52)</code></pre>
+        </div>
+
+        <h3 style="margin:20px 0 12px;font-size:16px;">Key Date Calculations</h3>
+        <div style="font-size:14px;color:var(--text-muted);line-height:1.8;">
+          <p><strong>Advent 1</strong> — Sunday nearest to November 30 (always Nov 27 – Dec 3)</p>
+          <p><strong>Easter</strong> — Anonymous Gregorian algorithm (Meeus/Jones/Butcher). Always March 22 – April 25.</p>
+          <p><strong>Ash Wednesday</strong> — Easter minus 46 days</p>
+          <p><strong>Pentecost</strong> — Easter plus 49 days (7 Sundays after Easter)</p>
+          <p><strong>Baptism of the Lord (US)</strong> — Epiphany is Sunday between Jan 2–8. Baptism is the following Sunday (or Monday if Epiphany is Jan 7/8).</p>
+          <p><strong>Lectionary Cycle</strong> — Based on the year Advent 1 falls in: mod 3 = 0 → Year C (Luke), mod 3 = 1 → Year A (Matthew), mod 3 = 2 → Year B (Mark)</p>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">💻 JavaScript Implementation</div>
+      <div class="section-body">
+        <p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">
+          Complete implementation ready for use in the TruePresence app. Includes the Computus algorithm for Easter,
+          Advent 1 calculation, Baptism of the Lord (US), and flex-zone proportional mapping.
+        </p>
+        <div class="algo-section">
+          <pre><code>// === Date Helpers ===
+
+function getEasterDate(year) {
+  // Anonymous Gregorian algorithm (Meeus/Jones/Butcher)
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31);
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+  return new Date(year, month - 1, day);
+}
+
+function getAdvent1(year) {
+  const nov30 = new Date(year, 10, 30);
+  const dow = nov30.getDay();
+  if (dow === 0) return nov30;
+  if (dow &lt;= 3) return new Date(year, 10, 30 - dow);
+  return new Date(year, 10, 30 + (7 - dow));
+}
+
+function getBaptismOfLord(year) {
+  const jan2 = new Date(year, 0, 2);
+  const dow = jan2.getDay();
+  const epiphany = dow === 0 ? jan2 : new Date(year, 0, 2 + (7 - dow));
+  const epDay = epiphany.getDate();
+  if (epDay &gt;= 7) return new Date(year, 0, epDay + 1);
+  return new Date(year, 0, epDay + 7);
+}
+
+function daysBetween(a, b) {
+  return Math.floor((b - a) / (1000 * 60 * 60 * 24));
+}
+
+function clamp(val, min, max) {
+  return Math.max(min, Math.min(max, val));
+}
+
+// === Main Function ===
+
+function getVirtueWeek(date) {
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const advent1ThisYear = getAdvent1(d.getFullYear());
+  let liturgicalYearStart = d &gt;= advent1ThisYear
+    ? d.getFullYear() : d.getFullYear() - 1;
+
+  const advent1    = getAdvent1(liturgicalYearStart);
+  const christmas  = new Date(liturgicalYearStart, 11, 25);
+  const easterYear = liturgicalYearStart + 1;
+  const baptism    = getBaptismOfLord(easterYear);
+  const easter     = getEasterDate(easterYear);
+  const ashWed     = new Date(easter.getTime() - 46 * 86400000);
+  const pentecost  = new Date(easter.getTime() + 49 * 86400000);
+  const nextAdvent1 = getAdvent1(liturgicalYearStart + 1);
+
+  if (d &gt;= nextAdvent1) return 1;
+
+  // ADVENT (1-4)
+  if (d &gt;= advent1 &amp;&amp; d &lt; christmas)
+    return clamp(Math.floor(daysBetween(advent1, d) / 7) + 1, 1, 4);
+
+  // CHRISTMAS (5-6)
+  if (d &gt;= christmas &amp;&amp; d &lt; baptism)
+    return clamp(5 + Math.floor(daysBetween(christmas, d) / 7), 5, 6);
+
+  // ORDINARY TIME I (7-13) — flex
+  if (d &gt;= baptism &amp;&amp; d &lt; ashWed) {
+    const total = daysBetween(baptism, ashWed);
+    const elapsed = daysBetween(baptism, d);
+    return clamp(7 + Math.floor((elapsed / total) * 7), 7, 13);
+  }
+
+  // LENT (14-19)
+  if (d &gt;= ashWed &amp;&amp; d &lt; easter)
+    return clamp(14 + Math.floor(daysBetween(ashWed, d) / 7), 14, 19);
+
+  // EASTER (20-27)
+  const pentEnd = new Date(pentecost.getTime() + 7 * 86400000);
+  if (d &gt;= easter &amp;&amp; d &lt; pentEnd)
+    return clamp(20 + Math.floor(daysBetween(easter, d) / 7), 20, 27);
+
+  // ORDINARY TIME II (28-52) — flex
+  if (d &gt;= pentEnd &amp;&amp; d &lt; nextAdvent1) {
+    const total = daysBetween(pentEnd, nextAdvent1);
+    const elapsed = daysBetween(pentEnd, d);
+    return clamp(28 + Math.floor((elapsed / total) * 25), 28, 52);
+  }
+
+  return 1;
+}</code></pre>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">📅 Key Liturgical Dates by Year</div>
+      <div class="section-body" style="overflow-x:auto;">
+        <table class="dates-table">
+          <thead><tr>
+            <th>Liturgical Year</th><th>Advent 1</th><th>Baptism</th><th>Ash Wed</th><th>Easter</th><th>Pentecost</th><th>Next Advent 1</th><th>Cycle</th>
+          </tr></thead>
+          <tbody>
+        <tr>
+          <td><strong>2025–2026</strong></td>
+          <td>2025-11-30</td>
+          <td>2026-01-11</td>
+          <td>2026-02-18</td>
+          <td>2026-04-05</td>
+          <td>2026-05-24</td>
+          <td>2026-11-29</td>
+          <td>Year C</td>
+        </tr>
+        <tr>
+          <td><strong>2026–2027</strong></td>
+          <td>2026-11-29</td>
+          <td>2027-01-10</td>
+          <td>2027-02-10</td>
+          <td>2027-03-28</td>
+          <td>2027-05-16</td>
+          <td>2027-11-28</td>
+          <td>Year A</td>
+        </tr>
+        <tr>
+          <td><strong>2027–2028</strong></td>
+          <td>2027-11-28</td>
+          <td>2028-01-09</td>
+          <td>2028-03-01</td>
+          <td>2028-04-16</td>
+          <td>2028-06-04</td>
+          <td>2028-12-03</td>
+          <td>Year B</td>
+        </tr>
+        <tr>
+          <td><strong>2028–2029</strong></td>
+          <td>2028-12-03</td>
+          <td>2029-01-14</td>
+          <td>2029-02-14</td>
+          <td>2029-04-01</td>
+          <td>2029-05-20</td>
+          <td>2029-12-02</td>
+          <td>Year C</td>
+        </tr>
+        <tr>
+          <td><strong>2029–2030</strong></td>
+          <td>2029-12-02</td>
+          <td>2030-01-13</td>
+          <td>2030-03-06</td>
+          <td>2030-04-21</td>
+          <td>2030-06-09</td>
+          <td>2030-12-01</td>
+          <td>Year A</td>
+        </tr>
+        <tr>
+          <td><strong>2030–2031</strong></td>
+          <td>2030-12-01</td>
+          <td>2031-01-12</td>
+          <td>2031-02-26</td>
+          <td>2031-04-13</td>
+          <td>2031-06-01</td>
+          <td>2031-11-30</td>
+          <td>Year B</td>
+        </tr>
+        <tr>
+          <td><strong>2031–2032</strong></td>
+          <td>2031-11-30</td>
+          <td>2032-01-11</td>
+          <td>2032-02-11</td>
+          <td>2032-03-28</td>
+          <td>2032-05-16</td>
+          <td>2032-11-28</td>
+          <td>Year C</td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">🔍 Quick Reference — "What Week Are We In?"</div>
+      <div class="section-body">
+        
+        <h4>2025–2026 Liturgical Year (Cycle C)</h4>
+        <table class="dates-table" style="margin-bottom:20px;">
+          <thead><tr><th>Date Range</th><th>Phase</th><th>Virtue Weeks</th></tr></thead>
+          <tbody>
+            <tr><td>2025-11-30 – Dec 24</td><td>Advent</td><td>1–4</td></tr>
+            <tr><td>Dec 25 – 2026-01-11</td><td>Christmas</td><td>5–6</td></tr>
+            <tr><td>2026-01-11 – day before 2026-02-18</td><td>Ordinary Time I</td><td>7–13</td></tr>
+            <tr><td>2026-02-18 – day before 2026-04-05</td><td>Lent</td><td>14–19</td></tr>
+            <tr><td>2026-04-05 – 2026-05-24 +6d</td><td>Easter</td><td>20–27</td></tr>
+            <tr><td>After Pentecost week – 2026-11-29</td><td>Ordinary Time II</td><td>28–52</td></tr>
+          </tbody>
+        </table>
+        <h4>2026–2027 Liturgical Year (Cycle A)</h4>
+        <table class="dates-table" style="margin-bottom:20px;">
+          <thead><tr><th>Date Range</th><th>Phase</th><th>Virtue Weeks</th></tr></thead>
+          <tbody>
+            <tr><td>2026-11-29 – Dec 24</td><td>Advent</td><td>1–4</td></tr>
+            <tr><td>Dec 25 – 2027-01-10</td><td>Christmas</td><td>5–6</td></tr>
+            <tr><td>2027-01-10 – day before 2027-02-10</td><td>Ordinary Time I</td><td>7–13</td></tr>
+            <tr><td>2027-02-10 – day before 2027-03-28</td><td>Lent</td><td>14–19</td></tr>
+            <tr><td>2027-03-28 – 2027-05-16 +6d</td><td>Easter</td><td>20–27</td></tr>
+            <tr><td>After Pentecost week – 2027-11-28</td><td>Ordinary Time II</td><td>28–52</td></tr>
+          </tbody>
+        </table>
+        <h4>2027–2028 Liturgical Year (Cycle B)</h4>
+        <table class="dates-table" style="margin-bottom:20px;">
+          <thead><tr><th>Date Range</th><th>Phase</th><th>Virtue Weeks</th></tr></thead>
+          <tbody>
+            <tr><td>2027-11-28 – Dec 24</td><td>Advent</td><td>1–4</td></tr>
+            <tr><td>Dec 25 – 2028-01-09</td><td>Christmas</td><td>5–6</td></tr>
+            <tr><td>2028-01-09 – day before 2028-03-01</td><td>Ordinary Time I</td><td>7–13</td></tr>
+            <tr><td>2028-03-01 – day before 2028-04-16</td><td>Lent</td><td>14–19</td></tr>
+            <tr><td>2028-04-16 – 2028-06-04 +6d</td><td>Easter</td><td>20–27</td></tr>
+            <tr><td>After Pentecost week – 2028-12-03</td><td>Ordinary Time II</td><td>28–52</td></tr>
+          </tbody>
+        </table>
+        <h4>2028–2029 Liturgical Year (Cycle C)</h4>
+        <table class="dates-table" style="margin-bottom:20px;">
+          <thead><tr><th>Date Range</th><th>Phase</th><th>Virtue Weeks</th></tr></thead>
+          <tbody>
+            <tr><td>2028-12-03 – Dec 24</td><td>Advent</td><td>1–4</td></tr>
+            <tr><td>Dec 25 – 2029-01-14</td><td>Christmas</td><td>5–6</td></tr>
+            <tr><td>2029-01-14 – day before 2029-02-14</td><td>Ordinary Time I</td><td>7–13</td></tr>
+            <tr><td>2029-02-14 – day before 2029-04-01</td><td>Lent</td><td>14–19</td></tr>
+            <tr><td>2029-04-01 – 2029-05-20 +6d</td><td>Easter</td><td>20–27</td></tr>
+            <tr><td>After Pentecost week – 2029-12-02</td><td>Ordinary Time II</td><td>28–52</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">📊 Summary by Cardinal Virtue</div>
+      <div class="section-body">
+        <div class="cardinal-summary">
+        <div class="cardinal-box">
+          <h4 style="color:var(--prudence)">Prudence</h4>
+          <div class="count" style="color:var(--prudence)">13</div>
+          <div class="virtues-list">Practical Wisdom, Memory, Understanding, Teachability, Creativity, Reasoning, Foresight, Alertness, Preparedness, Good Counsel, Sound Judgment, Personal Wisdom, Strategic Wisdom</div>
+        </div>
+        <div class="cardinal-box">
+          <h4 style="color:var(--justice)">Justice</h4>
+          <div class="count" style="color:var(--justice)">20</div>
+          <div class="virtues-list">Justice, Worship, Devotion, Prayer, Adoration, Sacrifice, Commitment, Generous Giving, Obedience, Gratitude, Just Correction, Truthfulness, Friendliness, Generosity, Fair Distribution, Fair Exchange, Equity, Filial Piety, Respect, Integrity</div>
+        </div>
+        <div class="cardinal-box">
+          <h4 style="color:var(--fortitude)">Fortitude</h4>
+          <div class="count" style="color:var(--fortitude)">4</div>
+          <div class="virtues-list">Courage, Big-Souledness, Patience, Perseverance</div>
+        </div>
+        <div class="cardinal-box">
+          <h4 style="color:var(--temperance)">Temperance</h4>
+          <div class="count" style="color:var(--temperance)">15</div>
+          <div class="virtues-list">Self-Discipline, Restraint, Sobriety, Chasteness, Forgiveness, Gentlefirmness, Humility, Diligence, Modesty, Gracefulness, Playing Well, Poise, Orderliness, Fasting, Self-Control</div>
+        </div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">🚫 5 Virtues Not Included</div>
+      <div class="section-body">
+        <table class="omitted-table">
+          <thead><tr><th>Virtue</th><th>Reason</th></tr></thead>
+          <tbody><tr><td>Exceptional Judgment</td><td>Substantially overlaps with Sound Judgment</td></tr><tr><td>Household Wisdom</td><td>Too domain-specific for a universal weekly calendar</td></tr><tr><td>Civic Wisdom</td><td>Too domain-specific for a universal weekly calendar</td></tr><tr><td>Magnificence</td><td>Substantially overlaps with Big-Souledness and Generosity</td></tr><tr><td>Consecrated Purity</td><td>Specific to the vocation of religious life</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">⚠️ Edge Cases</div>
+      <div class="section-body" style="font-size:14px;color:var(--text-muted);line-height:1.8;">
+        <p><strong>Gap between liturgical years:</strong> There can be 0–6 days between the last Saturday of OT II and the next Advent 1. During this gap, continue showing Week 52 (Fair Distribution / Christ the King) until the new Advent 1 begins.</p>
+        <p style="margin-top:12px;"><strong>Ordinary Time flex zones:</strong> In years with an early Easter (e.g., March 28), OT I is short (~5 weeks) and OT II is long (~28 weeks). In years with a late Easter (e.g., April 21), OT I is long (~9 weeks) and OT II is short (~24 weeks). The proportional mapping algorithm handles both cases — every virtue week still appears, just with slightly different durations.</p>
+        <p style="margin-top:12px;"><strong>Liturgical year spans two calendar years:</strong> The liturgical year always begins in November/December and ends in November of the next. Easter always falls in the second calendar year. The getVirtueWeek() function handles this automatically.</p>
+      </div>
+    </div>
+</div>
+<footer>
+  <div class="container">
+    TruePresence Virtue Dataset — Divine Mercy University<br>
+    Sanity Project: <code>hx1r1wkd</code> / <code>production</code> —
+    <a href="https://virtuestories.sanity.studio" target="_blank">Open Sanity Studio</a>
+  </div>
+</footer>
+<script>
+function toggleStoryText(btn) {
+  const panel = btn.nextElementSibling;
+  panel.classList.toggle('open');
+  btn.textContent = panel.classList.contains('open') ? '▾ Hide Full Text' : '▸ Show Full Text';
+}
+</script>
+
+<script>
+// Virtue of the Week live widget
+const VIRTUE_DATA = {"1": {"virtue": "Foresight", "aquinas": "Foresight", "cardinal": "Prudence", "phase": "Advent", "liturgicalContext": "Advent 1 — \"Stay awake, be ready\"", "connection": "Advent opens with the command to watch. Foresight is the virtue of looking ahead, reading the signs, and anticipating what God is bringing."}, "2": {"virtue": "Preparedness", "aquinas": "Caution", "cardinal": "Prudence", "phase": "Advent", "liturgicalContext": "Advent 2 — John the Baptist: \"Prepare the way\"", "connection": "The Baptist's entire mission is preparation. Preparedness (caution) means taking practical steps now for what lies ahead."}, "3": {"virtue": "Prayer", "aquinas": "Prayer", "cardinal": "Justice", "phase": "Advent", "liturgicalContext": "Advent 3 (Gaudete) — \"Rejoice always, pray without ceasing\"", "connection": "Gaudete Sunday calls us to rejoice — and the means is prayer. Paul's command in 1 Thessalonians 5:17 makes prayer the virtue of this joyful week."}, "4": {"virtue": "Humility", "aquinas": "Humility", "cardinal": "Temperance", "phase": "Advent", "liturgicalContext": "Advent 4 — The Annunciation to Mary", "connection": "Mary's fiat — \"Let it be done to me\" — is the supreme act of humility. She receives the greatest mission in history without a trace of self-assertion."}, "5": {"virtue": "Adoration", "aquinas": "Adoration", "cardinal": "Justice", "phase": "Christmas", "liturgicalContext": "Christmas / Holy Family — The Nativity", "connection": "Shepherds fall to their knees. Angels sing. The only fitting response to the Incarnation is adoration — giving God the worship that is His due."}, "6": {"virtue": "Generosity", "aquinas": "Generosity", "cardinal": "Justice", "phase": "Christmas", "liturgicalContext": "Epiphany / Baptism of the Lord — The Magi bring gifts", "connection": "The Magi travel far and offer their finest treasures. Epiphany reveals that the generous heart recognizes the King."}, "7": {"virtue": "Teachability", "aquinas": "Docility", "cardinal": "Prudence", "phase": "Ordinary Time I", "liturgicalContext": "OT Week 2 — \"Come and see\" / Calling of disciples", "connection": "The first disciples drop everything to learn from Jesus. Teachability is the willingness to be formed by a master — the starting point of discipleship."}, "8": {"virtue": "Courage", "aquinas": "Fortitude", "cardinal": "Fortitude", "phase": "Ordinary Time I", "liturgicalContext": "OT Week 3 — \"Follow me\" / Early ministry", "connection": "Leaving nets, tax booths, and families requires fortitude. The call to follow Christ is always a call to be brave."}, "9": {"virtue": "Truthfulness", "aquinas": "Truthfulness", "cardinal": "Justice", "phase": "Ordinary Time I", "liturgicalContext": "OT Week 4 — The Beatitudes", "connection": "The Beatitudes turn the world's values upside down. Only the truthful person can receive these hard sayings without flinching."}, "10": {"virtue": "Integrity", "aquinas": "Honesty/Beauty", "cardinal": "Justice", "phase": "Ordinary Time I", "liturgicalContext": "OT Week 5 — \"You are salt and light\"", "connection": "Salt that loses its flavor is thrown out. Light hidden under a basket serves no one. Integrity means being the same person inside and out — radiant and uncompromised."}, "11": {"virtue": "Reasoning", "aquinas": "Reason (Prudence)", "cardinal": "Prudence", "phase": "Ordinary Time I", "liturgicalContext": "OT Week 6 — \"You have heard it said… but I say to you\"", "connection": "Jesus deepens the Mosaic Law through rigorous moral reasoning. He does not abolish but fulfills — showing that reason illuminated by faith goes deeper than the letter."}, "12": {"virtue": "Forgiveness", "aquinas": "Clemency", "cardinal": "Temperance", "phase": "Ordinary Time I", "liturgicalContext": "OT Week 7 — \"Love your enemies\"", "connection": "The most radical command in the Gospel. Forgiveness is the temperance virtue that restrains our instinct for retaliation and frees us to love beyond merit."}, "13": {"virtue": "Practical Wisdom", "aquinas": "Prudence", "cardinal": "Prudence", "phase": "Ordinary Time I", "liturgicalContext": "OT Week 8 — \"The wise man built on rock\"", "connection": "The capstone of the Sermon on the Mount. Prudence — practical wisdom — is the master virtue that builds one's life on the solid foundation of Christ's teaching."}, "14": {"virtue": "Restraint", "aquinas": "Abstinence", "cardinal": "Temperance", "phase": "Lent", "liturgicalContext": "Lent 1 — Ash Wednesday / Temptation in the Desert", "connection": "Lent begins with fasting. Jesus refuses bread, spectacle, and power. Restraint — the habit of saying no to legitimate goods for a higher purpose — is the gateway to Lenten conversion."}, "15": {"virtue": "Fasting", "aquinas": "Fasting", "cardinal": "Temperance", "phase": "Lent", "liturgicalContext": "Lent 2 — The Transfiguration", "connection": "The disciples glimpse glory on Tabor but must descend. Fasting strips away comfort so that we can see clearly — the Transfiguration reveals what fasting prepares us to behold."}, "16": {"virtue": "Self-Discipline", "aquinas": "Temperance", "cardinal": "Temperance", "phase": "Lent", "liturgicalContext": "Lent 3 — Conversion and repentance", "connection": "Mid-Lent deepens the call to interior conversion. Self-discipline is the cardinal virtue itself — the ordering of desires so that what we want serves what we love."}, "17": {"virtue": "Gentlefirmness", "aquinas": "Meekness", "cardinal": "Temperance", "phase": "Lent", "liturgicalContext": "Lent 4 (Laetare) — The Prodigal Son / Healing", "connection": "The father runs to meet his wayward son — gentle in embrace yet firm in truth. Meekness is not weakness but strength held in check by love. Laetare's joy springs from this tender reunion."}, "18": {"virtue": "Perseverance", "aquinas": "Perseverance", "cardinal": "Fortitude", "phase": "Lent", "liturgicalContext": "Lent 5 — \"Unless a grain of wheat falls and dies…\"", "connection": "Jesus sets his face toward Jerusalem. The grain must fall. Perseverance is the fortitude to keep going when the cost becomes clear and the road narrows."}, "19": {"virtue": "Sacrifice", "aquinas": "Sacrifice", "cardinal": "Justice", "phase": "Lent", "liturgicalContext": "Holy Week / Palm Sunday — The Passion", "connection": "Christ lays down His life — the just offering that restores what sin has broken. Sacrifice is the justice virtue of giving to God what is most costly because He is most worthy."}, "20": {"virtue": "Gratitude", "aquinas": "Gratitude", "cardinal": "Justice", "phase": "Easter", "liturgicalContext": "Easter Sunday — The Resurrection", "connection": "Alleluia! Death is conquered. Gratitude is the only adequate response — not earning, not striving, but receiving the gift of life with overflowing thanks."}, "21": {"virtue": "Big-Souledness", "aquinas": "Magnanimity", "cardinal": "Fortitude", "phase": "Easter", "liturgicalContext": "Easter 2 (Divine Mercy Sunday) — Thomas touches the wounds", "connection": "Thomas moves from doubt to \"My Lord and my God!\" — the most expansive act of faith in the Gospels. Magnanimity, big-souledness, is the courage to believe greatly."}, "22": {"virtue": "Understanding", "aquinas": "Understanding", "cardinal": "Prudence", "phase": "Easter", "liturgicalContext": "Easter 3 — The Road to Emmaus", "connection": "\"Were not our hearts burning?\" The Emmaus disciples' eyes are opened through Scripture. Understanding — the prudence virtue that grasps the meaning beneath the surface — turns grief into recognition."}, "23": {"virtue": "Devotion", "aquinas": "Devotion", "cardinal": "Justice", "phase": "Easter", "liturgicalContext": "Easter 4 (Good Shepherd Sunday) — \"I am the Good Shepherd\"", "connection": "The shepherd lays down his life for the sheep. Devotion is the prompt willingness to give oneself entirely to God's service — the shepherd's defining quality."}, "24": {"virtue": "Commitment", "aquinas": "Vows", "cardinal": "Justice", "phase": "Easter", "liturgicalContext": "Easter 5 — \"I am the vine, you are the branches\"", "connection": "\"Abide in me.\" To remain on the vine is a choice renewed daily. Commitment is the justice virtue of following through on what we have promised — staying grafted to Christ."}, "25": {"virtue": "Friendliness", "aquinas": "Friendliness", "cardinal": "Justice", "phase": "Easter", "liturgicalContext": "Easter 6 — \"I call you friends\" / The New Commandment", "connection": "\"I no longer call you servants but friends.\" The risen Christ elevates His disciples into friendship. Friendliness is the virtue that makes us approachable, warm, and present to others."}, "26": {"virtue": "Diligence", "aquinas": "Studiousness", "cardinal": "Temperance", "phase": "Easter", "liturgicalContext": "Ascension / Easter 7 — \"Go and make disciples of all nations\"", "connection": "The Great Commission demands industrious effort. Diligence — the measured, sustained application of energy to the work at hand — is how the Church carries out the Ascension mandate."}, "27": {"virtue": "Creativity", "aquinas": "Shrewdness", "cardinal": "Prudence", "phase": "Easter", "liturgicalContext": "Pentecost — The Holy Spirit descends in fire and wind", "connection": "The Spirit speaks in every tongue, invents new ways to reach every heart. Creativity — the prudence virtue of finding unexpected solutions — is the Spirit's signature gift."}, "28": {"virtue": "Memory", "aquinas": "Memory", "cardinal": "Prudence", "phase": "Ordinary Time II", "liturgicalContext": "Trinity Sunday", "connection": "The Church recalls the deepest mystery of God's inner life. Memory — the prudence virtue of holding truth present in the mind — is how we treasure what has been revealed."}, "29": {"virtue": "Generous Giving", "aquinas": "Tithing", "cardinal": "Justice", "phase": "Ordinary Time II", "liturgicalContext": "Corpus Christi — \"This is my Body, given for you\"", "connection": "God holds nothing back. In the Eucharist, He gives His entire self. Generous giving — the habit of offering our substance, not just our surplus — mirrors this total gift."}, "30": {"virtue": "Worship", "aquinas": "Religion", "cardinal": "Justice", "phase": "Ordinary Time II", "liturgicalContext": "Sacred Heart of Jesus (mid-June)", "connection": "The Solemnity of the Sacred Heart invites us into the burning love of Christ's own heart. Worship — the virtue of rendering God the honor due to Him — is our entry into that fire."}, "31": {"virtue": "Justice", "aquinas": "Justice", "cardinal": "Justice", "phase": "Ordinary Time II", "liturgicalContext": "Sts. Peter and Paul (June 29)", "connection": "Peter the rock. Paul the apostle to the nations. Together they establish the Church's order in truth and right relationship. Justice itself — giving each person what is due — is their shared legacy."}, "32": {"virtue": "Sound Judgment", "aquinas": "Sound Judgment", "cardinal": "Prudence", "phase": "Ordinary Time II", "liturgicalContext": "St. Thomas the Apostle (July 3)", "connection": "Thomas demanded evidence. Jesus honored the demand. Sound judgment — the capacity to assess a situation rightly — leads Thomas from skepticism to the greatest confession of faith."}, "33": {"virtue": "Obedience", "aquinas": "Obedience", "cardinal": "Justice", "phase": "Ordinary Time II", "liturgicalContext": "St. Benedict (July 11)", "connection": "\"Listen\" — the first word of St. Benedict's Rule. Benedictine obedience is not servile compliance but the deep listening that orients the whole person toward God's will."}, "34": {"virtue": "Respect", "aquinas": "Observance", "cardinal": "Justice", "phase": "Ordinary Time II", "liturgicalContext": "St. Mary Magdalene (July 22)", "connection": "\"Rabboni!\" — Mary Magdalene greets the risen Lord with reverent awe. Respect (observance) is the justice virtue of honoring those who are set above us, beginning with Christ Himself."}, "35": {"virtue": "Filial Piety", "aquinas": "Piety (Filial)", "cardinal": "Justice", "phase": "Ordinary Time II", "liturgicalContext": "Sts. Joachim and Anne (July 26)", "connection": "The grandparents of Jesus. Filial piety — the love and honor owed to parents and ancestors — is embodied in the hidden faithfulness of Joachim and Anne, who prepared the way for Mary."}, "36": {"virtue": "Good Counsel", "aquinas": "Good Counsel", "cardinal": "Prudence", "phase": "Ordinary Time II", "liturgicalContext": "OT Week 18 — Summer parables of the kingdom", "connection": "The kingdom parables (treasure in a field, pearl of great price) invite deliberation: what is worth everything? Good counsel is the virtue of seeking and giving wise advice before acting."}, "37": {"virtue": "Alertness", "aquinas": "Circumspection", "cardinal": "Prudence", "phase": "Ordinary Time II", "liturgicalContext": "The Transfiguration (Aug 6) / St. Dominic (Aug 8)", "connection": "\"This is my beloved Son — listen to Him!\" Alertness — attentiveness to all the circumstances around us — is what the drowsy disciples on Tabor most needed, and what Dominic exercised in founding the Order of Preachers."}, "38": {"virtue": "Poise", "aquinas": "Shamefacedness", "cardinal": "Temperance", "phase": "Ordinary Time II", "liturgicalContext": "The Assumption (August 15)", "connection": "Mary is taken up body and soul into heaven — the ultimate composure before God. Poise is the temperance virtue of carrying oneself with dignity and grace, neither anxious nor presumptuous."}, "39": {"virtue": "Self-Control", "aquinas": "Continence", "cardinal": "Temperance", "phase": "Ordinary Time II", "liturgicalContext": "St. Augustine (August 28)", "connection": "\"Grant me chastity and continence — but not yet.\" Augustine's long struggle and eventual victory make him the patron of self-control: the power to master disordered desires through grace."}, "40": {"virtue": "Gracefulness", "aquinas": "Modesty of Movement", "cardinal": "Temperance", "phase": "Ordinary Time II", "liturgicalContext": "Birth of the Blessed Virgin Mary (September 8)", "connection": "Mary enters the world with quiet grace. Gracefulness — beauty in movement and manner — reflects the inner order of one who is \"full of grace.\""}, "41": {"virtue": "Patience", "aquinas": "Patience", "cardinal": "Fortitude", "phase": "Ordinary Time II", "liturgicalContext": "Exaltation of the Holy Cross (September 14)", "connection": "The Cross is not just endured but exalted. Patience is the fortitude to bear suffering without being broken — transforming pain into offering."}, "42": {"virtue": "Sobriety", "aquinas": "Sobriety", "cardinal": "Temperance", "phase": "Ordinary Time II", "liturgicalContext": "Our Lady of Sorrows (September 15)", "connection": "Mary stands at the foot of the Cross with clear-eyed grief — no hysteria, no denial. Sobriety is the temperance of a mind that remains unclouded even in the deepest pain."}, "43": {"virtue": "Strategic Wisdom", "aquinas": "Military Prudence", "cardinal": "Prudence", "phase": "Ordinary Time II", "liturgicalContext": "Sts. Michael, Gabriel, and Raphael (September 29)", "connection": "Michael battles the dragon. Gabriel delivers the message. Raphael guides the journey. Strategic wisdom — the capacity to coordinate complex efforts toward victory — is the archangels' gift."}, "44": {"virtue": "Orderliness", "aquinas": "Orderliness", "cardinal": "Temperance", "phase": "Ordinary Time II", "liturgicalContext": "St. Thérèse of Lisieux (October 1)", "connection": "The \"Little Way\" — doing small things with great love, in order. St. Thérèse found holiness not in grand gestures but in the careful ordering of daily life toward God."}, "45": {"virtue": "Playing Well", "aquinas": "Eutrapelia", "cardinal": "Temperance", "phase": "Ordinary Time II", "liturgicalContext": "St. Francis of Assisi (Oct 4) / Our Lady of the Rosary (Oct 7)", "connection": "Francis preached to birds, danced with Brother Sun, and called death \"Sister.\" Playing well — the virtue of wholesome recreation and joy — is the Franciscan charism: finding delight in God's creation."}, "46": {"virtue": "Personal Wisdom", "aquinas": "Personal Prudence", "cardinal": "Prudence", "phase": "Ordinary Time II", "liturgicalContext": "St. Teresa of Ávila (October 15)", "connection": "Teresa mapped the soul's journey through seven mansions. Personal wisdom — prudence directed at one's own spiritual growth — is the interior knowledge she cultivated and taught."}, "47": {"virtue": "Equity", "aquinas": "Epikeia", "cardinal": "Justice", "phase": "Ordinary Time II", "liturgicalContext": "St. Luke the Evangelist (October 18)", "connection": "Luke, the physician-evangelist, tells the stories of the poor, the outcast, the Samaritan. Equity — the virtue of applying the spirit of the law when the letter falls short — pervades his Gospel."}, "48": {"virtue": "Fair Exchange", "aquinas": "Commutative Justice", "cardinal": "Justice", "phase": "Ordinary Time II", "liturgicalContext": "Sts. Simon and Jude (October 28)", "connection": "The \"hidden apostles\" gave their lives for the Gospel and received the crown. Fair exchange — the justice of equal giving and receiving — is fulfilled in martyrdom: life given, eternal life received."}, "49": {"virtue": "Modesty", "aquinas": "Modesty of Dress", "cardinal": "Temperance", "phase": "Ordinary Time II", "liturgicalContext": "All Saints (November 1)", "connection": "The saints include kings and beggars, doctors and peasants — but all are clothed in white. Modesty, the virtue of presenting oneself appropriately, reminds us that holiness is the only garment that matters."}, "50": {"virtue": "Chasteness", "aquinas": "Chastity", "cardinal": "Temperance", "phase": "Ordinary Time II", "liturgicalContext": "All Souls / OT Week 32 — Parable of the wise and foolish virgins", "connection": "The wise virgins kept their lamps burning. Chasteness — purity of heart and body — is the oil that keeps the flame alive as we await the Bridegroom."}, "51": {"virtue": "Just Correction", "aquinas": "Vindication", "cardinal": "Justice", "phase": "Ordinary Time II", "liturgicalContext": "OT Week 33 — Parable of the talents / End-time accountability", "connection": "The master returns and settles accounts. Just correction — the virtue of righting wrongs and holding others accountable with fairness — is the theme of these eschatological parables."}, "52": {"virtue": "Fair Distribution", "aquinas": "Distributive Justice", "cardinal": "Justice", "phase": "Ordinary Time II", "liturgicalContext": "Christ the King — \"Whatever you did for the least of these…\"", "connection": "The final Sunday of the liturgical year. Christ the King judges the nations: did you feed the hungry, clothe the naked, visit the prisoner? Fair distribution — giving to each according to their need — is the measure of His kingdom."}};
+
+function getEasterDate(year) {
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31);
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+  return new Date(year, month - 1, day);
+}
+function getAdvent1(year) {
+  const nov30 = new Date(year, 10, 30);
+  const dow = nov30.getDay();
+  if (dow === 0) return nov30;
+  if (dow <= 3) return new Date(year, 10, 30 - dow);
+  return new Date(year, 10, 30 + (7 - dow));
+}
+function getBaptismOfLord(year) {
+  const jan2 = new Date(year, 0, 2);
+  const dow = jan2.getDay();
+  const epiphany = dow === 0 ? jan2 : new Date(year, 0, 2 + (7 - dow));
+  const epDay = epiphany.getDate();
+  if (epDay >= 7) return new Date(year, 0, epDay + 1);
+  return new Date(year, 0, epDay + 7);
+}
+function daysBetween(a, b) { return Math.floor((b - a) / 86400000); }
+function clamp(v, mn, mx) { return Math.max(mn, Math.min(mx, v)); }
+
+function getVirtueWeek(date) {
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const a1 = getAdvent1(d.getFullYear());
+  let lyStart = d >= a1 ? d.getFullYear() : d.getFullYear() - 1;
+  const advent1 = getAdvent1(lyStart);
+  const christmas = new Date(lyStart, 11, 25);
+  const ey = lyStart + 1;
+  const baptism = getBaptismOfLord(ey);
+  const easter = getEasterDate(ey);
+  const ashWed = new Date(easter.getTime() - 46 * 86400000);
+  const pentecost = new Date(easter.getTime() + 49 * 86400000);
+  const nextA1 = getAdvent1(lyStart + 1);
+  if (d >= nextA1) return 1;
+  if (d >= advent1 && d < christmas) return clamp(Math.floor(daysBetween(advent1, d) / 7) + 1, 1, 4);
+  if (d >= christmas && d < baptism) return clamp(5 + Math.floor(daysBetween(christmas, d) / 7), 5, 6);
+  if (d >= baptism && d < ashWed) { const t = daysBetween(baptism, ashWed); const e = daysBetween(baptism, d); return clamp(7 + Math.floor((e / t) * 7), 7, 13); }
+  if (d >= ashWed && d < easter) return clamp(14 + Math.floor(daysBetween(ashWed, d) / 7), 14, 19);
+  const pe = new Date(pentecost.getTime() + 7 * 86400000);
+  if (d >= easter && d < pe) return clamp(20 + Math.floor(daysBetween(easter, d) / 7), 20, 27);
+  if (d >= pe && d < nextA1) { const t = daysBetween(pe, nextA1); const e = daysBetween(pe, d); return clamp(28 + Math.floor((e / t) * 25), 28, 52); }
+  return 1;
+}
+
+// Populate live widget
+const week = getVirtueWeek(new Date());
+const v = VIRTUE_DATA[String(week)];
+if (v) {
+  document.getElementById('tv-week').textContent = 'Week ' + week;
+  document.getElementById('tv-virtue').textContent = v.virtue;
+  document.getElementById('tv-aquinas').textContent = 'Aquinas: ' + v.aquinas + ' · ' + v.cardinal;
+  document.getElementById('tv-phase').textContent = v.phase;
+  document.getElementById('tv-context').textContent = v.liturgicalContext;
+  document.getElementById('tv-connection').textContent = v.connection;
+}
+</script>
+</body>
+</html>
