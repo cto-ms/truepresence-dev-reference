@@ -250,6 +250,30 @@ footer {
   color: var(--text-muted);
   font-size: 13px;
 }
+/* Language selector */
+.lang-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.lang-btn:hover {
+  background: var(--surface2);
+  color: var(--text);
+  border-color: var(--accent);
+}
+.lang-btn.active {
+  background: rgba(88,166,255,0.15);
+  color: var(--accent);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
 @media (max-width: 768px) {
   .field-row { grid-template-columns: 1fr; }
   .story-grid { grid-template-columns: 1fr; }
@@ -279,6 +303,42 @@ footer {
         <div class="stat-card"><a href="story-image-map.html" style="color:inherit;text-decoration:none"><div class="number">551</div><div class="label">Public Domain Images →</div></a></div>
         <div class="stat-card"><div class="number">29</div><div class="label">Abela Names ✓</div></div>
         <div class="stat-card"><a href="virtue-of-the-week.html" style="color:inherit;text-decoration:none"><div class="number">52</div><div class="label">Weekly Calendar →</div></a></div>
+      </div>
+    </div>
+    <div class="section" style="margin-top: 24px;" id="language-section">
+      <div class="section-header">🌍 Language Selector — Document-Level i18n</div>
+      <div class="section-body">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;" id="lang-buttons">
+          <button class="lang-btn active" data-lang="en" data-label="English" data-flag="🇺🇸">🇺🇸 English</button>
+          <button class="lang-btn" data-lang="es" data-label="Spanish" data-flag="🇪🇸">🇪🇸 Español</button>
+          <button class="lang-btn" data-lang="de" data-label="German" data-flag="🇩🇪">🇩🇪 Deutsch</button>
+          <button class="lang-btn" data-lang="fr" data-label="French" data-flag="🇫🇷">🇫🇷 Français</button>
+          <button class="lang-btn" data-lang="it" data-label="Italian" data-flag="🇮🇹">🇮🇹 Italiano</button>
+          <button class="lang-btn" data-lang="la" data-label="Latin" data-flag="🇻🇦">🇻🇦 Latina</button>
+          <button class="lang-btn" data-lang="pl" data-label="Polish" data-flag="🇵🇱">🇵🇱 Polski</button>
+          <button class="lang-btn" data-lang="pt" data-label="Portuguese" data-flag="🇧🇷">🇧🇷 Português</button>
+          <button class="lang-btn" data-lang="ko" data-label="Korean" data-flag="🇰🇷">🇰🇷 한국어</button>
+          <button class="lang-btn" data-lang="tl" data-label="Tagalog" data-flag="🇵🇭">🇵🇭 Tagalog</button>
+        </div>
+        <div id="lang-detail" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+            <span id="lang-flag" style="font-size:28px;">🇺🇸</span>
+            <div>
+              <div id="lang-name" style="font-size:18px;font-weight:600;">English</div>
+              <div id="lang-role" style="font-size:13px;color:var(--green);">Base language — original document IDs</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:140px 1fr;gap:8px 12px;font-size:13px;">
+            <div style="color:var(--text-muted);font-weight:600;">Virtue doc ID</div>
+            <div><code class="field-name" id="lang-virtue-id">virtue-prudence</code></div>
+            <div style="color:var(--text-muted);font-weight:600;">Story doc ID</div>
+            <div><code class="field-name" id="lang-story-id">story-prudence-aesop_fables</code></div>
+            <div style="color:var(--text-muted);font-weight:600;">GROQ filter</div>
+            <div><code class="field-name" id="lang-groq" style="white-space:normal;">*[_type == "virtue" && !(_id match "i18n.*")]</code></div>
+            <div style="color:var(--text-muted);font-weight:600;">Metadata</div>
+            <div><code class="field-name" id="lang-metadata">translation.metadata.virtue-prudence</code></div>
+          </div>
+        </div>
       </div>
     </div>
         <div class="cardinal-group" id="prudence">
@@ -616,6 +676,39 @@ function toggleStoryText(btn) {
   panel.classList.toggle('open');
   btn.textContent = panel.classList.contains('open') ? '▾ Hide Full Text' : '▸ Show Full Text';
 }
+
+// Language selector
+(function() {
+  const btns = document.querySelectorAll('.lang-btn');
+  if (!btns.length) return;
+  btns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      btns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      const lang = this.dataset.lang;
+      const label = this.dataset.label;
+      const flag = this.dataset.flag;
+      const isBase = lang === 'en';
+      document.getElementById('lang-flag').textContent = flag;
+      document.getElementById('lang-name').textContent = label;
+      document.getElementById('lang-role').textContent = isBase
+        ? 'Base language — original document IDs'
+        : 'Translation document — ID prefix: i18n.';
+      document.getElementById('lang-role').style.color = isBase ? 'var(--green)' : 'var(--orange)';
+      document.getElementById('lang-virtue-id').textContent = isBase
+        ? 'virtue-prudence'
+        : 'i18n.virtue-prudence.' + lang;
+      document.getElementById('lang-story-id').textContent = isBase
+        ? 'story-prudence-aesop_fables'
+        : 'i18n.story-prudence-aesop_fables.' + lang;
+      document.getElementById('lang-groq').textContent = isBase
+        ? '*[_type == "virtue" && !(_id match "i18n.*")]'
+        : '*[_type == "virtue" && language == "' + lang + '"]';
+      document.getElementById('lang-metadata').textContent =
+        'translation.metadata.virtue-prudence';
+    });
+  });
+})();
 </script>
 </body>
 </html>

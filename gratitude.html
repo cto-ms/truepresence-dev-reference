@@ -250,6 +250,30 @@ footer {
   color: var(--text-muted);
   font-size: 13px;
 }
+/* Language selector */
+.lang-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.lang-btn:hover {
+  background: var(--surface2);
+  color: var(--text);
+  border-color: var(--accent);
+}
+.lang-btn.active {
+  background: rgba(88,166,255,0.15);
+  color: var(--accent);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
 @media (max-width: 768px) {
   .field-row { grid-template-columns: 1fr; }
   .story-grid { grid-template-columns: 1fr; }
@@ -629,6 +653,39 @@ function toggleStoryText(btn) {
   panel.classList.toggle('open');
   btn.textContent = panel.classList.contains('open') ? '▾ Hide Full Text' : '▸ Show Full Text';
 }
+
+// Language selector
+(function() {
+  const btns = document.querySelectorAll('.lang-btn');
+  if (!btns.length) return;
+  btns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      btns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      const lang = this.dataset.lang;
+      const label = this.dataset.label;
+      const flag = this.dataset.flag;
+      const isBase = lang === 'en';
+      document.getElementById('lang-flag').textContent = flag;
+      document.getElementById('lang-name').textContent = label;
+      document.getElementById('lang-role').textContent = isBase
+        ? 'Base language — original document IDs'
+        : 'Translation document — ID prefix: i18n.';
+      document.getElementById('lang-role').style.color = isBase ? 'var(--green)' : 'var(--orange)';
+      document.getElementById('lang-virtue-id').textContent = isBase
+        ? 'virtue-prudence'
+        : 'i18n.virtue-prudence.' + lang;
+      document.getElementById('lang-story-id').textContent = isBase
+        ? 'story-prudence-aesop_fables'
+        : 'i18n.story-prudence-aesop_fables.' + lang;
+      document.getElementById('lang-groq').textContent = isBase
+        ? '*[_type == "virtue" && !(_id match "i18n.*")]'
+        : '*[_type == "virtue" && language == "' + lang + '"]';
+      document.getElementById('lang-metadata').textContent =
+        'translation.metadata.virtue-prudence';
+    });
+  });
+})();
 </script>
 </body>
 </html>
