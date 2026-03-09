@@ -274,7 +274,7 @@ footer {
         <div class="stat-card"><div class="number">56</div><div class="label">Virtues</div></div>
         <div class="stat-card"><div class="number">223</div><div class="label">Stories</div></div>
         <div class="stat-card"><div class="number">6</div><div class="label">Audience Gates</div></div>
-        <div class="stat-card"><div class="number">7</div><div class="label">Languages</div></div>
+        <div class="stat-card"><div class="number">10</div><div class="label">Languages</div></div>
         <div class="stat-card"><a href="ai-image-gallery.html" style="color:inherit;text-decoration:none"><div class="number">232</div><div class="label">AI Images →</div></a></div>
         <div class="stat-card"><a href="story-image-map.html" style="color:inherit;text-decoration:none"><div class="number">551</div><div class="label">Public Domain Images →</div></a></div>
         <div class="stat-card"><div class="number">29</div><div class="label">Abela Names ✓</div></div>
@@ -582,23 +582,23 @@ footer {
       <div class="section-body">
         <div class="field-row">
           <div class="field-label"><span class="human-name">Virtue Document</span></div>
-          <div class="field-value"><code class="field-name">virtue</code> — 33 fields, 7 groups (Content, Aquinas, Perspectives, Traditions, Therapeutic, Metadata, Translations)</div>
+          <div class="field-value"><code class="field-name">virtue</code> — Flat string fields, document-level i18n. Groups: Content, Aquinas, Perspectives, Traditions, Therapeutic, Metadata</div>
         </div>
         <div class="field-row">
           <div class="field-label"><span class="human-name">Virtue Story Document</span></div>
-          <div class="field-value"><code class="field-name">virtueStory</code> — 30+ fields, 5 groups (Content, Genre &amp; Source, Metadata, Images, Translations)</div>
+          <div class="field-value"><code class="field-name">virtueStory</code> — Flat string fields, document-level i18n. Groups: Content, Genre &amp; Source, Metadata, Images</div>
         </div>
         <div class="field-row">
           <div class="field-label"><span class="human-name">Perspective Content</span></div>
           <div class="field-value"><code class="field-name">perspectiveContent</code> — Object type for 6 audience gates (audienceGate, displayName, blurb, article, reframe, bibliography)</div>
         </div>
         <div class="field-row">
-          <div class="field-label"><span class="human-name">Locale Types</span></div>
-          <div class="field-value"><code class="field-name">localeString</code> <code class="field-name">localeText</code> <code class="field-name">localeRichText</code> <code class="field-name">localeAudio</code> — 7 languages: en, es, fr, pt, it, de, pl</div>
+          <div class="field-label"><span class="human-name">i18n Model</span></div>
+          <div class="field-value"><code class="field-name">document-level i18n</code> — One document per language, all text fields are flat strings. <code class="field-name">language</code> field identifies locale. 10 languages: en, es, de, fr, it, la, pl, pt, ko, tl</div>
         </div>
         <div class="field-row">
           <div class="field-label"><span class="human-name">Document ID Patterns</span></div>
-          <div class="field-value">Virtue: <code class="field-name">virtue-{id}</code> — Story: <code class="field-name">story-{virtue_id}-{genre}</code></div>
+          <div class="field-value">Virtue: <code class="field-name">virtue-{id}</code> — Story: <code class="field-name">story-{virtue_id}-{genre}</code> — Translation: <code class="field-name">i18n.{baseId}.{lang}</code> — Metadata: <code class="field-name">translation.metadata.{baseId}</code></div>
         </div>
       </div>
     </div>
